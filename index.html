@@ -4,6 +4,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
 <title>SarkariYojanaIndex — Government Schemes for Students</title>
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-database-compat.js"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;600;700;800&family=Noto+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
@@ -270,6 +272,32 @@ footer button:hover{color:rgba(255,255,255,.7)}
 .ctx-i:hover{background:#F8FAFC}
 .ctx-i.dng:hover{background:rgba(239,68,68,.07);color:#EF4444}
 @media(max-width:600px){.schemes-grid{grid-template-columns:1fr;padding:0 14px 40px}.state-grid{grid-template-columns:repeat(auto-fill,minmax(136px,1fr))}.stats-in{gap:18px}.m-grid{grid-template-columns:1fr}.cp{min-width:200px}.chat-fab{right:14px;bottom:18px}}
+
+/* ── Admin Monitor – Telegram-style ── */
+.mon-inbox{display:flex;flex-direction:column;overflow-y:auto;min-height:0;flex:1}
+.mon-empty{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;color:var(--mu);font-size:12px;padding:20px;text-align:center}
+.mon-item{display:flex;align-items:center;gap:10px;padding:10px 12px;border-bottom:1px solid #F0EDE8;cursor:pointer;transition:.15s;position:relative}
+.mon-item:hover{background:#FAFBFC}
+.mon-item:last-child{border-bottom:none}
+.mon-av{width:38px;height:38px;border-radius:50%;color:#fff;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:800;flex-shrink:0}
+.mon-inf{flex:1;min-width:0}
+.mon-nm{font-size:13px;font-weight:700;color:var(--nv);line-height:1.3;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mon-prev{font-size:11px;color:var(--mu);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:2px}
+.mon-rt{display:flex;flex-direction:column;align-items:flex-end;gap:3px;flex-shrink:0}
+.mon-time{font-size:10px;color:var(--mu)}
+.mon-cnt{background:var(--sf);color:#fff;border-radius:9px;min-width:18px;height:18px;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:800;padding:0 4px}
+.mon-del-btn{background:none;border:none;cursor:pointer;color:var(--mu);padding:4px 6px;border-radius:5px;font-size:13px;opacity:0;transition:.15s;flex-shrink:0}
+.mon-item:hover .mon-del-btn{opacity:1}
+.mon-del-btn:hover{color:#EF4444;background:rgba(239,68,68,.09)}
+.mon-thdr{display:flex;align-items:center;gap:8px;padding:9px 11px;background:#F8FAFC;border-bottom:1px solid var(--bd);flex-shrink:0}
+.mon-back{background:none;border:none;cursor:pointer;font-size:22px;color:var(--nv);padding:1px 6px;border-radius:5px;line-height:1;transition:.15s;font-weight:700}
+.mon-back:hover{background:rgba(9,27,61,.08)}
+.mon-thav{width:30px;height:30px;border-radius:50%;color:#fff;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800;flex-shrink:0}
+.mon-thnm{font-size:13px;font-weight:700;color:var(--nv);flex:1}
+.btn-del-usr{border:1px solid rgba(197,48,48,.2);background:rgba(197,48,48,.07);color:#c53030;padding:4px 9px;border-radius:6px;font-size:11px;font-weight:700;cursor:pointer;font-family:'Noto Sans',sans-serif;transition:.15s}
+.btn-del-usr:hover{background:rgba(197,48,48,.15)}
+.am-name-inp{width:100%;padding:7px 10px;border:1.5px solid var(--bd);border-radius:7px;font-size:12px;font-family:'Noto Sans',sans-serif;outline:none;color:var(--tx);transition:.2s}
+.am-name-inp:focus{border-color:var(--sf)}
 </style>
 </head>
 <body>
@@ -442,6 +470,7 @@ footer button:hover{color:rgba(255,255,255,.7)}
     </div>
     <div class="acts">
       <span class="onb" id="cpOnb" style="display:none">0 users</span>
+      <span id="fbStatus"></span>
       <span id="fbStatus" title="Firebase status" style="font-size:10px;padding:2px 7px;border-radius:100px;font-weight:700;display:none"></span>
       <button class="chb" id="cpClrBtn" style="display:none" title="Clear all messages">🗑</button>
       <button class="chb d" id="cpCloseBtn" title="Close">✕</button>
@@ -469,33 +498,46 @@ footer button:hover{color:rgba(255,255,255,.7)}
   <div class="cp-rz" id="cpRz"></div>
 </div>
 
-<!-- Admin Monitor -->
+<!-- Admin Monitor — Telegram-style inbox + thread -->
 <div class="cp mon" id="adminMon">
   <div class="cp-h" id="amDragHdr">
     <div class="ico">🛡️</div>
-    <div class="inf"><div class="t">Admin Monitor</div><div class="s" id="amSub">All messages · tap header to expand</div></div>
+    <div class="inf">
+      <div class="t">Admin Monitor</div>
+      <div class="s" id="amSub">Tap header to expand</div>
+    </div>
     <div class="acts">
-      <button class="chb" id="amEditBtn" title="Edit your chat name">✏️</button>
+      <button class="chb" id="amEditBtn" title="Edit your chat display name">✏️</button>
       <button class="chb" id="amMinBtn" title="Minimize">⊟</button>
       <button class="chb d" id="amCloseBtn" title="Close">✕</button>
     </div>
   </div>
-  <!-- Name edit bar -->
   <div id="amNameEdit" style="display:none;padding:8px 10px;border-bottom:1px solid var(--bd);background:#f8fafc;flex-shrink:0">
     <div style="display:flex;gap:6px;align-items:center">
-      <input id="amNameInp" type="text" maxlength="24" placeholder="Admin display name in chat..."
-        style="flex:1;padding:7px 10px;border:1.5px solid var(--bd);border-radius:7px;font-size:12px;font-family:'Noto Sans',sans-serif;outline:none;color:var(--tx)">
-      <button id="amNameSaveBtn" style="padding:7px 13px;background:var(--sf);color:#fff;border:none;border-radius:7px;font-size:12px;font-weight:700;cursor:pointer;white-space:nowrap">Save</button>
+      <input id="amNameInp" class="am-name-inp" type="text" maxlength="24" placeholder="Your display name in chat...">
+      <button id="amNameSaveBtn" style="padding:7px 12px;background:var(--sf);color:#fff;border:none;border-radius:7px;font-size:12px;font-weight:700;cursor:pointer;white-space:nowrap;font-family:'Noto Sans',sans-serif">Save</button>
     </div>
   </div>
   <div class="cp-body" id="amBody">
-    <div class="cp-msgs" id="amMsgs"></div>
-    <div class="cp-ir" id="amIR">
-      <textarea class="cp-inp" id="amInp" rows="1" maxlength="400" placeholder="Message as Admin (Enter to send)..."></textarea>
-      <button class="cp-send" id="amSendBtn">➤</button>
+    <!-- INBOX: list of users -->
+    <div id="amInbox" class="mon-inbox"></div>
+    <!-- THREAD: conversation with one user (hidden initially) -->
+    <div id="amThread" style="display:none;flex-direction:column;flex:1;overflow:hidden;min-height:0">
+      <div class="mon-thdr">
+        <button class="mon-back" id="amBackBtn">‹</button>
+        <div class="mon-thav" id="amThAv">?</div>
+        <div class="mon-thnm" id="amThNm">User</div>
+        <button class="btn-del-usr" id="amDelUsrBtn">🗑 Delete</button>
+      </div>
+      <div class="cp-msgs" id="amThreadMsgs"></div>
+      <div class="cp-ir">
+        <textarea class="cp-inp" id="amInp" rows="1" maxlength="400" placeholder="Reply as Admin (Enter to send)..."></textarea>
+        <button class="cp-send" id="amSendBtn">➤</button>
+      </div>
     </div>
   </div>
   <div class="cp-rz" id="amRz"></div>
+</div>
 </div>
 
 <!-- Context Menu -->
@@ -511,11 +553,7 @@ footer button:hover{color:rgba(255,255,255,.7)}
 // ═══════════════════════════════════════════════════════════════
 const STATES=[{n:"Andhra Pradesh",e:"🌾"},{n:"Arunachal Pradesh",e:"🏔️"},{n:"Assam",e:"🍵"},{n:"Bihar",e:"📚"},{n:"Chhattisgarh",e:"🌿"},{n:"Goa",e:"🌊"},{n:"Gujarat",e:"🦁"},{n:"Haryana",e:"🌻"},{n:"Himachal Pradesh",e:"❄️"},{n:"Jharkhand",e:"⛏️"},{n:"Karnataka",e:"🏛️"},{n:"Kerala",e:"🌴"},{n:"Madhya Pradesh",e:"🐅"},{n:"Maharashtra",e:"🏙️"},{n:"Manipur",e:"💃"},{n:"Meghalaya",e:"🌧️"},{n:"Mizoram",e:"🎋"},{n:"Nagaland",e:"🦋"},{n:"Odisha",e:"🛕"},{n:"Punjab",e:"🌾"},{n:"Rajasthan",e:"🏜️"},{n:"Sikkim",e:"🏔️"},{n:"Tamil Nadu",e:"🎭"},{n:"Telangana",e:"🤝"},{n:"Tripura",e:"🌺"},{n:"Uttar Pradesh",e:"🕌"},{n:"Uttarakhand",e:"🏔️"},{n:"West Bengal",e:"🐯"},{n:"Delhi (NCT)",e:"🏛️"},{n:"Jammu & Kashmir",e:"❄️"},{n:"Ladakh",e:"🏔️"},{n:"Chandigarh",e:"🌳"},{n:"Puducherry",e:"🌊"},{n:"Lakshadweep",e:"🏝️"},{n:"Dadra & Nagar Haveli",e:"🌿"},{n:"Andaman & Nicobar",e:"🏝️"}];
 const CAT={all:{l:"All",i:"⭐",c:"#F7941D",b:"#FFF7ED"},"10th":{l:"10th Level",i:"📖",c:"#6366F1",b:"#EEF2FF"},intermediate:{l:"11th–12th",i:"📝",c:"#0EA5E9",b:"#E0F2FE"},graduation:{l:"Graduation",i:"🎓",c:"#10B981",b:"#D1FAE5"},postgrad:{l:"Post Grad",i:"🔬",c:"#8B5CF6",b:"#EDE9FE"},competitive:{l:"NEET/JEE/UPSC",i:"🏆",c:"#EF4444",b:"#FEE2E2"},other:{l:"Other",i:"📌",c:"#F59E0B",b:"#FEF3C7"}};
-const FIREBASE_CONFIG={apiKey:"AIzaSyBJk5ek-1PRjEagnPuV4zpt-Ky7ERfi1uY",authDomain:"niha-994b8.firebaseapp.com",databaseURL:"https://niha-994b8-default-rtdb.firebaseio.com",projectId:"niha-994b8",storageBucket:"niha-994b8.firebasestorage.app",messagingSenderId:"912923961733",appId:"1:912923961733:web:9e1f6173a1b05fe3bf7cec"};
-const MSG_TTL=8000,AUTO_MIN=5000,DEF_W=338,DEF_H=488,MON_W=296,MON_H=360;
-const AV_COLS=["#6366F1","#10B981","#3B82F6","#8B5CF6","#EC4899","#14B8A6","#F59E0B","#EF4444","#84CC16","#06B6D4"];
-const avc=n=>AV_COLS[(n||"?").charCodeAt(0)%AV_COLS.length];
-const avi=n=>(n||"?")[0].toUpperCase();
+// Firebase config, chat constants and helpers are declared below in the COMMUNITY CHAT section
 
 const SEED=[
   // ── CENTRAL ──
@@ -736,146 +774,111 @@ function resetData(){if(!confirm('Reset all schemes to default data? All edits w
 function doSearch(){const q=document.getElementById('homeSearch')?.value.trim();if(!q)return;showState('Central (All India)');setTimeout(()=>{const si=document.getElementById('stSearch');if(si){si.value=q;applyFilters();}},80);}
 
 // ═══════════════════════════════════════════════════════════════
-// COMMUNITY CHAT
+// COMMUNITY CHAT — Firebase Realtime DB + localStorage fallback
 // ═══════════════════════════════════════════════════════════════
-let chatOpen=false,chatMin=false,chatJoined=false;
-let monOpen=false,monMin=false;
-let chatUser='',chatMsgs=[],pinnedMsg=null;
-let unread=0,ctxMsgId=null,fbDb=null;
-let autoMinTimer=null,expireLoop=null;
+const FIREBASE_CONFIG={
+  apiKey:"AIzaSyBJk5ek-1PRjEagnPuV4zpt-Ky7ERfi1uY",
+  authDomain:"niha-994b8.firebaseapp.com",
+  databaseURL:"https://niha-994b8-default-rtdb.firebaseio.com",
+  projectId:"niha-994b8",
+  storageBucket:"niha-994b8.firebasestorage.app",
+  messagingSenderId:"912923961733",
+  appId:"1:912923961733:web:9e1f6173a1b05fe3bf7cec"
+};
+const MSG_TTL=8000,AUTO_MIN=5000,DEF_W=340,DEF_H=500,MON_W=310,MON_H=480;
+const AVC=['#6366F1','#10B981','#3B82F6','#8B5CF6','#EC4899','#14B8A6','#F59E0B','#EF4444','#84CC16','#06B6D4'];
+const avc=n=>AVC[(n||'?').charCodeAt(0)%AVC.length];
+const avi=n=>(n||'?')[0].toUpperCase();
+
+// ── State ──
+let chatOpen=false,chatJoined=false,monOpen=false,monMin=false;
+let chatUser='',adminChatName='Admin',chatMsgs=[],pinnedMsg=null;
+let unread=0,monNewMsgs=0,ctxMsgId=null,fbDb=null;
+let autoMinTimer=null,monView='inbox',monSelUser='';
 let chatW=DEF_W,chatH=DEF_H;
 
-function initChat(){
-  chatUser=localStorage.getItem('syi_chat_name')||'';
-  // Set sizes
-  const cp=document.getElementById('chatPanel');const am=document.getElementById('adminMon');
-  if(cp){cp.style.width=chatW+'px';cp.style.height=chatH+'px';}
-  if(am){am.style.width=MON_W+'px';am.style.height=MON_H+'px';}
-  // Wire user chat buttons
-  document.getElementById('chatFab').addEventListener('click',toggleChat);
-  document.getElementById('cpClrBtn').addEventListener('click',adminClearAll);
-  document.getElementById('cpCloseBtn').addEventListener('click',closeChat);
-  document.getElementById('cpJoinBtn').addEventListener('click',joinChat);
-  document.getElementById('cpSendBtn').addEventListener('click',sendMsg);
-  document.getElementById('cpNameInp').addEventListener('keydown',e=>{if(e.key==='Enter')joinChat();});
-  document.getElementById('cpInp').addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();sendMsg();}});
-  document.getElementById('cpInp').addEventListener('input',e=>{autoResizeTa(e.target);resetAutoMin();});
-  // Wire admin monitor buttons
-  document.getElementById('amMinBtn').addEventListener('click',e=>{e.stopPropagation();minimizeMon();});
-  document.getElementById('amCloseBtn').addEventListener('click',e=>{e.stopPropagation();closeMon();});
-  document.getElementById('amEditBtn').addEventListener('click',e=>{e.stopPropagation();toggleNameEdit();});
-  document.getElementById('amNameSaveBtn').addEventListener('click',saveAdminName);
-  document.getElementById('amSendBtn').addEventListener('click',sendAdminMsg);
-  document.getElementById('amInp').addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();sendAdminMsg();}});
-  document.getElementById('amInp').addEventListener('input',e=>autoResizeTa(e.target));
-  // Click minimized monitor header to expand
-  document.getElementById('amDragHdr').addEventListener('click',toggleMonExpand);
-  // Load admin chat name
-  adminChatName=localStorage.getItem('syi_admin_name')||'Admin';
-  const amSub=document.getElementById('amSub');if(amSub)amSub.textContent='Chatting as: '+adminChatName;
-  // Context menu
-  document.getElementById('ctxPin').addEventListener('click',ctxPin);
-  document.getElementById('ctxUnpin').addEventListener('click',ctxUnpin);
-  document.getElementById('ctxDel').addEventListener('click',ctxDelete);
-  // Drag + resize
-  makeDraggable('chatPanel','cpDragHdr',false);
-  makeDraggable('adminMon','amDragHdr',true);
-  makeResizable('chatPanel','cpRz',true);
-  makeResizable('adminMon','amRz',false);
-  // Firebase or local
-  if(!tryFirebase())loadLocal();
-  // Expire ticker
-  expireLoop=setInterval(()=>{if(tickExpire()){if(chatJoined)renderMsgs();if(loggedIn&&monOpen)renderMon();}},1000);
-  updateChatAdminUI();
-}
-
-// ── Firebase ──
-function tryFirebase(){
-  if(!FIREBASE_CONFIG.apiKey)return false;
-  let n=0;
-  ['https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js','https://www.gstatic.com/firebasejs/10.14.1/firebase-database-compat.js'].forEach(src=>{
-    const s=document.createElement('script');s.src=src;
-    s.onload=()=>{if(++n===2)connectFb();};
-    s.onerror=()=>{if(!fbDb)loadLocal();};
-    document.head.appendChild(s);
-  });
-  return true;
-}
+// ── Firebase init (SDK already loaded via <head> script tags) ──
 function connectFb(){
   try{
-    if(!window.firebase)throw new Error('SDK not loaded');
+    if(typeof firebase==='undefined')throw new Error('Firebase SDK not loaded');
     if(!firebase.apps.length)firebase.initializeApp(FIREBASE_CONFIG);
     fbDb=firebase.database();
-    // Test connection
+
+    // Connection status indicator
     fbDb.ref('.info/connected').on('value',snap=>{
-      const online=snap.val()===true;
-      setFbStatus(online?'live':'offline');
+      setFbStatus(snap.val()===true?'live':'offline');
     });
-    fbDb.ref('syi_chat/messages').limitToLast(80).on('value',snap=>{
-      const prevLen=chatMsgs.filter(m=>!m.system).length;
-      chatMsgs=[];snap.forEach(c=>chatMsgs.push({id:c.key,...c.val()}));
-      const newLen=chatMsgs.filter(m=>!m.system).length;
+
+    // Listen: messages
+    fbDb.ref('syi_chat/messages').limitToLast(200).on('value',snap=>{
+      chatMsgs=[];
+      snap.forEach(c=>chatMsgs.push({id:c.key,...c.val()}));
       if(chatJoined)renderMsgs();
-      if(loggedIn&&monOpen){renderMon();}
-      // Badge new messages on monitor button when monitor is closed
-      if(loggedIn&&!monOpen&&newLen>prevLen){
-        monNewMsgs+=(newLen-prevLen);
-        updateMonBadge();
+      if(loggedIn&&monOpen){
+        if(monView==='inbox')renderMonInbox();
+        else renderMonThread(monSelUser);
+        monNewMsgs=0;updateMonBadge();
+      } else if(loggedIn&&!monOpen){
+        monNewMsgs++;updateMonBadge();
       }
-      updateChatAdminUI();
     });
-    fbDb.ref('syi_chat/pinned').on('value',snap=>{pinnedMsg=snap.val()||null;renderPinned();});
+
+    // Listen: pinned
+    fbDb.ref('syi_chat/pinned').on('value',snap=>{
+      pinnedMsg=snap.val()||null;renderPinned();
+    });
+
+    console.log('[SYI] Firebase ready ✅');
   }catch(e){
-    console.warn('[Chat] Firebase error:',e.message);
+    console.warn('[SYI] Firebase error:',e.message,'→ offline mode');
     setFbStatus('offline');fbDb=null;loadLocal();
   }
 }
+
 function setFbStatus(state){
   const el=document.getElementById('fbStatus');if(!el)return;
-  if(state==='live'){el.textContent='🟢 Live';el.style.background='rgba(34,197,94,.15)';el.style.color='#15803D';el.style.display='inline-flex';}
-  else if(state==='offline'){el.textContent='⚫ Offline';el.style.background='rgba(100,116,139,.15)';el.style.color='#475569';el.style.display='inline-flex';}
-  else el.style.display='none';
+  if(state==='live'){el.textContent='🟢 Live';el.style.cssText='display:inline-flex;background:rgba(34,197,94,.15);color:#15803D;padding:2px 7px;border-radius:100px;font-size:9px;font-weight:700';}
+  else{el.textContent='⚫ Offline';el.style.cssText='display:inline-flex;background:rgba(100,116,139,.15);color:#475569;padding:2px 7px;border-radius:100px;font-size:9px;font-weight:700';}
 }
+
+// ── Local fallback ──
 function loadLocal(){
   try{chatMsgs=JSON.parse(localStorage.getItem('syi_c_msgs')||'[]');}catch(e){chatMsgs=[];}
   try{pinnedMsg=JSON.parse(localStorage.getItem('syi_c_pin')||'null');}catch(e){pinnedMsg=null;}
-  tickExpire();if(chatJoined){renderMsgs();renderPinned();}if(loggedIn&&monOpen)renderMon();
+  tickExpire();
+  if(chatJoined){renderMsgs();renderPinned();}
+  if(loggedIn&&monOpen)renderMonInbox();
 }
-function saveLocal(){if(fbDb)return;localStorage.setItem('syi_c_msgs',JSON.stringify(chatMsgs));localStorage.setItem('syi_c_pin',JSON.stringify(pinnedMsg));}
+function saveLocal(){
+  if(fbDb)return;
+  localStorage.setItem('syi_c_msgs',JSON.stringify(chatMsgs));
+  localStorage.setItem('syi_c_pin',JSON.stringify(pinnedMsg));
+}
 
-// ── Expiry ──
-// Expire loop: remove expired messages only for non-admin users.
-// Admin users (loggedIn=true) should still see expired messages in the monitor.
+// ── Expiry (USER messages only — admin messages have no exp) ──
 function tickExpire(){
-  const now=Date.now();
-  const prev=chatMsgs.length;
-  // Only prune expired messages when the viewer is not an admin.
-  if(!loggedIn){
-    chatMsgs=chatMsgs.filter(m=>!m.exp || m.exp>now);
-  }
-  if(chatMsgs.length!==prev){
-    saveLocal();
-    return true;
-  }
-  return false;
+  const now=Date.now(),prev=chatMsgs.length;
+  chatMsgs=chatMsgs.filter(m=>m.isAdmin||!m.exp||m.exp>now);
+  if(chatMsgs.length!==prev)saveLocal();
 }
 
-// ── Auto-minimize = back to icon ──
+// ── Auto-close (back to icon after 5s idle) ──
 function resetAutoMin(){
   clearTimeout(autoMinTimer);
   autoMinTimer=setTimeout(()=>{if(chatOpen&&chatJoined)closeChat();},AUTO_MIN);
 }
 
-// ── FAB — toggle open/close ──
+// ── FAB + Chat panel ──
 function toggleChat(){if(!chatOpen)openChat();else closeChat();}
+
 function openChat(){
   chatOpen=true;
   const cp=document.getElementById('chatPanel'),fb=document.getElementById('chatFab');
-  if(cp){cp.classList.add('open');cp.style.height=chatH+'px';cp.style.width=chatW+'px';}
-  if(fb){fb.innerHTML='✕<span class="cb-badge" id="chatBadge"></span>';fb.style.fontSize='18px';fb.style.background='var(--nv)';}
+  if(cp){cp.classList.add('open');cp.style.width=chatW+'px';cp.style.height=chatH+'px';}
+  if(fb){fb.innerHTML='✕<span class="cb-badge" id="chatBadge"></span>';fb.style.cssText='font-size:18px;background:var(--nv)';}
   unread=0;updateBadge();
-  // If already joined — go straight to messages, no name screen
   if(chatJoined){
+    // Already joined — show messages immediately
     const ne=document.getElementById('cpNE'),cm=document.getElementById('cpMsgs'),cr=document.getElementById('cpIR');
     if(ne)ne.style.display='none';if(cm)cm.style.display='flex';if(cr)cr.style.display='flex';
     renderMsgs();scrollBot('cpMsgs');
@@ -886,16 +889,21 @@ function openChat(){
   }
   resetAutoMin();
 }
+
 function closeChat(){
   chatOpen=false;clearTimeout(autoMinTimer);
   const cp=document.getElementById('chatPanel'),fb=document.getElementById('chatFab');
   if(cp)cp.classList.remove('open');
-  if(fb){fb.innerHTML='💬<span class="cb-badge" id="chatBadge"></span>';fb.style.fontSize='22px';fb.style.background='var(--sf)';}
+  if(fb){fb.innerHTML='💬<span class="cb-badge" id="chatBadge"></span>';fb.style.cssText='font-size:22px;background:var(--sf)';}
   updateBadge();closeCtxMenu();
 }
 
-// ── Join ──
-function joinChat(){const ni=document.getElementById('cpNameInp');const v=(ni?ni.value:'').trim();if(!v){if(ni)ni.focus();return;}chatUser=v.substring(0,24);localStorage.setItem('syi_chat_name',chatUser);autoJoin();}
+// ── Join chat ──
+function joinChat(){
+  const ni=document.getElementById('cpNameInp');
+  const v=(ni?ni.value:'').trim();if(!v){ni?.focus();return;}
+  chatUser=v.substring(0,24);localStorage.setItem('syi_chat_name',chatUser);autoJoin();
+}
 function autoJoin(){
   if(chatJoined)return;chatJoined=true;
   const ne=document.getElementById('cpNE'),cm=document.getElementById('cpMsgs'),cr=document.getElementById('cpIR');
@@ -904,48 +912,57 @@ function autoJoin(){
   pushSys(chatUser+' joined 👋');resetAutoMin();
 }
 
-// ── Send ──
+// ── Send user message (expires after MSG_TTL) ──
 function sendMsg(){
-  const inp=document.getElementById('cpInp');const txt=(inp?inp.value:'').trim();if(!txt||!chatJoined)return;
-  const msg={id:'m'+Date.now()+'_'+Math.random().toString(36).slice(2,5),name:chatUser,text:txt,ts:Date.now(),exp:Date.now()+MSG_TTL,isAdmin:!!loggedIn};
+  const inp=document.getElementById('cpInp');
+  const txt=(inp?inp.value:'').trim();if(!txt||!chatJoined)return;
+  const msg={id:'m'+Date.now()+'_'+Math.random().toString(36).slice(2,5),name:chatUser,text:txt,ts:Date.now(),exp:Date.now()+MSG_TTL,isAdmin:false};
   if(fbDb){
-    // Persist the message to the realtime database. Do NOT auto-remove it;
-    // client-side expiry will hide it for regular users while admins retain history.
     fbDb.ref('syi_chat/messages/'+msg.id).set(msg);
-  } else {
-    chatMsgs.push(msg);
-    saveLocal();
-    renderMsgs();
-    scrollBot('cpMsgs');
-    if(loggedIn && monOpen) renderMon();
-  }
+    // Auto-remove from Firebase after TTL
+    setTimeout(()=>{try{fbDb.ref('syi_chat/messages/'+msg.id).remove();}catch(e){}},MSG_TTL+800);
+  }else{chatMsgs.push(msg);saveLocal();renderMsgs();scrollBot('cpMsgs');}
   if(inp){inp.value='';inp.style.height='';}resetAutoMin();
 }
-function pushSys(txt){
-  const m={id:'s'+Date.now(),system:true,text:txt,ts:Date.now(),exp:Date.now()+10000};
-  if(fbDb){
-    // Write system message to the database without scheduling removal so admins retain a record.
-    fbDb.ref('syi_chat/messages/'+m.id).set(m);
-  } else {
-    chatMsgs.push(m);
-    saveLocal();
-    if(chatJoined) renderMsgs();
-  }
+
+// ── Send admin reply (NO expiry — admin messages stay) ──
+function sendAdminMsg(){
+  const inp=document.getElementById('amInp');
+  const txt=(inp?inp.value:'').trim();if(!txt)return;
+  const msg={
+    id:'ma'+Date.now()+'_'+Math.random().toString(36).slice(2,4),
+    name:adminChatName,text:txt,ts:Date.now(),
+    exp:null,        // ← NEVER expires
+    isAdmin:true,
+    replyTo:monSelUser||''
+  };
+  if(fbDb){fbDb.ref('syi_chat/messages/'+msg.id).set(msg);}
+  else{chatMsgs.push(msg);saveLocal();renderMsgs();renderMonThread(monSelUser);}
+  if(inp){inp.value='';inp.style.height='';}
+  scrollBot('amThreadMsgs');
 }
 
-// ── Render ──
+// ── System message ──
+function pushSys(txt){
+  const m={id:'s'+Date.now(),system:true,text:txt,ts:Date.now(),exp:Date.now()+10000};
+  if(fbDb){fbDb.ref('syi_chat/messages/'+m.id).set(m);setTimeout(()=>{try{fbDb.ref('syi_chat/messages/'+m.id).remove();}catch(e){}},10500);}
+  else{chatMsgs.push(m);saveLocal();if(chatJoined)renderMsgs();}
+}
+
+// ── Render USER chat (messages expire for user) ──
 function renderMsgs(){
   const box=document.getElementById('cpMsgs');if(!box)return;
   const atBot=box.scrollHeight-box.scrollTop-box.clientHeight<60;
-  const now=Date.now(),vis=chatMsgs.filter(m=>!m.exp||m.exp>now);
+  const now=Date.now();
+  // User sees: non-admin messages that haven't expired + admin messages (no expiry)
+  const vis=chatMsgs.filter(m=>!m.system&&(!m.exp||m.exp>now));
   let html='',lastDay='';
   vis.forEach(m=>{
-    if(m.system){html+=`<div class="cp-sys"><span>${esc(m.text)}</span></div>`;return;}
     const day=new Date(m.ts).toLocaleDateString('en-IN',{day:'numeric',month:'short'});
     if(day!==lastDay){html+=`<div class="cp-msg-sep"><span>${day}</span></div>`;lastDay=day;}
     const own=m.name===chatUser,adm=m.isAdmin;
     const time=new Date(m.ts).toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit'});
-    const rem=m.exp?Math.max(0,Math.ceil((m.exp-now)/1000)):null;
+    const rem=(!adm&&m.exp)?Math.max(0,Math.ceil((m.exp-now)/1000)):null;
     const avBg=adm?'':` style="background:${avc(m.name)}"`;
     html+=`<div class="cp-row ${own?'own':''} ${adm?'adm-m':''}" data-id="${m.id}">
       <div class="cp-av"${avBg}>${avi(m.name)}</div>
@@ -961,130 +978,229 @@ function renderMsgs(){
       </div>
     </div>`;
   });
-  if(!html)html=`<div style="flex:1;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:6px;color:var(--mu);font-size:12px;padding:20px;text-align:center"><div style="font-size:28px">💬</div><div>No messages yet — say hi!</div><div style="font-size:10px;background:#F1F5F9;padding:2px 9px;border-radius:20px">⏱ Messages disappear in ${MSG_TTL/1000}s</div></div>`;
+  if(!html)html=`<div style="flex:1;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:6px;color:var(--mu);font-size:12px;padding:20px;text-align:center"><div style="font-size:28px">💬</div><div>No messages yet — say hi!</div><div style="font-size:10px;background:#F1F5F9;padding:2px 9px;border-radius:20px">⏱ Your messages disappear in ${MSG_TTL/1000}s</div></div>`;
   box.innerHTML=html;
-  // Wire delete buttons
-  box.querySelectorAll('.cp-dlb').forEach(btn=>{btn.addEventListener('click',()=>delMsg(btn.dataset.mid));});
-  // Wire right-click on rows
+  box.querySelectorAll('.cp-dlb[data-mid]').forEach(b=>{b.addEventListener('click',e=>{e.stopPropagation();delMsg(b.dataset.mid);});});
   box.querySelectorAll('.cp-row[data-id]').forEach(row=>{row.addEventListener('contextmenu',e=>{e.preventDefault();showCtxMenu(e,row.dataset.id);});});
   if(atBot)scrollBot('cpMsgs');
   if(!chatOpen){unread++;updateBadge();}
 }
 
-function renderPinned(){const el=document.getElementById('cpPin'),tx=document.getElementById('cpPinTxt');if(!el||!tx)return;if(pinnedMsg?.text){tx.textContent=pinnedMsg.text;el.style.display='block';}else el.style.display='none';}
+function renderPinned(){
+  const el=document.getElementById('cpPin'),tx=document.getElementById('cpPinTxt');
+  if(!el||!tx)return;
+  if(pinnedMsg?.text){tx.textContent=pinnedMsg.text;el.style.display='block';}
+  else el.style.display='none';
+}
 
-function renderMon(){
-  const box=document.getElementById('amMsgs');if(!box)return;
-  const now=Date.now();const all=[...chatMsgs].filter(m=>!m.system).reverse();
-  let html='';
-  all.forEach(m=>{
-    const expired=m.exp&&m.exp<=now;
-    const time=new Date(m.ts).toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit',second:'2-digit'});
-    const avBg=m.isAdmin?'':` style="background:${avc(m.name)}"`;
-    html+=`<div class="cp-row ${m.isAdmin?'adm-m':''}" style="opacity:${expired?.35:1}">
+// ── ADMIN MONITOR — Inbox (Telegram chat list) ──
+function renderMonInbox(){
+  const box=document.getElementById('amInbox');if(!box)return;
+  // Group messages by non-admin sender
+  const userMap={};
+  chatMsgs.filter(m=>!m.system&&!m.isAdmin).forEach(m=>{
+    if(!userMap[m.name])userMap[m.name]={msgs:[],last:null};
+    userMap[m.name].msgs.push(m);
+    if(!userMap[m.name].last||m.ts>userMap[m.name].last.ts)userMap[m.name].last=m;
+  });
+  const users=Object.keys(userMap).sort((a,b)=>userMap[b].last.ts-userMap[a].last.ts);
+  if(!users.length){
+    box.innerHTML='<div class="mon-empty"><div style="font-size:32px">📭</div><div>No user messages yet</div><div style="font-size:10px;color:var(--mu)">Messages from users will appear here</div></div>';
+    return;
+  }
+  const now=Date.now();
+  box.innerHTML=users.map(u=>{
+    const d=userMap[u];
+    const time=timeAgo(d.last.ts);
+    const expired=d.last.exp&&d.last.exp<=now;
+    const preview=(expired?'[expired] ':'')+d.last.text.substring(0,40)+(d.last.text.length>40?'…':'');
+    return`<div class="mon-item" data-user="${esc(u)}">
+      <div class="mon-av" style="background:${avc(u)}">${avi(u)}</div>
+      <div class="mon-inf">
+        <div class="mon-nm">${esc(u)}</div>
+        <div class="mon-prev">${esc(preview)}</div>
+      </div>
+      <div class="mon-rt">
+        <div class="mon-time">${time}</div>
+        <div class="mon-cnt">${d.msgs.length}</div>
+      </div>
+      <button class="mon-del-btn" data-user="${esc(u)}" title="Delete all messages from ${esc(u)}">🗑</button>
+    </div>`;
+  }).join('');
+  box.querySelectorAll('.mon-item').forEach(item=>{
+    item.addEventListener('click',e=>{
+      if(e.target.classList.contains('mon-del-btn')){deleteUserConvo(e.target.dataset.user);return;}
+      openThread(item.dataset.user);
+    });
+  });
+  box.querySelectorAll('.mon-del-btn').forEach(btn=>{
+    btn.addEventListener('click',e=>{e.stopPropagation();deleteUserConvo(btn.dataset.user);});
+  });
+  const sub=document.getElementById('amSub');if(sub)sub.textContent=users.length+' conversation'+(users.length!==1?'s':'');
+}
+
+// ── Time-ago helper ──
+function timeAgo(ts){
+  const s=Math.floor((Date.now()-ts)/1000);
+  if(s<60)return 'just now';if(s<3600)return Math.floor(s/60)+'m';
+  if(s<86400)return Math.floor(s/3600)+'h';return Math.floor(s/86400)+'d';
+}
+
+// ── Open thread with a specific user ──
+function openThread(username){
+  monSelUser=username;monView='thread';
+  const inbox=document.getElementById('amInbox'),thread=document.getElementById('amThread');
+  if(inbox)inbox.style.display='none';
+  if(thread){thread.style.display='flex';}
+  const av=document.getElementById('amThAv'),nm=document.getElementById('amThNm');
+  if(av){av.textContent=avi(username);av.style.background=avc(username);}
+  if(nm)nm.textContent=username;
+  renderMonThread(username);
+  setTimeout(()=>scrollBot('amThreadMsgs'),50);
+  const sub=document.getElementById('amSub');if(sub)sub.textContent='← tap back to inbox';
+}
+
+// ── Render thread for one user ──
+function renderMonThread(username){
+  const box=document.getElementById('amThreadMsgs');if(!box)return;
+  const atBot=box.scrollHeight-box.scrollTop-box.clientHeight<60;
+  // Admin sees ALL messages in this thread (user msgs + admin replies for this user) — NO expiry filter
+  const thread=chatMsgs.filter(m=>!m.system&&(
+    (m.name===username&&!m.isAdmin)||
+    (m.isAdmin&&(m.replyTo===username||m.replyTo===''))
+  )).sort((a,b)=>a.ts-b.ts);
+  const now=Date.now();
+  let html='',lastDay='';
+  thread.forEach(m=>{
+    const day=new Date(m.ts).toLocaleDateString('en-IN',{day:'numeric',month:'short'});
+    if(day!==lastDay){html+=`<div class="cp-msg-sep"><span>${day}</span></div>`;lastDay=day;}
+    const own=m.isAdmin;
+    const time=new Date(m.ts).toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit'});
+    const expired=!m.isAdmin&&m.exp&&m.exp<=now;
+    const avBg=own?'':` style="background:${avc(m.name)}"`;
+    html+=`<div class="cp-row ${own?'own':''} ${own?'adm-m':''}" style="${expired?'opacity:.38':''}">
       <div class="cp-av"${avBg}>${avi(m.name)}</div>
       <div class="cp-bw">
         <div class="cp-met">
           <span class="cp-un">${esc(m.name)}</span>
-          ${m.isAdmin?'<span class="cp-ab">Admin</span>':''}
+          ${own?'<span class="cp-ab">Admin</span>':''}
           <span class="cp-tm">${time}</span>
-          ${expired?'<span style="font-size:9px;color:#EF4444;font-weight:800">EXPIRED</span>':''}
+          ${expired?'<span style="font-size:9px;color:#EF4444;font-weight:700">expired</span>':''}
+          <button class="cp-dlb vis" data-mid="${m.id}">✕</button>
         </div>
-        <div class="cp-bub" style="font-size:11.5px">${esc(m.text)}</div>
+        <div class="cp-bub" style="font-size:12px">${esc(m.text)}</div>
       </div>
     </div>`;
   });
-  if(!html)html='<div style="padding:20px;text-align:center;color:var(--mu);font-size:12px">📭 No messages yet</div>';
+  if(!html)html=`<div style="flex:1;display:flex;align-items:center;justify-content:center;color:var(--mu);font-size:12px">No messages yet with ${esc(username)}</div>`;
   box.innerHTML=html;
+  box.querySelectorAll('.cp-dlb[data-mid]').forEach(b=>{b.addEventListener('click',e=>{e.stopPropagation();delMsg(b.dataset.mid);});});
+  if(atBot)scrollBot('amThreadMsgs');
+}
+
+// ── Back to inbox ──
+function closeThread(){
+  monView='inbox';monSelUser='';
+  const inbox=document.getElementById('amInbox'),thread=document.getElementById('amThread');
+  if(inbox)inbox.style.display='flex';
+  if(thread)thread.style.display='none';
+  renderMonInbox();
+}
+
+// ── Delete all messages from a user ──
+function deleteUserConvo(username){
+  if(!confirm(`Delete ALL messages from "${username}"? This cannot be undone.`))return;
+  const toDelete=chatMsgs.filter(m=>m.name===username&&!m.isAdmin).map(m=>m.id);
+  if(fbDb){toDelete.forEach(id=>fbDb.ref('syi_chat/messages/'+id).remove());}
+  else{chatMsgs=chatMsgs.filter(m=>!(m.name===username&&!m.isAdmin));saveLocal();renderMsgs();}
+  if(monView==='thread'&&monSelUser===username)closeThread();
+  else renderMonInbox();
+  toast('🗑 Deleted all messages from "'+username+'"');
 }
 
 function scrollBot(id){const b=document.getElementById(id);if(b)b.scrollTop=b.scrollHeight;}
-function updateBadge(){const b=document.getElementById('chatBadge');if(!b)return;if(unread>0&&!chatOpen){b.textContent=unread>9?'9+':unread;b.classList.add('vis');}else{b.classList.remove('vis');if(!chatOpen)unread=0;}}
-
-// ── Admin monitor ──
-let monNewMsgs=0,adminChatName='Admin';
+function updateBadge(){
+  const b=document.getElementById('chatBadge');if(!b)return;
+  if(unread>0&&!chatOpen){b.textContent=unread>9?'9+':unread;b.classList.add('vis');}
+  else{b.classList.remove('vis');if(!chatOpen)unread=0;}
+}
 function updateMonBadge(){
   const b=document.getElementById('monBadge');if(!b)return;
   if(monNewMsgs>0&&!monOpen){b.textContent=monNewMsgs>9?'9+':monNewMsgs;b.style.display='inline';}
   else b.style.display='none';
+}
+
+// ── Admin UI controls ──
+function updateChatAdminUI(){
+  const clr=document.getElementById('cpClrBtn'),onb=document.getElementById('cpOnb');
+  if(loggedIn){
+    if(clr)clr.style.display='inline-flex';
+    if(onb){onb.style.display='flex';const u=new Set(chatMsgs.filter(m=>!m.system).map(m=>m.name));onb.textContent=u.size+' users';}
+    if(!monOpen)openMon();else{renderMonInbox();}
+  }else{
+    if(clr)clr.style.display='none';if(onb)onb.style.display='none';closeMon();
+  }
 }
 function toggleMonitor(){if(monOpen&&!monMin)closeMon();else openMon();}
 function openMon(){
   const am=document.getElementById('adminMon'),ab=document.getElementById('amBody'),mb=document.getElementById('amMinBtn');
   if(!am)return;
   am.classList.add('open');monOpen=true;monMin=false;
-  am.style.height=MON_H+'px';
-  if(ab){ab.style.display='flex';}
-  if(mb)mb.textContent='⊟';
-  const ne=document.getElementById('amNameEdit');if(ne)ne.style.display='none';
-  renderMon();scrollBot('amMsgs');
+  if(ab){ab.style.display='flex';}if(mb)mb.textContent='⊟';
+  am.style.height=MON_H+'px';am.style.width=MON_W+'px';
+  // Reset to inbox view
+  monView='inbox';monSelUser='';
+  const inbox=document.getElementById('amInbox'),thread=document.getElementById('amThread');
+  if(inbox)inbox.style.display='flex';if(thread)thread.style.display='none';
+  renderMonInbox();
   monNewMsgs=0;updateMonBadge();
   const btn=document.getElementById('monToggleBtn');if(btn)btn.style.fontWeight='800';
+  const sub=document.getElementById('amSub');if(sub)sub.textContent='Tap user to open chat';
 }
 function minimizeMon(){
   monMin=true;
   const am=document.getElementById('adminMon'),ab=document.getElementById('amBody'),mb=document.getElementById('amMinBtn');
-  if(am)am.style.height='50px';
-  if(ab)ab.style.display='none';
-  if(mb)mb.textContent='⊞';
+  if(am)am.style.height='50px';if(ab)ab.style.display='none';if(mb)mb.textContent='⊞';
 }
-// Clicking the minimized header strip expands it back
 function toggleMonExpand(e){
   if(e.target.tagName==='BUTTON')return;
   if(monMin)openMon();
 }
 function closeMon(){
-  monOpen=false;monMin=false;
+  monOpen=false;monMin=false;monView='inbox';monSelUser='';
   const am=document.getElementById('adminMon');if(am)am.classList.remove('open');
   const btn=document.getElementById('monToggleBtn');if(btn)btn.style.fontWeight='';
 }
-// Admin sends message from monitor panel
-function sendAdminMsg(){
-  const inp=document.getElementById('amInp');const txt=(inp?inp.value:'').trim();if(!txt)return;
-  const msg={id:'m'+Date.now()+'_adm',name:adminChatName,text:txt,ts:Date.now(),exp:Date.now()+MSG_TTL,isAdmin:true};
-  if(fbDb){
-    // Persist the admin message to the realtime database. Do NOT auto-remove it; admins retain history.
-    fbDb.ref('syi_chat/messages/'+msg.id).set(msg);
-  } else {
-    chatMsgs.push(msg);
-    saveLocal();
-    renderMsgs();
-    renderMon();
-  }
-  if(inp){inp.value='';inp.style.height='';}
+
+// ── Admin actions ──
+function adminClearAll(){
+  if(!loggedIn||!confirm('Clear ALL chat messages?'))return;
+  if(fbDb)fbDb.ref('syi_chat/messages').remove();
+  else{chatMsgs=[];saveLocal();renderMsgs();renderMonInbox();}
+  toast('🗑 Chat cleared.');
 }
-// Edit admin chat name
+function delMsg(id){
+  if(!loggedIn)return;
+  if(fbDb)fbDb.ref('syi_chat/messages/'+id).remove();
+  else{chatMsgs=chatMsgs.filter(m=>m.id!==id);saveLocal();renderMsgs();if(monOpen){if(monView==='inbox')renderMonInbox();else renderMonThread(monSelUser);}}
+  toast('🗑 Deleted.');
+}
 function toggleNameEdit(){
   const ne=document.getElementById('amNameEdit');if(!ne)return;
-  const open=ne.style.display!=='none'&&ne.style.display!=='';
-  ne.style.display=open?'none':'block';
-  if(!open){const ni=document.getElementById('amNameInp');if(ni){ni.value=adminChatName;ni.focus();}}
+  const show=ne.style.display==='none'||ne.style.display==='';
+  ne.style.display=show?'block':'none';
+  if(show){const ni=document.getElementById('amNameInp');if(ni){ni.value=adminChatName;ni.focus();}}
 }
 function saveAdminName(){
   const ni=document.getElementById('amNameInp');const v=(ni?ni.value:'').trim();
   if(v){adminChatName=v;localStorage.setItem('syi_admin_name',v);}
   const ne=document.getElementById('amNameEdit');if(ne)ne.style.display='none';
-  const sub=document.getElementById('amSub');if(sub)sub.textContent='Chatting as: '+adminChatName;
-  toast('✅ Name updated to "'+adminChatName+'"');
+  toast('✅ Display name updated to "'+adminChatName+'"');
 }
-function updateChatAdminUI(){
-  const clr=document.getElementById('cpClrBtn'),onb=document.getElementById('cpOnb');
-  if(loggedIn){
-    if(clr)clr.style.display='inline-flex';
-    if(onb){onb.style.display='flex';const u=new Set(chatMsgs.filter(m=>!m.system).map(m=>m.name));onb.textContent=u.size+' users';}
-    if(!monOpen)openMon();
-    else{renderMon();}
-  }else{
-    if(clr)clr.style.display='none';if(onb)onb.style.display='none';
-    closeMon();
-  }
-}
-function adminClearAll(){if(!loggedIn)return;if(!confirm('Clear ALL chat messages?'))return;if(fbDb)fbDb.ref('syi_chat/messages').remove();else{chatMsgs=[];saveLocal();renderMsgs();if(monOpen)renderMon();}toast('🗑️ Chat cleared.');}
-function delMsg(id){if(!loggedIn)return;if(fbDb)fbDb.ref('syi_chat/messages/'+id).remove();else{chatMsgs=chatMsgs.filter(m=>m.id!==id);saveLocal();renderMsgs();if(monOpen)renderMon();}toast('🗑️ Deleted.');}
 
 // ── Context menu ──
 function showCtxMenu(e,id){if(!loggedIn)return;ctxMsgId=id;const ctx=document.getElementById('ctxMenu');if(!ctx)return;ctx.style.left=Math.min(e.clientX,window.innerWidth-165)+'px';ctx.style.top=Math.min(e.clientY,window.innerHeight-105)+'px';ctx.classList.add('open');}
-function closeCtxMenu(){const ctx=document.getElementById('ctxMenu');if(ctx)ctx.classList.remove('open');ctxMsgId=null;}
+function closeCtxMenu(){document.getElementById('ctxMenu')?.classList.remove('open');ctxMsgId=null;}
 function ctxDelete(){if(ctxMsgId)delMsg(ctxMsgId);closeCtxMenu();}
 function ctxPin(){if(!ctxMsgId||!loggedIn)return;const m=chatMsgs.find(x=>x.id===ctxMsgId);if(!m)return;pinnedMsg={text:m.text,by:m.name};if(fbDb)fbDb.ref('syi_chat/pinned').set(pinnedMsg);else{saveLocal();renderPinned();}toast('📌 Pinned.');closeCtxMenu();}
 function ctxUnpin(){if(!loggedIn)return;pinnedMsg=null;if(fbDb)fbDb.ref('syi_chat/pinned').remove();else{saveLocal();renderPinned();}toast('Unpinned.');closeCtxMenu();}
@@ -1102,33 +1218,92 @@ function makeDraggable(panelId,hdrId,leftAnchored){
   document.addEventListener('mousemove',move);document.addEventListener('touchmove',move,{passive:true});
   document.addEventListener('mouseup',end);document.addEventListener('touchend',end);
 }
-// ── Resize ──
-function makeResizable(panelId,rzId,trackChatH){
+function makeResizable(panelId,rzId,trackH){
   const panel=document.getElementById(panelId),rz=document.getElementById(rzId);if(!panel||!rz)return;
   let rsz=false,rx0=0,ry0=0,rw0=0,rh0=0;
   rz.addEventListener('mousedown',e=>{rsz=true;e.stopPropagation();e.preventDefault();rx0=e.clientX;ry0=e.clientY;rw0=panel.offsetWidth;rh0=panel.offsetHeight;document.body.style.userSelect='none';});
-  document.addEventListener('mousemove',e=>{if(!rsz)return;const nw=Math.max(240,Math.min(700,rw0+(e.clientX-rx0))),nh=Math.max(200,Math.min(760,rh0+(e.clientY-ry0)));panel.style.width=nw+'px';const isMin=panelId==='chatPanel'?chatMin:monMin;if(!isMin){panel.style.height=nh+'px';if(trackChatH)chatH=nh;}});
+  document.addEventListener('mousemove',e=>{if(!rsz)return;const nw=Math.max(260,Math.min(700,rw0+(e.clientX-rx0))),nh=Math.max(300,Math.min(800,rh0+(e.clientY-ry0)));panel.style.width=nw+'px';const isMin=panelId==='chatPanel'?false:monMin;if(!isMin){panel.style.height=nh+'px';if(trackH)chatH=nh;}});
   document.addEventListener('mouseup',()=>{rsz=false;document.body.style.userSelect='';});
 }
 
+// ── Expire ticker (inside initChat, not global) ──
+let expireInterval=null;
+
+// ── Init ──
+function initChat(){
+  chatUser=localStorage.getItem('syi_chat_name')||'';
+  adminChatName=localStorage.getItem('syi_admin_name')||'Admin';
+  // Size panels
+  const cp=document.getElementById('chatPanel'),am=document.getElementById('adminMon');
+  if(cp){cp.style.width=chatW+'px';cp.style.height=chatH+'px';}
+  if(am){am.style.width=MON_W+'px';am.style.height=MON_H+'px';}
+  // Drag + resize
+  makeDraggable('chatPanel','cpDragHdr',false);
+  makeDraggable('adminMon','amDragHdr',true);
+  makeResizable('chatPanel','cpRz',true);
+  makeResizable('adminMon','amRz',false);
+  // Button wiring — user chat
+  document.getElementById('chatFab').addEventListener('click',toggleChat);
+  document.getElementById('cpClrBtn').addEventListener('click',adminClearAll);
+  document.getElementById('cpCloseBtn').addEventListener('click',closeChat);
+  document.getElementById('cpJoinBtn').addEventListener('click',joinChat);
+  document.getElementById('cpSendBtn').addEventListener('click',sendMsg);
+  document.getElementById('cpNameInp').addEventListener('keydown',e=>{if(e.key==='Enter')joinChat();});
+  document.getElementById('cpInp').addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();sendMsg();}});
+  document.getElementById('cpInp').addEventListener('input',e=>{autoResizeTa(e.target);resetAutoMin();});
+  // Button wiring — admin monitor
+  document.getElementById('amMinBtn').addEventListener('click',e=>{e.stopPropagation();minimizeMon();});
+  document.getElementById('amCloseBtn').addEventListener('click',e=>{e.stopPropagation();closeMon();});
+  document.getElementById('amEditBtn').addEventListener('click',e=>{e.stopPropagation();toggleNameEdit();});
+  document.getElementById('amNameSaveBtn').addEventListener('click',saveAdminName);
+  document.getElementById('amSendBtn').addEventListener('click',sendAdminMsg);
+  document.getElementById('amBackBtn').addEventListener('click',closeThread);
+  document.getElementById('amDelUsrBtn').addEventListener('click',()=>deleteUserConvo(monSelUser));
+  document.getElementById('amInp').addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();sendAdminMsg();}});
+  document.getElementById('amInp').addEventListener('input',e=>autoResizeTa(e.target));
+  document.getElementById('amDragHdr').addEventListener('click',toggleMonExpand);
+  document.getElementById('amNameInp').addEventListener('keydown',e=>{if(e.key==='Enter')saveAdminName();});
+  // Context menu
+  document.getElementById('ctxPin').addEventListener('click',ctxPin);
+  document.getElementById('ctxUnpin').addEventListener('click',ctxUnpin);
+  document.getElementById('ctxDel').addEventListener('click',ctxDelete);
+  document.addEventListener('click',e=>{if(!document.getElementById('ctxMenu')?.contains(e.target))closeCtxMenu();});
+  // Start expire ticker
+  if(expireInterval)clearInterval(expireInterval);
+  expireInterval=setInterval(()=>{
+    tickExpire();
+    if(chatJoined)renderMsgs();
+    if(loggedIn&&monOpen&&monView==='thread')renderMonThread(monSelUser);
+  },1000);
+  // Connect Firebase (SDK loaded in <head>)
+  connectFb();
+}
+
 // ═══════════════════════════════════════════════════════════════
-// STARTUP — single DOMContentLoaded
+// STARTUP — Single DOMContentLoaded, initialises everything
 // ═══════════════════════════════════════════════════════════════
 document.addEventListener('DOMContentLoaded',()=>{
-  loadSchemes();checkSession();renderStateGrid();updateStats();populateAdmStateFilter();populateModalStates();
-  // Modal close
+  // Schemes
+  loadSchemes();
+  checkSession();
+  renderStateGrid();
+  updateStats();
+  populateAdmStateFilter();
+  populateModalStates();
+  // Scheme modal close
   const sm=document.getElementById('schModal');
-  if(sm){sm.addEventListener('click',e=>{if(e.target===sm)closeModal();});}
-  const mc=document.getElementById('mCls');if(mc)mc.addEventListener('click',closeModal);
-  // Admin login on Enter
-  const lp=document.getElementById('loginP');if(lp)lp.addEventListener('keydown',e=>{if(e.key==='Enter')doLogin();});
-  // Close context menu on outside click
-  document.addEventListener('click',e=>{const ctx=document.getElementById('ctxMenu');if(ctx&&!ctx.contains(e.target))closeCtxMenu();});
-  // Init chat
+  if(sm)sm.addEventListener('click',e=>{if(e.target===sm)closeModal();});
+  const mc=document.getElementById('mCls');
+  if(mc)mc.addEventListener('click',closeModal);
+  // Admin login on Enter key
+  const lp=document.getElementById('loginP');
+  if(lp)lp.addEventListener('keydown',e=>{if(e.key==='Enter')doLogin();});
+  // Chat
   initChat();
-  // If was logged in, show admin
+  // Restore admin session
   if(loggedIn)updateChatAdminUI();
 });
+
 </script>
 </body>
 </html>
