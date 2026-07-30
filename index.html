@@ -470,6 +470,38 @@ footer button:hover{color:rgba(255,255,255,.7)}
         <button class="btn-lo" onclick="doLogout()">Logout</button>
       </div>
     </div>
+    <!-- ── Firebase Rules Setup Guide (shown when PERMISSION_DENIED) ── -->
+    <div id="fbRulesHint" style="display:none;background:#FEF2F2;border:1.5px solid #FECACA;border-radius:12px;padding:18px 20px;margin-bottom:18px">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px">
+        <span style="font-size:22px">🔴</span>
+        <div>
+          <div style="font-weight:800;color:#991B1B;font-size:14px">Firebase Rules Blocking Chat</div>
+          <div style="font-size:12px;color:#B91C1C;margin-top:1px">Messages from users cannot be read/written — cross-device chat is broken</div>
+        </div>
+      </div>
+      <div style="font-size:12px;color:#7F1D1D;margin-bottom:10px;line-height:1.6">
+        <strong>Fix in 30 seconds:</strong><br>
+        1. Go to <a href="https://console.firebase.google.com/project/niha-994b8/database" target="_blank" style="color:#2563EB;font-weight:700">Firebase Console → Realtime Database → Rules</a><br>
+        2. Replace the rules with:
+      </div>
+      <div style="background:#1E1E1E;color:#4EC9B0;font-family:monospace;font-size:12px;padding:12px 14px;border-radius:8px;margin-bottom:10px;white-space:pre;overflow-x:auto">{
+  "rules": {
+    "syi_chat": {
+      ".read": true,
+      ".write": true
+    }
+  }
+}</div>
+      <button onclick="testFbConnection()" style="background:#DC2626;color:#fff;border:none;padding:8px 16px;border-radius:7px;font-size:12px;font-weight:700;cursor:pointer;font-family:'Noto Sans',sans-serif">🔄 Re-test Connection</button>
+    </div>
+
+    <!-- ── Live connection status bar ── -->
+    <div id="fbStatusBar" style="display:flex;align-items:center;gap:8px;background:#F8FAFC;border:1.5px solid var(--bd);border-radius:10px;padding:10px 14px;margin-bottom:16px;font-size:12px;color:var(--mu)">
+      <span id="fbStatusDot" style="width:8px;height:8px;border-radius:50%;background:#94A3B8;flex-shrink:0"></span>
+      <span id="fbStatusText">Connecting to Firebase…</span>
+      <button onclick="testFbConnection()" style="margin-left:auto;background:none;border:1px solid var(--bd);color:var(--mu);padding:3px 10px;border-radius:5px;font-size:11px;font-weight:600;cursor:pointer;font-family:'Noto Sans',sans-serif">Test</button>
+    </div>
+
     <div class="adm-stats" id="admStats"></div>
 
     <!-- ── VIEW A: States Grid (default) ── -->
@@ -1279,28 +1311,33 @@ function connectFb(){
     });
 
     // Listen: messages
-    fbDb.ref('syi_chat/messages').limitToLast(300).on('value',snap=>{
-      // Merge Firebase data with any locally-added (optimistic) messages
+    fbDb.ref('syi_chat/messages').orderByChild('ts').limitToLast(300).on('value',snap=>{
       const fromFb=[];
-      snap.forEach(c=>fromFb.push({id:c.key,...c.val()}));
+      snap.forEach(c=>{const v=c.val();if(v)fromFb.push({id:c.key,...v});});
       const fbIds=new Set(fromFb.map(m=>m.id));
-      // Keep optimistic local messages not yet in Firebase
       const localPending=chatMsgs.filter(m=>!fbIds.has(m.id)&&m._local);
       chatMsgs=[...fromFb,...localPending].sort((a,b)=>(a.ts||0)-(b.ts||0));
 
       if(chatJoined) renderMsgs();
-      if(loggedIn&&monOpen){
-        monView==='inbox' ? renderMonInbox() : renderMonThread(monSelUser);
-        monNewMsgs=0; updateMonBadge();
-      } else if(loggedIn&&!monOpen){
-        monNewMsgs++; updateMonBadge();
+      if(loggedIn){
+        if(monOpen){
+          monView==='inbox' ? renderMonInbox() : renderMonThread(monSelUser);
+          monNewMsgs=0; updateMonBadge();
+        } else {
+          monNewMsgs++; updateMonBadge();
+        }
+        updateChatAdminUI();
       }
     },(err)=>{
-      console.warn('[SYI] Firebase read error:',err.message);
-      setFbStatus('denied');
-      fbDb=null;
-      // Don't overwrite chatMsgs — keep any messages already there
-      renderPinned();
+      console.warn('[SYI] Firebase read error:',err.code, err.message);
+      // PERMISSION_DENIED = rules blocking access
+      if(err.code==='PERMISSION_DENIED'){
+        setFbStatus('denied');
+        showFbRulesHint();
+      } else {
+        setFbStatus('offline');
+      }
+      // DO NOT null fbDb here — Firebase auto-retries when rules are fixed or connection restores
       if(chatJoined) renderMsgs();
     });
 
@@ -1316,23 +1353,48 @@ function connectFb(){
 }
 
 function setFbStatus(state){
-  const el=document.getElementById('fbStatus');if(!el)return;
+  const el=document.getElementById('fbStatus');
+  const dot=document.getElementById('fbStatusDot');
+  const txt=document.getElementById('fbStatusText');
   const map={
-    live:   ['🟢 Live',   'rgba(34,197,94,.15)',  '#15803D'],
-    offline:['⚫ Offline', 'rgba(100,116,139,.15)','#475569'],
-    denied: ['🔴 Rules!', 'rgba(239,68,68,.15)',  '#c53030'],
+    live:   {badge:'🟢 Live',   bg:'rgba(34,197,94,.15)',  col:'#15803D', dotCol:'#22C55E', msg:'Firebase connected — cross-device chat is live'},
+    offline:{badge:'⚫ Offline', bg:'rgba(100,116,139,.15)','col':'#475569', dotCol:'#94A3B8', msg:'Firebase offline — using local storage only'},
+    denied: {badge:'🔴 Rules!', bg:'rgba(239,68,68,.15)',  col:'#c53030', dotCol:'#EF4444', msg:'Firebase rules blocking access — see setup guide below'},
   };
-  const [txt,bg,col]=map[state]||map.offline;
-  el.textContent=txt;
-  el.style.cssText=`display:inline-flex;background:${bg};color:${col};padding:2px 7px;border-radius:100px;font-size:9px;font-weight:700`;
-  // Show rules hint in admin if denied
-  if(state==='denied'){
-    const hint=document.getElementById('fbRulesHint');
-    if(hint)hint.style.display='block';
-  }
+  const s=map[state]||map.offline;
+  if(el){el.textContent=s.badge;el.style.cssText=`display:inline-flex;background:${s.bg};color:${s.col};padding:2px 7px;border-radius:100px;font-size:9px;font-weight:700`;}
+  if(dot)dot.style.background=s.dotCol;
+  if(txt)txt.textContent=s.msg;
 }
 
-// setFbStatus defined inside connectFb above
+function showFbRulesHint(){
+  const h=document.getElementById('fbRulesHint');
+  if(h)h.style.display='block';
+}
+
+function testFbConnection(){
+  if(!fbDb){
+    toast('⚠️ Firebase not initialised — reload the page');
+    return;
+  }
+  toast('🔄 Testing Firebase connection…');
+  fbDb.ref('syi_chat/.test').set({t:Date.now()})
+    .then(()=>{
+      fbDb.ref('syi_chat/.test').remove();
+      setFbStatus('live');
+      const h=document.getElementById('fbRulesHint');if(h)h.style.display='none';
+      toast('✅ Firebase working! Cross-device chat is live.');
+    })
+    .catch(err=>{
+      if(err.code==='PERMISSION_DENIED'){
+        setFbStatus('denied');showFbRulesHint();
+        toast('🔴 Rules are blocking access — see setup guide');
+      } else {
+        setFbStatus('offline');
+        toast('⚫ Firebase offline: '+err.message);
+      }
+    });
+}
 
 // ── Local fallback ──
 function loadLocal(){
@@ -1427,15 +1489,17 @@ function sendMsg(){
   renderMsgs(); scrollBot('cpMsgs');
 
   if(fbDb){
-    const toStore={...msg};delete toStore._local;   // don't store _local flag in Firebase
+    const toStore={...msg};delete toStore._local;
     fbDb.ref('syi_chat/messages/'+msg.id).set(toStore)
-      .then(()=>{
-        // Remove _local tag once confirmed
+      .then(()=>{const m=chatMsgs.find(x=>x.id===msg.id);if(m)delete m._local;})
+      .catch(err=>{
+        console.warn('[SYI] send failed:',err.message);
+        // Message already shown locally — just remove optimistic flag
         const m=chatMsgs.find(x=>x.id===msg.id);if(m)delete m._local;
-      })
-      .catch(err=>console.warn('[SYI] send failed:',err.message));
-    // Auto-remove from Firebase after expiry
-    setTimeout(()=>{try{fbDb.ref('syi_chat/messages/'+msg.id).remove();}catch(e){}},MSG_TTL+800);
+      });
+    // NOTE: We do NOT auto-delete from Firebase here.
+    // Users see messages filtered by exp timestamp client-side.
+    // Admin always sees full history in the monitor.
   }else{
     const m=chatMsgs.find(x=>x.id===msg.id);if(m)delete m._local;
     saveLocal();
@@ -1717,10 +1781,19 @@ function updateChatAdminUI(){
   const clr=document.getElementById('cpClrBtn'),onb=document.getElementById('cpOnb');
   if(loggedIn){
     if(clr)clr.style.display='inline-flex';
-    if(onb){onb.style.display='flex';const u=new Set(chatMsgs.filter(m=>!m.system).map(m=>m.name));onb.textContent=u.size+' users';}
-    if(!monOpen)openMon();else{renderMonInbox();}
+    if(onb){
+      onb.style.display='flex';
+      const u=new Set(chatMsgs.filter(m=>!m.system&&!m.isAdmin).map(m=>m.name));
+      onb.textContent=u.size+' user'+(u.size!==1?'s':'');
+    }
+    // Always open/refresh monitor when admin UI updates
+    if(!monOpen) openMon(); else renderMonInbox();
+    // Test Firebase connection on login so admin sees status immediately
+    if(fbDb) setTimeout(testFbConnection, 800);
   }else{
-    if(clr)clr.style.display='none';if(onb)onb.style.display='none';closeMon();
+    if(clr)clr.style.display='none';
+    if(onb)onb.style.display='none';
+    closeMon();
   }
 }
 function toggleMonitor(){if(monOpen&&!monMin)closeMon();else openMon();}
@@ -1821,6 +1894,9 @@ let expireInterval=null;
 function initChat(){
   chatUser=localStorage.getItem('syi_chat_name')||'';
   adminChatName=localStorage.getItem('syi_admin_name')||'Admin';
+  // Pre-fill name input if returning user
+  const ni=document.getElementById('cpNameInp');
+  if(ni&&chatUser)ni.value=chatUser;
   // Size panels
   const cp=document.getElementById('chatPanel'),am=document.getElementById('adminMon');
   if(cp){cp.style.width=chatW+'px';cp.style.height=chatH+'px';}
