@@ -1,0 +1,2252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>SarkariYojanaIndex — Government Schemes for Students</title>
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-database-compat.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;600;700;800&family=Noto+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--sf:#F7941D;--sd:#D97B00;--nv:#091B3D;--nv2:#142952;--gr:#138808;--cr:#FFFBF4;--wh:#fff;--tx:#1A1A2E;--mu:#5A6A85;--bd:#E2E8F0;--sh:0 4px 20px rgba(9,27,61,.08);--shh:0 8px 32px rgba(9,27,61,.14)}
+body{font-family:'Noto Sans',sans-serif;background:var(--cr);color:var(--tx);min-height:100vh;display:flex;flex-direction:column}
+.hidden{display:none!important}
+.strip{height:5px;background:linear-gradient(to right,#FF9933 33%,#fff 33% 66%,#138808 66%)}
+/* HEADER */
+.hdr{background:var(--nv);border-bottom:3px solid var(--sf);position:sticky;top:0;z-index:200}
+.hdr-in{max-width:1280px;margin:0 auto;padding:0 20px;height:60px;display:flex;align-items:center;justify-content:space-between}
+.logo{display:flex;align-items:center;gap:10px;cursor:pointer}
+.logo-ico{width:36px;height:36px;background:var(--sf);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0}
+.logo-nm{font-family:'Baloo 2',cursive;font-weight:800;font-size:16px;color:#fff;line-height:1}
+.logo-nm em{color:var(--sf);font-style:normal}
+.logo-tg{font-size:10px;color:rgba(255,255,255,.5);letter-spacing:.7px;text-transform:uppercase}
+.hdr-nav{display:flex;gap:6px}
+.hn{background:none;border:1px solid rgba(255,255,255,.25);color:rgba(255,255,255,.8);padding:6px 14px;border-radius:7px;font-size:13px;cursor:pointer;font-family:'Noto Sans',sans-serif;transition:.2s}
+.hn:hover{background:rgba(255,255,255,.1);color:#fff}
+.hn.cta{background:var(--sf);border-color:var(--sf);color:#fff}
+/* HERO */
+.hero{background:linear-gradient(135deg,var(--nv) 0%,#16305a 55%,#1c3d70 100%);padding:52px 20px 68px;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;top:-100px;right:-80px;width:380px;height:380px;background:radial-gradient(circle,rgba(247,148,29,.12),transparent 68%);border-radius:50%}
+.hero-in{max-width:740px;margin:0 auto;text-align:center;position:relative;z-index:1}
+.hero-pill{display:inline-block;background:rgba(247,148,29,.14);border:1px solid rgba(247,148,29,.35);color:var(--sf);padding:4px 14px;border-radius:100px;font-size:11px;font-weight:600;letter-spacing:.8px;text-transform:uppercase;margin-bottom:16px}
+.hero h1{font-family:'Baloo 2',cursive;font-size:clamp(26px,5vw,44px);font-weight:800;color:#fff;line-height:1.1;margin-bottom:12px}
+.hero h1 em{color:var(--sf);font-style:normal}
+.hero p{font-size:15px;color:rgba(255,255,255,.67);max-width:520px;margin:0 auto 28px;line-height:1.7}
+.srch{display:flex;max-width:540px;margin:0 auto;background:#fff;border-radius:12px;overflow:hidden;box-shadow:0 8px 28px rgba(0,0,0,.28)}
+.srch input{flex:1;padding:14px 18px;border:none;outline:none;font-size:14px;font-family:'Noto Sans',sans-serif;color:var(--tx)}
+.srch button{background:var(--sf);border:none;padding:14px 22px;color:#fff;font-size:14px;font-weight:700;cursor:pointer;transition:.2s}
+.srch button:hover{background:var(--sd)}
+/* STATS */
+.stats{background:var(--sf);padding:12px 20px}
+.stats-in{max-width:1280px;margin:0 auto;display:flex;justify-content:center;gap:36px;flex-wrap:wrap}
+.stat{display:flex;align-items:center;gap:8px}
+.stat-n{font-family:'Baloo 2',cursive;font-size:21px;font-weight:800;color:var(--nv)}
+.stat-l{font-size:12px;color:rgba(9,27,61,.7);font-weight:600}
+/* MAIN */
+.main{max-width:1280px;margin:0 auto;padding:32px 20px 56px;flex:1}
+.sec-title{font-family:'Baloo 2',cursive;font-size:23px;font-weight:700;color:var(--nv);margin-bottom:4px}
+.sec-title em{color:var(--sf);font-style:normal}
+.sec-sub{font-size:13px;color:var(--mu);margin-bottom:18px}
+/* CENTRAL BTN */
+.central-btn{width:100%;display:flex;align-items:center;justify-content:center;gap:12px;background:var(--nv);color:#fff;border:none;padding:16px 24px;border-radius:13px;cursor:pointer;font-family:'Baloo 2',cursive;font-size:18px;font-weight:700;margin-bottom:28px;transition:.22s;box-shadow:var(--sh)}
+.central-btn:hover{background:var(--nv2);box-shadow:var(--shh);transform:translateY(-2px)}
+.central-btn .chip{background:var(--sf);color:#fff;padding:2px 10px;border-radius:100px;font-size:12px;font-weight:700}
+.central-btn .cnt{background:rgba(255,255,255,.12);color:rgba(255,255,255,.8);padding:2px 10px;border-radius:100px;font-size:12px}
+/* STATE GRID */
+.state-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(155px,1fr));gap:9px}
+.state-card{background:#fff;border:1.5px solid var(--bd);border-radius:10px;padding:13px 12px;cursor:pointer;transition:.2s;display:flex;align-items:center;gap:9px;box-shadow:0 2px 6px rgba(9,27,61,.04)}
+.state-card:hover{border-color:var(--sf);box-shadow:0 4px 14px rgba(247,148,29,.18);transform:translateY(-2px)}
+.sc-em{font-size:21px;flex-shrink:0}
+.sc-nm{font-size:12px;font-weight:700;color:var(--nv);line-height:1.3}
+.sc-ct{font-size:10px;color:var(--mu);margin-top:2px}
+/* PAGE HEADER */
+.pg-hdr{background:var(--nv);padding:24px 20px;border-bottom:3px solid var(--sf)}
+.pg-hdr-in{max-width:1280px;margin:0 auto}
+.breadcrumb{display:flex;align-items:center;gap:6px;font-size:12px;color:rgba(255,255,255,.5);margin-bottom:8px}
+.breadcrumb a{color:rgba(255,255,255,.5);text-decoration:none;cursor:pointer}
+.breadcrumb a:hover{color:var(--sf)}
+.breadcrumb span{color:var(--sf)}
+.pg-title{font-family:'Baloo 2',cursive;font-size:28px;font-weight:800;color:#fff}
+.pg-sub{font-size:13px;color:rgba(255,255,255,.55);margin-top:4px}
+/* CAT TABS */
+.cat-tabs{background:#fff;border-bottom:2px solid var(--bd);position:sticky;top:63px;z-index:100;padding:0 20px}
+.cat-tabs-in{max-width:1280px;margin:0 auto;display:flex;gap:2px;overflow-x:auto;scrollbar-width:none}
+.cat-tabs-in::-webkit-scrollbar{display:none}
+.ctab{padding:12px 16px;border:none;background:transparent;cursor:pointer;font-family:'Noto Sans',sans-serif;font-size:13px;font-weight:500;color:var(--mu);white-space:nowrap;border-bottom:3px solid transparent;margin-bottom:-2px;transition:.18s}
+.ctab:hover{color:var(--nv)}
+.ctab.active{color:var(--sf);border-bottom-color:var(--sf);font-weight:700}
+/* FILTER BAR */
+.filter-bar{max-width:1280px;margin:18px auto 0;padding:0 20px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.fl{font-size:12px;font-weight:700;color:var(--mu);text-transform:uppercase;letter-spacing:.5px}
+.tag-btn{padding:5px 12px;border:1.5px solid var(--bd);border-radius:100px;background:#fff;font-size:12px;font-weight:600;cursor:pointer;color:var(--mu);transition:.15s}
+.tag-btn:hover,.tag-btn.active{border-color:var(--sf);color:var(--sf);background:rgba(247,148,29,.06)}
+.st-srch{padding:8px 13px;border:1.5px solid var(--bd);border-radius:8px;font-size:13px;font-family:'Noto Sans',sans-serif;outline:none;width:210px;transition:.2s}
+.st-srch:focus{border-color:var(--sf)}
+.sch-cnt{max-width:1280px;margin:10px auto 0;padding:0 20px;font-size:13px;color:var(--mu);font-weight:500}
+/* SCHEMES GRID */
+.schemes-grid{max-width:1280px;margin:14px auto 0;padding:0 20px 56px;display:grid;grid-template-columns:repeat(auto-fill,minmax(330px,1fr));gap:16px}
+/* SCHEME CARD */
+.s-card{background:#fff;border:1.5px solid var(--bd);border-radius:13px;padding:18px;transition:.22s;box-shadow:var(--sh);position:relative;overflow:hidden}
+.s-card::before{content:'';position:absolute;top:0;left:0;width:4px;height:100%;background:var(--cc,var(--sf))}
+.s-card:hover{border-color:var(--cc,var(--sf));box-shadow:var(--shh);transform:translateY(-2px)}
+.sc-top{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;margin-bottom:9px}
+.sc-name{font-family:'Baloo 2',cursive;font-size:15px;font-weight:700;color:var(--nv);line-height:1.3;flex:1}
+.sc-chip{padding:2px 8px;border-radius:5px;font-size:10px;font-weight:700;white-space:nowrap;background:var(--catbg,#fff7ed);color:var(--cc,var(--sf));border:1px solid;flex-shrink:0}
+.sc-min{font-size:11px;color:var(--mu);margin-bottom:9px;display:flex;align-items:center;gap:4px}
+.sc-desc{font-size:12.5px;color:#4A5568;line-height:1.6;margin-bottom:10px}
+.sc-ben{background:linear-gradient(135deg,rgba(247,148,29,.09),rgba(247,148,29,.04));border:1px solid rgba(247,148,29,.22);border-radius:7px;padding:8px 11px;margin-bottom:9px}
+.sc-ben .lb{font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:.7px;color:var(--sd);margin-bottom:2px}
+.sc-ben .vl{font-size:12.5px;font-weight:700;color:var(--nv)}
+.sc-elig{font-size:11.5px;color:var(--mu);line-height:1.55;margin-bottom:11px}
+.sc-elig strong{color:var(--tx)}
+.sc-tags{display:flex;flex-wrap:wrap;gap:4px;margin-bottom:12px}
+.sc-tag{padding:2px 8px;border-radius:100px;font-size:10px;font-weight:700;background:rgba(9,27,61,.06);color:var(--nv2)}
+.sc-foot{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.btn-apply{display:inline-flex;align-items:center;gap:5px;background:var(--nv);color:#fff;text-decoration:none;padding:8px 14px;border-radius:7px;font-size:12px;font-weight:700;font-family:'Noto Sans',sans-serif;transition:.2s}
+.btn-apply:hover{background:var(--sf)}
+.s-cent{font-size:10px;font-weight:700;color:var(--gr)}
+.s-stlbl{font-size:10px;color:var(--mu)}
+.empty{text-align:center;padding:64px 20px;color:var(--mu);grid-column:1/-1}
+.empty .ei{font-size:50px;margin-bottom:12px}
+.empty h3{font-family:'Baloo 2',cursive;font-size:21px;color:var(--nv);margin-bottom:6px}
+/* ADMIN LOGIN */
+.al-wrap{min-height:calc(100vh - 70px);display:flex;align-items:center;justify-content:center;padding:36px 20px}
+.al-card{background:#fff;border-radius:16px;padding:40px 36px;width:100%;max-width:400px;box-shadow:0 12px 44px rgba(9,27,61,.13);border:1px solid var(--bd)}
+.al-icon{font-size:38px;margin-bottom:12px}
+.al-card h2{font-family:'Baloo 2',cursive;font-size:25px;font-weight:800;color:var(--nv);margin-bottom:4px}
+.al-card .sub{font-size:13px;color:var(--mu);margin-bottom:24px}
+.hint{background:rgba(19,136,8,.07);border:1px solid rgba(19,136,8,.2);border-radius:8px;padding:9px 12px;margin-bottom:18px;font-size:12px;color:#065F46}
+.fg{margin-bottom:16px}
+.fl2{display:block;font-size:11px;font-weight:700;color:var(--nv);margin-bottom:6px;text-transform:uppercase;letter-spacing:.4px}
+.fi{width:100%;padding:10px 14px;border:1.5px solid var(--bd);border-radius:8px;font-size:14px;font-family:'Noto Sans',sans-serif;outline:none;transition:.2s;color:var(--tx)}
+.fi:focus{border-color:var(--sf)}
+.fs{width:100%;padding:10px 14px;border:1.5px solid var(--bd);border-radius:8px;font-size:14px;font-family:'Noto Sans',sans-serif;outline:none;transition:.2s;color:var(--tx);background:#fff;cursor:pointer}
+.fs:focus{border-color:var(--sf)}
+.fta{width:100%;padding:10px 14px;border:1.5px solid var(--bd);border-radius:8px;font-size:13px;font-family:'Noto Sans',sans-serif;outline:none;transition:.2s;color:var(--tx);resize:vertical;min-height:68px}
+.fta:focus{border-color:var(--sf)}
+.err{color:#c53030;font-size:12px;margin-top:7px;display:none;font-weight:500}
+.btn-p{width:100%;padding:12px;background:var(--nv);color:#fff;border:none;border-radius:8px;font-size:14px;font-weight:700;cursor:pointer;font-family:'Noto Sans',sans-serif;transition:.2s}
+.btn-p:hover{background:var(--sf)}
+/* ADMIN DASHBOARD */
+.adm{max-width:1380px;margin:0 auto;padding:26px 20px}
+.adm-top{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:22px;flex-wrap:wrap;gap:12px}
+.adm-title{font-family:'Baloo 2',cursive;font-size:24px;font-weight:800;color:var(--nv)}
+.adm-sub{font-size:12px;color:var(--mu);margin-top:3px}
+.adm-acts{display:flex;gap:8px;flex-wrap:wrap}
+.btn-add{display:flex;align-items:center;gap:6px;background:var(--sf);color:#fff;border:none;padding:9px 18px;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;font-family:'Noto Sans',sans-serif;transition:.2s}
+.btn-add:hover{background:var(--sd)}
+.btn-rst{background:rgba(197,48,48,.07);border:1.5px solid rgba(197,48,48,.2);color:#c53030;padding:9px 16px;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;font-family:'Noto Sans',sans-serif;transition:.2s}
+.btn-rst:hover{background:rgba(197,48,48,.14)}
+.btn-lo{background:none;border:1.5px solid var(--bd);color:var(--mu);padding:9px 16px;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;font-family:'Noto Sans',sans-serif;transition:.2s}
+.btn-lo:hover{border-color:#c53030;color:#c53030}
+.btn-mon{background:rgba(9,27,61,.07);border:1.5px solid var(--bd);color:var(--nv);padding:9px 16px;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;font-family:'Noto Sans',sans-serif;transition:.2s}
+.btn-mon:hover{background:rgba(9,27,61,.13)}
+.adm-stats{display:grid;grid-template-columns:repeat(auto-fill,minmax(185px,1fr));gap:12px;margin-bottom:20px}
+.astat{background:#fff;border:1.5px solid var(--bd);border-radius:11px;padding:16px;display:flex;align-items:center;gap:12px;box-shadow:var(--sh)}
+.astat .ico{font-size:28px}
+.astat .n{font-family:'Baloo 2',cursive;font-size:24px;font-weight:800}
+.astat .l{font-size:12px;color:var(--mu);margin-top:1px}
+.adm-flt{background:#fff;border:1.5px solid var(--bd);border-radius:11px;padding:16px;margin-bottom:18px;display:flex;gap:12px;flex-wrap:wrap;align-items:flex-end}
+.afg{display:flex;flex-direction:column;gap:4px;flex:1;min-width:140px}
+.afl{font-size:10px;font-weight:700;color:var(--mu);text-transform:uppercase;letter-spacing:.4px}
+.tbl-wrap{background:#fff;border-radius:11px;border:1.5px solid var(--bd);overflow:hidden}
+.tbl-hdr{padding:12px 16px;background:#F8FAFC;border-bottom:1.5px solid var(--bd);font-size:12px;font-weight:600;color:var(--mu);display:flex;justify-content:space-between;align-items:center}
+.tbl{width:100%;border-collapse:collapse;font-size:12.5px}
+.tbl th{padding:10px 14px;text-align:left;background:#F8FAFC;font-weight:700;color:var(--mu);font-size:11px;text-transform:uppercase;letter-spacing:.4px;border-bottom:1px solid var(--bd)}
+.tbl td{padding:11px 14px;border-bottom:1px solid var(--bd);vertical-align:top}
+.tbl tr:hover td{background:#FAFBFC}
+.tbl tr:last-child td{border-bottom:none}
+.td-nm{font-weight:700;color:var(--nv);max-width:230px}
+.st-bdg{display:inline-block;padding:2px 7px;border-radius:5px;font-size:10px;font-weight:700;background:rgba(9,27,61,.07);color:var(--nv2)}
+.cat-bdg{display:inline-block;padding:2px 7px;border-radius:5px;font-size:10px;font-weight:700}
+.btn-ed{background:rgba(247,148,29,.1);border:1px solid rgba(247,148,29,.3);color:var(--sd);padding:4px 10px;border-radius:5px;font-size:11px;font-weight:700;cursor:pointer;font-family:'Noto Sans',sans-serif;transition:.15s;margin-right:4px}
+.btn-ed:hover{background:rgba(247,148,29,.2)}
+.btn-dl{background:rgba(197,48,48,.07);border:1px solid rgba(197,48,48,.2);color:#c53030;padding:4px 10px;border-radius:5px;font-size:11px;font-weight:700;cursor:pointer;font-family:'Noto Sans',sans-serif;transition:.15s}
+.btn-dl:hover{background:rgba(197,48,48,.15)}
+/* MODAL */
+.m-ov{position:fixed;inset:0;background:rgba(9,27,61,.6);backdrop-filter:blur(4px);z-index:999;display:none;align-items:center;justify-content:center;padding:18px}
+.m-ov.open{display:flex}
+.m-box{background:#fff;border-radius:16px;padding:28px;width:100%;max-width:660px;max-height:92vh;overflow-y:auto;box-shadow:0 24px 72px rgba(9,27,61,.26)}
+.m-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:22px}
+.m-title{font-family:'Baloo 2',cursive;font-size:20px;font-weight:800;color:var(--nv)}
+.m-cls{background:none;border:none;font-size:24px;cursor:pointer;color:var(--mu);line-height:1;padding:2px 6px;border-radius:5px}
+.m-cls:hover{background:#f0f0f0}
+.m-grid{display:grid;grid-template-columns:1fr 1fr;gap:13px}
+.m-grid .full{grid-column:1/-1}
+.m-acts{display:flex;gap:9px;margin-top:20px}
+.btn-sv{flex:1;padding:12px;background:var(--sf);color:#fff;border:none;border-radius:8px;font-size:14px;font-weight:700;cursor:pointer;font-family:'Noto Sans',sans-serif;transition:.2s}
+.btn-sv:hover{background:var(--sd)}
+.btn-cn{flex:.5;padding:12px;background:#fff;border:1.5px solid var(--bd);border-radius:8px;cursor:pointer;font-family:'Noto Sans',sans-serif;font-size:13px;transition:.2s}
+.btn-cn:hover{border-color:var(--mu)}
+/* TOAST */
+.toast{position:fixed;bottom:22px;right:22px;background:var(--nv);color:#fff;padding:11px 18px;border-radius:9px;font-size:13px;font-weight:600;box-shadow:0 8px 24px rgba(0,0,0,.26);z-index:9999;animation:fup .3s ease}
+@keyframes fup{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+/* FOOTER */
+footer{background:var(--nv);color:rgba(255,255,255,.45);text-align:center;padding:20px;font-size:12px;margin-top:auto}
+footer strong{color:rgba(255,255,255,.8)}
+footer .warn{margin-top:5px;font-size:11px}
+footer button{background:none;border:none;color:rgba(255,255,255,.4);font-size:12px;cursor:pointer}
+footer button:hover{color:rgba(255,255,255,.7)}
+/* ============================================================
+   COMMUNITY CHAT — PiP Floating Window
+   ============================================================ */
+.cb-badge{position:absolute;top:-3px;right:-3px;background:#EF4444;color:#fff;font-size:10px;font-weight:800;min-width:18px;height:18px;border-radius:9px;display:flex;align-items:center;justify-content:center;padding:0 3px;border:2px solid var(--cr);opacity:0;transition:.2s}
+.cb-badge.vis{opacity:1}
+/* Panel */
+.cp{position:fixed;z-index:1199;background:#fff;border-radius:15px;box-shadow:0 12px 48px rgba(9,27,61,.24);border:1.5px solid var(--bd);display:flex;flex-direction:column;opacity:0;pointer-events:none;transform:scale(.95) translateY(10px);transition:opacity .22s,transform .24s cubic-bezier(.34,1.4,.64,1);overflow:hidden;min-width:240px;min-height:52px;bottom:90px;right:26px}
+.cp.open{opacity:1;pointer-events:all;transform:scale(1) translateY(0)}
+/* Header */
+.cp-h{background:var(--nv);padding:0 11px;height:50px;flex-shrink:0;display:flex;align-items:center;gap:8px;cursor:grab;user-select:none;-webkit-user-select:none;border-radius:13px 13px 0 0}
+.cp-h:active{cursor:grabbing}
+.cp.minimized .cp-h{border-radius:13px}
+.cp-h .ico{font-size:17px;pointer-events:none;flex-shrink:0}
+.cp-h .inf{flex:1;min-width:0;pointer-events:none}
+.cp-h .inf .t{font-family:'Baloo 2',cursive;font-size:13px;font-weight:800;color:#fff;line-height:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.cp-h .inf .s{font-size:10px;color:rgba(255,255,255,.5);margin-top:1px}
+.cp-h .acts{display:flex;align-items:center;gap:2px;flex-shrink:0}
+.chb{width:26px;height:26px;border-radius:7px;background:none;border:none;cursor:pointer;color:rgba(255,255,255,.6);font-size:13px;display:flex;align-items:center;justify-content:center;transition:.15s;font-family:'Noto Sans',sans-serif;font-weight:700;flex-shrink:0}
+.chb:hover{background:rgba(255,255,255,.15);color:#fff}
+.chb.d:hover{background:rgba(239,68,68,.3);color:#FCA5A5}
+.onb{background:rgba(34,197,94,.2);color:#86EFAC;padding:2px 7px;border-radius:100px;font-size:9px;font-weight:700;display:flex;align-items:center;gap:3px;white-space:nowrap}
+.onb::before{content:'';width:5px;height:5px;background:#22C55E;border-radius:50%;flex-shrink:0}
+/* Body */
+.cp-body{display:flex;flex-direction:column;flex:1;overflow:hidden;min-height:0}
+/* Name entry */
+.cp-ne{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px 16px;gap:10px}
+.ne-ico{font-size:36px}
+.cp-ne h3{font-family:'Baloo 2',cursive;font-size:16px;font-weight:800;color:var(--nv);text-align:center}
+.cp-ne p{font-size:12px;color:var(--mu);text-align:center;line-height:1.6}
+.cp-ne input{width:100%;padding:10px 12px;border:1.5px solid var(--bd);border-radius:8px;font-size:13px;font-family:'Noto Sans',sans-serif;outline:none;transition:.2s}
+.cp-ne input:focus{border-color:var(--sf)}
+.cp-ne button{width:100%;padding:10px;background:var(--sf);border:none;border-radius:8px;color:#fff;font-size:13px;font-weight:700;cursor:pointer;font-family:'Noto Sans',sans-serif;transition:.2s}
+.cp-ne button:hover{background:var(--sd)}
+/* Pinned */
+.cp-pin{background:rgba(247,148,29,.07);border-left:3px solid var(--sf);padding:6px 11px;flex-shrink:0}
+.cp-pin .plb{font-size:9px;font-weight:800;color:var(--sf);text-transform:uppercase;letter-spacing:.5px}
+.cp-pin .ptx{font-size:12px;color:var(--nv);font-weight:600;margin-top:1px}
+/* Messages */
+.cp-msg-sep{text-align:center;margin:4px 0;flex-shrink:0}
+.cp-msg-sep span{background:#F1F5F9;color:var(--mu);padding:2px 9px;border-radius:100px;font-size:10px;font-weight:600}
+.cp-msgs{flex:1;overflow-y:auto;padding:9px 9px 4px;display:flex;flex-direction:column;gap:5px;min-height:0;scrollbar-width:thin;scrollbar-color:var(--bd) transparent}
+.cp-msgs::-webkit-scrollbar{width:3px}
+.cp-msgs::-webkit-scrollbar-thumb{background:var(--bd);border-radius:4px}
+/* Row */
+.cp-row{display:flex;gap:5px;align-items:flex-end;flex-shrink:0}
+.cp-row.own{flex-direction:row-reverse}
+.cp-row.own .cp-bub{background:var(--nv);color:#fff;border-radius:13px 4px 13px 13px}
+.cp-row.own .cp-met{justify-content:flex-end}
+.cp-row.adm-m .cp-bub{background:linear-gradient(135deg,var(--sf),#E8830A);color:#fff;border-radius:13px 4px 13px 13px}
+.cp-av{width:24px;height:24px;border-radius:50%;color:#fff;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:800;flex-shrink:0}
+.cp-bw{display:flex;flex-direction:column;max-width:80%;gap:2px}
+.cp-bub{background:#F1F5F9;color:var(--tx);padding:7px 10px;border-radius:4px 13px 13px 13px;font-size:12px;line-height:1.5;word-break:break-word}
+.cp-met{display:flex;align-items:center;gap:4px;padding:0 3px;flex-wrap:wrap}
+.cp-un{font-size:10px;font-weight:700;color:var(--nv)}
+.cp-ab{font-size:9px;font-weight:800;background:var(--sf);color:#fff;padding:1px 5px;border-radius:4px}
+.cp-tm{font-size:10px;color:var(--mu)}
+.cp-ex{font-size:9px;color:#F59E0B;font-weight:800;background:rgba(245,158,11,.1);padding:1px 4px;border-radius:4px}
+.cp-dlb{background:none;border:none;cursor:pointer;font-size:11px;color:var(--mu);padding:1px 3px;border-radius:4px;transition:.15s;display:none}
+.cp-dlb:hover{color:#EF4444;background:rgba(239,68,68,.1)}
+.cp-row:hover .cp-dlb.vis{display:inline-flex}
+.cp-sys{text-align:center;flex-shrink:0}
+.cp-sys span{font-size:10px;color:var(--mu);background:#F8FAFC;padding:2px 8px;border-radius:100px}
+/* Input */
+.cp-ir{border-top:1px solid var(--bd);padding:8px;display:flex;gap:6px;align-items:flex-end;flex-shrink:0;background:#fff}
+.cp-inp{flex:1;padding:8px 11px;border:1.5px solid var(--bd);border-radius:18px;font-size:13px;font-family:'Noto Sans',sans-serif;outline:none;resize:none;max-height:70px;transition:.2s;line-height:1.4}
+.cp-inp:focus{border-color:var(--sf)}
+.cp-send{width:32px;height:32px;border-radius:50%;background:var(--sf);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:13px;transition:.2s;flex-shrink:0}
+.cp-send:hover{background:var(--sd)}
+/* Resize handle */
+.cp-rz{position:absolute;bottom:0;right:0;width:18px;height:18px;cursor:se-resize;z-index:10;background:linear-gradient(135deg,transparent 50%,rgba(9,27,61,.16) 50%);border-radius:0 0 13px 0}
+.cp.minimized .cp-rz{display:none}
+/* Admin Monitor */
+.mon{left:26px;bottom:90px;right:auto;border-top:3px solid var(--sf)}
+/* Context menu */
+.ctx{position:fixed;background:#fff;border-radius:10px;box-shadow:0 8px 28px rgba(9,27,61,.17);border:1px solid var(--bd);padding:5px;z-index:2000;display:none;min-width:155px}
+.ctx.open{display:block}
+.ctx-i{display:flex;align-items:center;gap:8px;padding:7px 11px;border-radius:7px;cursor:pointer;font-size:13px;transition:.15s}
+.ctx-i:hover{background:#F8FAFC}
+.ctx-i.dng:hover{background:rgba(239,68,68,.07);color:#EF4444}
+@media(max-width:600px){.schemes-grid{grid-template-columns:1fr;padding:0 14px 40px}.state-grid{grid-template-columns:repeat(auto-fill,minmax(136px,1fr))}.stats-in{gap:18px}.m-grid{grid-template-columns:1fr}.cp{min-width:200px}.chat-fab{right:14px;bottom:18px}}
+
+/* ── Admin Monitor – Telegram-style ── */
+.mon-inbox{display:flex;flex-direction:column;overflow-y:auto;min-height:0;flex:1}
+.mon-empty{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;color:var(--mu);font-size:12px;padding:20px;text-align:center}
+.mon-item{display:flex;align-items:center;gap:10px;padding:10px 12px;border-bottom:1px solid #F0EDE8;cursor:pointer;transition:.15s;position:relative}
+.mon-item:hover{background:#FAFBFC}
+.mon-item:last-child{border-bottom:none}
+.mon-av{width:38px;height:38px;border-radius:50%;color:#fff;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:800;flex-shrink:0}
+.mon-inf{flex:1;min-width:0}
+.mon-nm{font-size:13px;font-weight:700;color:var(--nv);line-height:1.3;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mon-prev{font-size:11px;color:var(--mu);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:2px}
+.mon-rt{display:flex;flex-direction:column;align-items:flex-end;gap:3px;flex-shrink:0}
+.mon-time{font-size:10px;color:var(--mu)}
+.mon-cnt{background:var(--sf);color:#fff;border-radius:9px;min-width:18px;height:18px;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:800;padding:0 4px}
+.mon-del-btn{background:none;border:none;cursor:pointer;color:var(--mu);padding:4px 6px;border-radius:5px;font-size:13px;opacity:0;transition:.15s;flex-shrink:0}
+.mon-item:hover .mon-del-btn{opacity:1}
+.mon-del-btn:hover{color:#EF4444;background:rgba(239,68,68,.09)}
+.mon-thdr{display:flex;align-items:center;gap:8px;padding:9px 11px;background:#F8FAFC;border-bottom:1px solid var(--bd);flex-shrink:0}
+.mon-back{background:none;border:none;cursor:pointer;font-size:22px;color:var(--nv);padding:1px 6px;border-radius:5px;line-height:1;transition:.15s;font-weight:700}
+.mon-back:hover{background:rgba(9,27,61,.08)}
+.mon-thav{width:30px;height:30px;border-radius:50%;color:#fff;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800;flex-shrink:0}
+.mon-thnm{font-size:13px;font-weight:700;color:var(--nv);flex:1}
+.btn-del-usr{border:1px solid rgba(197,48,48,.2);background:rgba(197,48,48,.07);color:#c53030;padding:4px 9px;border-radius:6px;font-size:11px;font-weight:700;cursor:pointer;font-family:'Noto Sans',sans-serif;transition:.15s}
+.btn-del-usr:hover{background:rgba(197,48,48,.15)}
+.am-name-inp{width:100%;padding:7px 10px;border:1.5px solid var(--bd);border-radius:7px;font-size:12px;font-family:'Noto Sans',sans-serif;outline:none;color:var(--tx);transition:.2s}
+.am-name-inp:focus{border-color:var(--sf)}
+
+/* ════ ADMIN STATE-FIRST LAYOUT ════ */
+.adm-state-hdr{display:flex;align-items:center;gap:12px;margin-bottom:18px;padding-bottom:16px;border-bottom:2px solid var(--bd);flex-wrap:wrap}
+.adm-state-back{background:#fff;border:1.5px solid var(--bd);color:var(--nv);padding:8px 14px;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;font-family:'Noto Sans',sans-serif;transition:.2s;display:flex;align-items:center;gap:5px}
+.adm-state-back:hover{border-color:var(--sf);color:var(--sf);background:rgba(247,148,29,.05)}
+.adm-state-title{font-family:'Baloo 2',cursive;font-size:20px;font-weight:800;color:var(--nv);flex:1}
+.adm-state-flt{background:#fff;border:1.5px solid var(--bd);border-radius:11px;padding:14px 16px;margin-bottom:16px;display:flex;gap:10px;flex-wrap:wrap;align-items:flex-end}
+/* State cards in admin get an edit badge */
+.state-card .sc-adm-cnt{display:inline-flex;align-items:center;gap:3px;background:var(--sf);color:#fff;font-size:9px;font-weight:800;padding:1px 6px;border-radius:10px;margin-top:2px}
+.state-card.zero-schemes{opacity:.65}
+
+/* ════ LOGO-STYLE CHAT FAB ════ */
+.chat-fab{position:fixed;bottom:26px;right:26px;z-index:1200;width:56px;height:56px;border-radius:50%;background:var(--nv);border:none;cursor:pointer;box-shadow:0 6px 24px rgba(9,27,61,.35);display:flex;align-items:center;justify-content:center;transition:.2s;padding:0}
+.chat-fab:hover{background:var(--nv2);transform:scale(1.08)}
+.fab-logo-ico{width:40px;height:40px;background:var(--sf);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:20px;pointer-events:none;transition:.2s}
+.chat-fab.fab-open{background:var(--nv)}
+.chat-fab.fab-open .fab-logo-ico{background:rgba(255,255,255,.15);font-size:16px}
+@keyframes fabPulse{0%,100%{box-shadow:0 6px 24px rgba(9,27,61,.35),0 0 0 0 rgba(247,148,29,.4)}50%{box-shadow:0 6px 24px rgba(9,27,61,.35),0 0 0 8px rgba(247,148,29,0)}}
+.chat-fab.has-msgs{animation:fabPulse 2s infinite}
+
+/* ════ WHATSAPP-STYLE ADMIN MONITOR ════ */
+.am-wa-hdr{background:linear-gradient(135deg,#128C7E,#075E54)!important}
+.am-wa-logo{width:32px;height:32px;background:rgba(255,255,255,.15);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;pointer-events:none}
+/* WhatsApp chat background */
+.wa-msgs{background:#E5DDD5 url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23000000' fill-opacity='0.02'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")}
+/* WhatsApp-style admin message bubbles (right side, green) */
+.wa-msgs .cp-row.own .cp-bub{background:#DCF8C6;color:#111;border-radius:12px 4px 12px 12px;position:relative}
+.wa-msgs .cp-row.own .cp-bub::after{content:'';position:absolute;right:-7px;top:6px;border:7px solid transparent;border-left-color:#DCF8C6;border-right:0}
+/* WhatsApp-style user message bubbles (left side, white) */
+.wa-msgs .cp-row:not(.own) .cp-bub{background:#fff;color:#111;border-radius:4px 12px 12px 12px;position:relative}
+.wa-msgs .cp-row:not(.own) .cp-bub::after{content:'';position:absolute;left:-7px;top:6px;border:7px solid transparent;border-right-color:#fff;border-left:0}
+/* Thread header */
+.wa-thdr{background:linear-gradient(135deg,#128C7E,#075E54)!important;padding:0 10px!important}
+.wa-back{color:rgba(255,255,255,.85)!important;font-size:26px!important}
+.wa-back:hover{background:rgba(255,255,255,.1)!important;color:#fff!important}
+#amThNm{color:#fff!important}
+#amThAv{background:rgba(255,255,255,.2)!important;color:#fff!important}
+/* WhatsApp-style input bar */
+.wa-ir{background:#F0F0F0!important;border-top:1px solid #ddd!important;padding:8px 10px!important}
+.wa-ir .cp-inp{background:#fff!important;border-radius:20px!important;border:none!important;box-shadow:0 1px 3px rgba(0,0,0,.1)!important}
+.wa-send{background:#25D366!important}
+.wa-send:hover{background:#128C7E!important}
+/* WhatsApp conversation list items */
+.wa-inbox .mon-item{border-bottom:1px solid #f0f0f0;padding:12px 14px}
+.wa-inbox .mon-item:hover{background:#F5F5F5}
+.wa-inbox .mon-av{width:42px;height:42px;font-size:17px}
+.wa-inbox .mon-nm{font-size:14px;font-weight:600}
+.wa-inbox .mon-prev{font-size:12px;color:#667781}
+.wa-inbox .mon-time{font-size:11px;color:#667781}
+.wa-inbox .mon-cnt{background:#25D366;border-radius:50%;min-width:20px;height:20px;font-size:11px}
+/* WhatsApp online indicator in inbox header */
+.wa-online-strip{background:#F0F0F0;border-bottom:1px solid #e0e0e0;padding:6px 14px;font-size:11px;color:#667781;display:flex;align-items:center;gap:5px;flex-shrink:0}
+.wa-online-dot{width:8px;height:8px;background:#25D366;border-radius:50%;flex-shrink:0}
+/* Expired message tag in admin monitor */
+.wa-expired{font-size:9px;color:#FF6B6B;font-weight:700;background:rgba(255,107,107,.1);padding:1px 4px;border-radius:4px}
+
+/* ════ DARK THEME ═══════════════════════════════════════════════ */
+::view-transition-old(root),::view-transition-new(root){animation:none;mix-blend-mode:normal}
+::view-transition-old(root){z-index:1}
+::view-transition-new(root){z-index:9999}
+body.dark{--cr:#0D1117;--wh:#161B22;--tx:#E6EDF3;--mu:#7D93B0;--bd:#2D3748;--sh:0 4px 20px rgba(0,0,0,.35);--shh:0 8px 32px rgba(0,0,0,.55);color-scheme:dark}
+/* Header nav */
+body.dark .hn{border-color:rgba(255,255,255,.15);color:rgba(255,255,255,.7)}
+body.dark .hn:hover{background:rgba(255,255,255,.1);color:#fff}
+/* Hero already dark ✓ */
+/* Stats bar */
+body.dark .stat-n{color:var(--nv)}
+body.dark .stat-l{color:rgba(9,27,61,.8)}
+/* State grid */
+body.dark .state-card{background:#161B22;border-color:#2D3748;box-shadow:0 2px 8px rgba(0,0,0,.25)}
+body.dark .state-card:hover{background:#1C2333;border-color:var(--sf);box-shadow:0 4px 16px rgba(247,148,29,.18)}
+body.dark .sc-nm{color:#CBD5E1}
+body.dark .sc-ct{color:#4A5568}
+/* Section */
+body.dark .sec-title{color:#E6EDF3}
+body.dark .sec-sub{color:#4A5568}
+body.dark .central-btn{background:#0D1B35;border-color:#1E3056;color:#CBD5E1}
+body.dark .central-btn:hover{background:#122240;border-color:var(--sf)}
+/* Category tabs */
+body.dark .cat-tabs{background:#161B22;border-bottom-color:#2D3748}
+body.dark .ctab{color:#4A5568}
+body.dark .ctab:hover{color:#CBD5E1}
+body.dark .ctab.active{color:var(--sf);border-bottom-color:var(--sf)}
+/* Filter bar */
+body.dark .filter-bar{background:transparent}
+body.dark .tag-btn{background:#1C2333;border-color:#2D3748;color:#7D93B0}
+body.dark .tag-btn:hover,.dark .tag-btn.active,.dark .tag-btn.active:hover{background:var(--sf);border-color:var(--sf);color:#fff}
+body.dark .st-srch{background:#161B22;border-color:#2D3748;color:#E6EDF3}
+body.dark .st-srch::placeholder{color:#3A4A5A}
+body.dark .st-srch:focus{border-color:var(--sf)}
+/* Scheme cards */
+body.dark .s-card{background:#161B22;border-color:#2D3748}
+body.dark .s-card:hover{background:#1C2333}
+body.dark .sc-name{color:#E6EDF3}
+body.dark .sc-min{color:#4A5568}
+body.dark .sc-desc{color:#7D93B0}
+body.dark .sc-ben{background:rgba(247,148,29,.06);border-color:rgba(247,148,29,.15)}
+body.dark .sc-ben .vl{color:#E6EDF3}
+body.dark .sc-elig{color:#7D93B0}
+body.dark .sc-elig strong{color:#CBD5E1}
+body.dark .sc-tag{background:rgba(255,255,255,.05);color:#7D93B0}
+body.dark .btn-apply{background:#1A2E5A}
+body.dark .btn-apply:hover{background:var(--sf)}
+body.dark .sch-cnt{color:#4A5568}
+body.dark .empty h3{color:#E6EDF3}
+body.dark .cp-msg-sep span{background:#2D3748;color:#7D93B0}
+/* Page header */
+body.dark .pg-hdr{background:#0D1B35}
+body.dark .pg-title{color:#E6EDF3}
+body.dark .pg-sub{color:#7D93B0}
+body.dark .breadcrumb a{color:rgba(255,255,255,.55)}
+body.dark .breadcrumb{color:rgba(255,255,255,.35)}
+/* Admin login */
+body.dark .al-card{background:#161B22;border-color:#2D3748;box-shadow:0 12px 44px rgba(0,0,0,.4)}
+body.dark .al-card h2{color:#E6EDF3}
+body.dark .al-card .sub{color:#7D93B0}
+body.dark #loginP{background:#0D1117;border-color:#2D3748;color:#E6EDF3}
+body.dark .hint{background:rgba(19,136,8,.1);border-color:rgba(19,136,8,.25);color:#34D399}
+/* Admin dashboard */
+body.dark .adm-title{color:#E6EDF3}
+body.dark .adm-sub{color:#7D93B0}
+body.dark .btn-mon{background:rgba(255,255,255,.04);border-color:#2D3748;color:#CBD5E1}
+body.dark .btn-mon:hover{background:rgba(255,255,255,.08)}
+body.dark .btn-lo{border-color:#2D3748;color:#7D93B0}
+body.dark .btn-lo:hover{border-color:#EF4444;color:#EF4444}
+body.dark .astat{background:#161B22;border-color:#2D3748}
+body.dark .astat .l{color:#7D93B0}
+body.dark #fbStatusBar{background:#161B22;border-color:#2D3748}
+body.dark #fbStatusText{color:#7D93B0}
+body.dark .tbl-wrap{background:#161B22;border-color:#2D3748}
+body.dark .tbl-hdr{background:#0D1B35;border-bottom-color:#2D3748;color:#7D93B0}
+body.dark .tbl th{background:#0D1B35;border-bottom-color:#2D3748;color:#4A5568}
+body.dark .tbl td{border-bottom-color:#2D3748;color:#CBD5E1}
+body.dark .tbl tr:hover td{background:#1C2333}
+body.dark .td-nm{color:#E6EDF3}
+body.dark .adm-state-hdr{border-bottom-color:#2D3748}
+body.dark .adm-state-back{background:#1C2333;border-color:#2D3748;color:#CBD5E1}
+body.dark .adm-state-title{color:#E6EDF3}
+body.dark .adm-state-flt{background:#161B22;border-color:#2D3748}
+body.dark .adm-flt{background:#161B22;border-color:#2D3748}
+body.dark .afl{color:#4A5568}
+body.dark .fi,.dark .fs,.dark .fta{background:#0D1117;border-color:#2D3748;color:#E6EDF3}
+body.dark .fi:focus,.dark .fs:focus,.dark .fta:focus{border-color:var(--sf)}
+body.dark .fl2{color:#7D93B0}
+/* Modal */
+body.dark .m-ov{background:rgba(0,0,0,.8)}
+body.dark .m-box{background:#161B22;border:1.5px solid #2D3748;box-shadow:0 24px 72px rgba(0,0,0,.6)}
+body.dark .m-title{color:#E6EDF3}
+body.dark .m-cls:hover{background:#2D3748;color:#E6EDF3}
+body.dark .btn-cn{background:#1C2333;border-color:#2D3748;color:#CBD5E1}
+body.dark .btn-cn:hover{border-color:var(--mu);background:#2C3340}
+/* Toast */
+body.dark .toast{background:#1C2333;border:1px solid #2D3748}
+/* Chat panel */
+body.dark .cp{background:#161B22;border-color:#2D3748;box-shadow:0 12px 48px rgba(0,0,0,.6)}
+body.dark .cp-msgs{background:#0D1117}
+body.dark .cp-row:not(.own):not(.adm-m) .cp-bub{background:#1E2730;color:#E6EDF3}
+body.dark .cp-row.own .cp-bub{background:#1A3028;color:#D4F1E4}
+body.dark .cp-ir{background:#1C2333;border-top-color:#2D3748}
+body.dark .cp-inp{background:#0D1117;border-color:#2D3748;color:#E6EDF3}
+body.dark .cp-inp::placeholder{color:#3A4A5A}
+body.dark .cp-un{color:#CBD5E1}
+body.dark .cp-ne-title{color:#E6EDF3}
+body.dark .cp-ne-sub{color:#7D93B0}
+/* Admin state card edit badge */
+body.dark #admStateGrid .state-card{background:#161B22;border-color:#2D3748}
+
+</style>
+</head>
+<body>
+<div class="strip"></div>
+
+<!-- ═══════ HEADER ═══════ -->
+<header class="hdr">
+  <div class="hdr-in">
+    <div class="logo" onclick="showHome()">
+      <div class="logo-ico">🎓</div>
+      <div>
+        <div class="logo-nm">Sarkari<em>Yojana</em>Index</div>
+        <div class="logo-tg">Government Schemes for Students</div>
+      </div>
+    </div>
+    <div class="hdr-nav">
+      <button class="hn" id="themeBtn" title="Switch theme" style="font-size:16px;padding:6px 10px" aria-label="Toggle dark mode">🌙</button>
+      <button class="hn" id="homeBtn">🏠 Home</button>
+    </div>
+  </div>
+</header>
+
+<!-- ═══════ HOME ═══════ -->
+<div id="view-home">
+  <div class="hero">
+    <div class="hero-in">
+      <div class="hero-pill" id="heroPill">📚 Loading…</div>
+      <h1>Find Your <em>Sarkari Yojana</em></h1>
+      <p>India's most complete hub for government education schemes, scholarships &amp; free coaching. Select your state to get started.</p>
+      <div class="srch">
+        <input type="text" id="homeSearch" placeholder="Search schemes, states, eligibility..." onkeydown="if(event.key==='Enter')doSearch()">
+        <button onclick="doSearch()">🔍 Search</button>
+      </div>
+    </div>
+  </div>
+  <div class="stats">
+    <div class="stats-in">
+      <div class="stat"><div class="stat-n" id="statN">—</div><div class="stat-l">Schemes Listed</div></div>
+      <div class="stat"><div class="stat-n" id="statSt">—</div><div class="stat-l">States &amp; UTs</div></div>
+      <div class="stat"><div class="stat-n" id="statLv">—</div><div class="stat-l">Education Levels</div></div>
+      <div class="stat"><div class="stat-n">Free</div><div class="stat-l">Always Free</div></div>
+    </div>
+  </div>
+  <div class="main">
+    <button class="central-btn" onclick="showState('Central (All India)')">
+      🇮🇳 &nbsp; Central Government Schemes
+      <span class="chip">All India</span>
+      <span class="cnt" id="centralCount">0 schemes</span>
+    </button>
+    <div class="sec-title">Select Your <em>State</em></div>
+    <div class="sec-sub">Click your state to see all applicable government schemes</div>
+    <div class="state-grid" id="stateGrid"></div>
+  </div>
+</div>
+
+<!-- ═══════ STATE VIEW ═══════ -->
+<div id="view-state" class="hidden">
+  <div class="pg-hdr">
+    <div class="pg-hdr-in">
+      <div class="breadcrumb"><a onclick="showHome()">🏠 Home</a> › <span id="breadState">State</span></div>
+      <div class="pg-title" id="pgTitle">Schemes</div>
+      <div class="pg-sub" id="pgSub">Central + state-specific schemes</div>
+    </div>
+  </div>
+  <div class="cat-tabs" id="filterBar">
+    <div class="cat-tabs-in">
+      <button class="ctab active" onclick="selCat('all',this)">⭐ All</button>
+      <button class="ctab" onclick="selCat('10th',this)">📖 10th Level</button>
+      <button class="ctab" onclick="selCat('intermediate',this)">📝 11th–12th</button>
+      <button class="ctab" onclick="selCat('graduation',this)">🎓 Graduation (UG)</button>
+      <button class="ctab" onclick="selCat('postgrad',this)">🔬 Post Graduation</button>
+      <button class="ctab" onclick="selCat('competitive',this)">🏆 NEET / JEE / UPSC</button>
+      <button class="ctab" onclick="selCat('sports',this)">🏅 Sports</button>
+      <button class="ctab" onclick="selCat('other',this)">📌 Other</button>
+    </div>
+  </div>
+  <div class="filter-bar">
+    <span class="fl">Filter:</span>
+    <button class="tag-btn active" onclick="selTag('All',this)">All</button>
+    <button class="tag-btn" onclick="selTag('SC',this)">SC</button>
+    <button class="tag-btn" onclick="selTag('ST',this)">ST</button>
+    <button class="tag-btn" onclick="selTag('OBC',this)">OBC</button>
+    <button class="tag-btn" onclick="selTag('EWS',this)">EWS</button>
+    <button class="tag-btn" onclick="selTag('Girls',this)">👩 Girls</button>
+    <button class="tag-btn" onclick="selTag('Merit',this)">🏅 Merit</button>
+    <button class="tag-btn" onclick="selTag('Sports',this)">⚽ Sports</button>
+    <button class="tag-btn" onclick="selTag('Minority',this)">Minority</button>
+    <div style="margin-left:auto"><input class="st-srch" type="text" id="stSearch" placeholder="🔍 Search schemes..." oninput="applyFilters()"></div>
+  </div>
+  <div class="sch-cnt" id="schCnt"></div>
+  <div class="schemes-grid" id="schemesGrid"></div>
+</div>
+
+<!-- ═══════ ADMIN LOGIN ═══════ -->
+<div id="view-admin-login" class="hidden">
+  <div class="al-wrap">
+    <div class="al-card">
+      <div class="al-icon">🔐</div>
+      <h2>Admin Login</h2>
+      <p class="sub">Enter your admin credentials to continue</p>
+      <div class="fg"><label class="fl2">Username</label><input class="fi" id="loginU" type="text" placeholder="Enter username" autocomplete="off"></div>
+      <div class="fg"><label class="fl2">Password</label><input class="fi" id="loginP" type="password" placeholder="Enter password" autocomplete="off"></div>
+      <div class="err" id="loginErr">❌ Invalid credentials. Please try again.</div>
+      <button class="btn-p" onclick="doLogin()">Login →</button>
+      <p style="text-align:center;margin-top:12px;font-size:12px;color:var(--mu)"><a onclick="showHome()" style="color:var(--sf);cursor:pointer">← Back to Home</a></p>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════ ADMIN DASHBOARD ═══════ -->
+<div id="view-admin" class="hidden">
+  <div class="adm">
+    <div class="adm-top">
+      <div><div class="adm-title">⚙️ Admin Dashboard</div><div class="adm-sub" id="admSubTitle">Select a state to manage its schemes</div></div>
+      <div class="adm-acts">
+        <button class="btn-mon" id="monToggleBtn" onclick="toggleMonitor()" title="Open/close WhatsApp-style chat monitor">💬 Chat Monitor <span id="monBadge" style="display:none;background:#EF4444;color:#fff;border-radius:9px;padding:1px 6px;font-size:11px;font-weight:800;margin-left:3px">0</span></button>
+        <button class="btn-rst" onclick="resetData()">🔄 Reset</button>
+        <button class="btn-lo" onclick="doLogout()">Logout</button>
+      </div>
+    </div>
+    <!-- ── Firebase Rules Setup Guide (shown when PERMISSION_DENIED) ── -->
+    <div id="fbRulesHint" style="display:none;background:#FEF2F2;border:1.5px solid #FECACA;border-radius:12px;padding:18px 20px;margin-bottom:18px">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px">
+        <span style="font-size:22px">🔴</span>
+        <div>
+          <div style="font-weight:800;color:#991B1B;font-size:14px">Firebase Rules Blocking Chat</div>
+          <div style="font-size:12px;color:#B91C1C;margin-top:1px">Messages from users cannot be read/written — cross-device chat is broken</div>
+        </div>
+      </div>
+      <div style="font-size:12px;color:#7F1D1D;margin-bottom:10px;line-height:1.6">
+        <strong>Fix in 30 seconds:</strong><br>
+        1. Go to <a href="https://console.firebase.google.com/project/niha-994b8/database" target="_blank" style="color:#2563EB;font-weight:700">Firebase Console → Realtime Database → Rules</a><br>
+        2. Replace the rules with:
+      </div>
+      <div style="background:#1E1E1E;color:#4EC9B0;font-family:monospace;font-size:12px;padding:12px 14px;border-radius:8px;margin-bottom:10px;white-space:pre;overflow-x:auto">{
+  "rules": {
+    "syi_chat": {
+      ".read": true,
+      ".write": true
+    }
+  }
+}</div>
+      <button onclick="testFbConnection()" style="background:#DC2626;color:#fff;border:none;padding:8px 16px;border-radius:7px;font-size:12px;font-weight:700;cursor:pointer;font-family:'Noto Sans',sans-serif">🔄 Re-test Connection</button>
+    </div>
+
+    <!-- ── Live connection status bar ── -->
+    <div id="fbStatusBar" style="display:flex;align-items:center;gap:8px;background:#F8FAFC;border:1.5px solid var(--bd);border-radius:10px;padding:10px 14px;margin-bottom:16px;font-size:12px;color:var(--mu)">
+      <span id="fbStatusDot" style="width:8px;height:8px;border-radius:50%;background:#94A3B8;flex-shrink:0"></span>
+      <span id="fbStatusText">Connecting to Firebase…</span>
+      <button onclick="testFbConnection()" style="margin-left:auto;background:none;border:1px solid var(--bd);color:var(--mu);padding:3px 10px;border-radius:5px;font-size:11px;font-weight:600;cursor:pointer;font-family:'Noto Sans',sans-serif">Test</button>
+    </div>
+
+    <div class="adm-stats" id="admStats"></div>
+
+    <!-- ── VIEW A: States Grid (default) ── -->
+    <div id="adm-states-view">
+      <button class="central-btn" onclick="showAdminState('central')">
+        🇮🇳 &nbsp; Central Government Schemes
+        <span class="chip">All India</span>
+        <span class="cnt" id="admCentralCount">0 schemes</span>
+      </button>
+      <div class="sec-title" style="margin-top:4px">Manage Schemes by <em>State</em></div>
+      <div class="sec-sub">Click a state to add, edit, or remove its schemes</div>
+      <div class="state-grid" id="admStateGrid"></div>
+    </div>
+
+    <!-- ── VIEW B: State-specific Scheme Table ── -->
+    <div id="adm-state-schemes-view" class="hidden">
+      <div class="adm-state-hdr">
+        <button class="adm-state-back" onclick="showAdminStatesGrid()">← All States</button>
+        <div class="adm-state-title" id="adm-state-title">State</div>
+        <button class="btn-add" onclick="openAdd()">＋ Add Scheme</button>
+      </div>
+      <div class="adm-state-flt">
+        <div class="afg">
+          <label class="afl">Category</label>
+          <select class="fs" id="adm-state-ca" style="padding:8px 11px;font-size:13px" onchange="renderAdmStateTbl()">
+            <option value="all">All Categories</option>
+            <option value="10th">📖 10th Level</option>
+            <option value="intermediate">📝 11th–12th</option>
+            <option value="graduation">🎓 Graduation</option>
+            <option value="postgrad">🔬 Post Graduation</option>
+            <option value="competitive">🏆 Competitive Exams</option>
+            <option value="other">📌 Other</option>
+          </select>
+        </div>
+        <div class="afg" style="flex:2">
+          <label class="afl">Search</label>
+          <input class="fi" id="adm-state-q" style="padding:8px 11px;font-size:13px" placeholder="Search schemes in this state..." oninput="renderAdmStateTbl()">
+        </div>
+      </div>
+      <div class="tbl-wrap">
+        <div class="tbl-hdr">
+          <span id="admStateTblInfo">Loading...</span>
+          <span style="font-size:11px;color:var(--mu)">Auto-saved to browser</span>
+        </div>
+        <div style="overflow-x:auto">
+          <table class="tbl">
+            <thead><tr><th>#</th><th>Scheme Name</th><th>Category</th><th>Benefits</th><th>URL</th><th>Actions</th></tr></thead>
+            <tbody id="admStateTbody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════ SCHEME MODAL ═══════ -->
+<div class="m-ov" id="schModal">
+  <div class="m-box">
+    <div class="m-hdr"><div class="m-title" id="mTitle">Add Scheme</div><button class="m-cls" id="mCls">×</button></div>
+    <div class="m-grid">
+      <div class="full fg"><label class="fl2">Scheme Name *</label><input class="fi" id="m-nm" placeholder="Full official scheme name"></div>
+      <div class="fg"><label class="fl2">State *</label><select class="fs" id="m-st"></select></div>
+      <div class="fg"><label class="fl2">Category *</label><select class="fs" id="m-ca"><option value="all">All Categories</option><option value="10th">10th Level</option><option value="intermediate">11th–12th</option><option value="graduation">Graduation (UG)</option><option value="postgrad">Post Graduation</option><option value="competitive">Competitive Exams</option><option value="sports">🏅 Sports</option><option value="other">Other</option></select></div>
+      <div class="full fg"><label class="fl2">Ministry / Department</label><input class="fi" id="m-mi" placeholder="e.g. Ministry of Education"></div>
+      <div class="full fg"><label class="fl2">Description *</label><textarea class="fta" id="m-de" placeholder="What is this scheme about?"></textarea></div>
+      <div class="full fg"><label class="fl2">Benefits *</label><input class="fi" id="m-be" placeholder="e.g. ₹12,000/year for 4 years"></div>
+      <div class="full fg"><label class="fl2">Eligibility</label><textarea class="fta" id="m-el" style="min-height:58px" placeholder="Who can apply? Category, income, marks criteria..."></textarea></div>
+      <div class="full fg"><label class="fl2">Official URL</label><input class="fi" id="m-ur" placeholder="https://..."></div>
+      <div class="full fg"><label class="fl2">Tags (comma separated)</label><input class="fi" id="m-tg" placeholder="SC, ST, OBC, Girls, Merit, Minority, EWS, All..."></div>
+    </div>
+    <div class="m-acts"><button class="btn-sv" onclick="saveScheme()">💾 Save Scheme</button><button class="btn-cn" onclick="closeModal()">Cancel</button></div>
+  </div>
+</div>
+
+<!-- ═══════ FOOTER ═══════ -->
+<footer>
+  <p>🇮🇳 <strong>SarkariYojanaIndex</strong> — One place for all government education schemes in India</p>
+  <p class="warn">⚠️ Data from official portals. Always verify at official sites before applying.</p>
+</footer>
+
+<!-- ═══════ COMMUNITY CHAT ═══════ -->
+<!-- FAB — shows site logo when closed, ✕ when open -->
+<button class="chat-fab" id="chatFab" title="Need help? Chat with us">
+  <span class="fab-logo-ico">🎓</span>
+  <span class="cb-badge" id="chatBadge"></span>
+</button>
+
+<!-- User Help Desk Chat Panel -->
+<div class="cp" id="chatPanel">
+  <div class="cp-h" id="cpDragHdr">
+    <div class="ico">🛟</div>
+    <div class="inf">
+      <div class="t">Help &amp; Support</div>
+      <div class="s" id="cpSub">Private chat with our team</div>
+    </div>
+    <div class="acts">
+      <span class="onb" id="cpOnb" style="display:none">Admin online</span>
+      <span id="fbStatus" title="Connection status" style="font-size:10px;padding:2px 7px;border-radius:100px;font-weight:700;display:none"></span>
+      <button class="chb" id="cpClrBtn" style="display:none" title="Clear all messages">🗑</button>
+      <button class="chb d" id="cpCloseBtn" title="Close">✕</button>
+    </div>
+  </div>
+  <div class="cp-body" id="cpBody">
+    <div class="cp-ne" id="cpNE">
+      <div class="ne-ico">🛟</div>
+      <h3>Start a Conversation</h3>
+      <p>Ask about any scheme, eligibility, or application process. Our team replies privately.</p>
+      <input id="cpNameInp" type="text" maxlength="24" placeholder="Your name (e.g. Ravi)">
+      <p style="font-size:11px;color:var(--mu);margin-top:-4px">🔒 Private — only you and admin can see this chat</p>
+      <button id="cpJoinBtn">Start Chat →</button>
+    </div>
+    <div class="cp-pin" id="cpPin" style="display:none">
+      <div class="plb">📌 Pinned</div>
+      <div class="ptx" id="cpPinTxt"></div>
+    </div>
+    <div class="cp-msgs" id="cpMsgs" style="display:none"></div>
+    <div class="cp-ir" id="cpIR" style="display:none">
+      <textarea class="cp-inp" id="cpInp" rows="1" maxlength="400" placeholder="Type your question…"></textarea>
+      <button class="cp-send" id="cpSendBtn">➤</button>
+    </div>
+  </div>
+  <div class="cp-rz" id="cpRz"></div>
+</div>
+
+<!-- Admin Monitor — WhatsApp-style inbox + thread -->
+<div class="cp mon" id="adminMon">
+  <!-- WhatsApp-style green header -->
+  <div class="cp-h am-wa-hdr" id="amDragHdr">
+    <div class="am-wa-logo">🛡️</div>
+    <div class="inf">
+      <div class="t">Chat Monitor</div>
+      <div class="s" id="amSub">Admin · All conversations</div>
+    </div>
+    <div class="acts">
+      <button class="chb" id="amEditBtn" title="Edit display name">✏️</button>
+      <button class="chb" id="amMinBtn" title="Minimize">⊟</button>
+      <button class="chb d" id="amCloseBtn" title="Close">✕</button>
+    </div>
+  </div>
+  <!-- Name edit bar -->
+  <div id="amNameEdit" style="display:none;padding:8px 10px;border-bottom:1px solid var(--bd);background:#f8fafc;flex-shrink:0">
+    <div style="display:flex;gap:6px;align-items:center">
+      <input id="amNameInp" class="am-name-inp" type="text" maxlength="24" placeholder="Your display name in chat...">
+      <button id="amNameSaveBtn" style="padding:7px 12px;background:#25D366;color:#fff;border:none;border-radius:7px;font-size:12px;font-weight:700;cursor:pointer;white-space:nowrap;font-family:'Noto Sans',sans-serif">Save</button>
+    </div>
+  </div>
+  <div class="cp-body" id="amBody">
+    <!-- INBOX: WhatsApp-style conversation list -->
+    <div id="amInbox" class="mon-inbox wa-inbox"></div>
+    <!-- THREAD: conversation with one user -->
+    <div id="amThread" style="display:none;flex-direction:column;flex:1;overflow:hidden;min-height:0">
+      <div class="mon-thdr wa-thdr">
+        <button class="mon-back wa-back" id="amBackBtn">‹</button>
+        <div class="mon-thav" id="amThAv">?</div>
+        <div class="mon-thnm" id="amThNm">User</div>
+        <button class="btn-del-usr" id="amDelUsrBtn">🗑 Delete</button>
+      </div>
+      <!-- Chat background like WhatsApp -->
+      <div class="cp-msgs wa-msgs" id="amThreadMsgs"></div>
+      <div class="cp-ir wa-ir">
+        <textarea class="cp-inp" id="amInp" rows="1" maxlength="400" placeholder="Type a reply as Admin..."></textarea>
+        <button class="cp-send wa-send" id="amSendBtn">➤</button>
+      </div>
+    </div>
+  </div>
+  <div class="cp-rz" id="amRz"></div>
+</div>
+</div>
+
+<!-- Context Menu -->
+<div class="ctx" id="ctxMenu">
+  <div class="ctx-i" id="ctxPin">📌 Pin message</div>
+  <div class="ctx-i" id="ctxUnpin">📍 Unpin</div>
+  <div class="ctx-i dng" id="ctxDel">🗑️ Delete message</div>
+</div>
+
+<script>
+// ═══════════════════════════════════════════════════════════════
+// DATA
+// ═══════════════════════════════════════════════════════════════
+const STATES=[{n:"Andhra Pradesh",e:"🌾"},{n:"Arunachal Pradesh",e:"🏔️"},{n:"Assam",e:"🍵"},{n:"Bihar",e:"📚"},{n:"Chhattisgarh",e:"🌿"},{n:"Goa",e:"🌊"},{n:"Gujarat",e:"🦁"},{n:"Haryana",e:"🌻"},{n:"Himachal Pradesh",e:"❄️"},{n:"Jharkhand",e:"⛏️"},{n:"Karnataka",e:"🏛️"},{n:"Kerala",e:"🌴"},{n:"Madhya Pradesh",e:"🐅"},{n:"Maharashtra",e:"🏙️"},{n:"Manipur",e:"💃"},{n:"Meghalaya",e:"🌧️"},{n:"Mizoram",e:"🎋"},{n:"Nagaland",e:"🦋"},{n:"Odisha",e:"🛕"},{n:"Punjab",e:"🌾"},{n:"Rajasthan",e:"🏜️"},{n:"Sikkim",e:"🏔️"},{n:"Tamil Nadu",e:"🎭"},{n:"Telangana",e:"🤝"},{n:"Tripura",e:"🌺"},{n:"Uttar Pradesh",e:"🕌"},{n:"Uttarakhand",e:"🏔️"},{n:"West Bengal",e:"🐯"},{n:"Delhi (NCT)",e:"🏛️"},{n:"Jammu & Kashmir",e:"❄️"},{n:"Ladakh",e:"🏔️"},{n:"Chandigarh",e:"🌳"},{n:"Puducherry",e:"🌊"},{n:"Lakshadweep",e:"🏝️"},{n:"Dadra & Nagar Haveli",e:"🌿"},{n:"Andaman & Nicobar",e:"🏝️"}];
+const CAT={all:{l:"All",i:"⭐",c:"#F7941D",b:"#FFF7ED"},"10th":{l:"10th Level",i:"📖",c:"#6366F1",b:"#EEF2FF"},intermediate:{l:"11th–12th",i:"📝",c:"#0EA5E9",b:"#E0F2FE"},graduation:{l:"Graduation",i:"🎓",c:"#10B981",b:"#D1FAE5"},postgrad:{l:"Post Grad",i:"🔬",c:"#8B5CF6",b:"#EDE9FE"},competitive:{l:"NEET/JEE/UPSC",i:"🏆",c:"#EF4444",b:"#FEE2E2"},sports:{l:"Sports",i:"🏅",c:"#1D4ED8",b:"#DBEAFE"},other:{l:"Other",i:"📌",c:"#F59E0B",b:"#FEF3C7"}};
+// Firebase config, chat constants and helpers are declared below in the COMMUNITY CHAT section
+
+const SEED=[
+  // ── CENTRAL ──
+  {id:"c01",state:"central",cat:"all",name:"National Scholarship Portal (NSP)",min:"Ministry of Electronics & IT, GoI",desc:"Single-window portal for all central government scholarship schemes. Covers pre-matric, post-matric, and merit-cum-means scholarships for SC/ST/OBC/Minority/EWS students.",ben:"₹1,000–₹20,000/year depending on category and level",elig:"SC/ST/OBC/Minority/EWS students; income and category criteria per individual scheme",url:"https://scholarships.gov.in",tags:["SC","ST","OBC","Minority","EWS","All"]},
+  {id:"c02",state:"central",cat:"10th",name:"National Means-cum-Merit Scholarship (NMMS)",min:"Ministry of Education, GoI",desc:"Reduces dropout at Class 8 level by providing financial support to meritorious students from economically weaker sections. About 1 lakh scholarships awarded annually.",ben:"₹12,000/year (₹1,000/month) for 4 years (Class 9–12)",elig:"Class 8 students with 55%+ marks; family income ≤ ₹3.5 lakh/year; state merit test required",url:"https://scholarships.gov.in",tags:["All","Merit","EWS"]},
+  {id:"c03",state:"central",cat:"intermediate",name:"PM YASASVI Scholarship Scheme",min:"Ministry of Social Justice & Empowerment",desc:"Scholarship for OBC, EBC, DNT students in Class 9–12. Selected via NTA-conducted PM-YASASVI Entrance Test (YET).",ben:"₹75,000/year (Class 9–10) | ₹1,25,000/year (Class 11–12)",elig:"OBC/EBC/DNT/NT students; family income ≤ ₹2.5 lakh/year; selected via NTA test",url:"https://yet.nta.ac.in",tags:["OBC","EBC","DNT"]},
+  {id:"c04",state:"central",cat:"intermediate",name:"Begum Hazrat Mahal National Scholarship (Girls)",min:"Maulana Azad Education Foundation",desc:"Encourages meritorious girls from minority communities to continue education from Class 9 to 12 by providing financial support.",ben:"₹5,000 (Class 9–10) | ₹6,000 (Class 11–12)",elig:"Minority girls; 50%+ marks in previous exam; family income ≤ ₹2 lakh/year",url:"https://maef.nic.in",tags:["Girls","Minority"]},
+  {id:"c05",state:"central",cat:"intermediate",name:"Post Matric Scholarship – SC Students (Central)",min:"Ministry of Social Justice & Empowerment",desc:"Financial assistance to SC students studying at post-matric level (Class 11 onwards) to help them complete education.",ben:"Up to ₹1,200/month maintenance + tuition fee reimbursement",elig:"SC students in Class 11 and above; family income ≤ ₹2.5 lakh/year",url:"https://scholarships.gov.in",tags:["SC"]},
+  {id:"c06",state:"central",cat:"graduation",name:"Central Sector Scholarship Scheme (CSS)",min:"Ministry of Education, GoI",desc:"82,000 merit-cum-means scholarships for UG and PG students. 50% reserved for girl students. Disbursed via DBT.",ben:"₹12,000/year (UG 1–3 years) | ₹20,000/year (UG 4–5 & PG)",elig:"Above 80th percentile in Class 12 board; family income ≤ ₹8 lakh/year",url:"https://scholarships.gov.in",tags:["Merit","All","EWS"]},
+  {id:"c07",state:"central",cat:"graduation",name:"INSPIRE Scholarship for Higher Education (SHE)",min:"Dept. of Science & Technology, MoST",desc:"For students in top 1% of board exams enrolled in natural sciences. Encourages talent towards research careers in basic sciences.",ben:"₹80,000/year for 5 years",elig:"Top 1% in Class 12 board; pursuing BSc/BS/MSc in natural & basic sciences",url:"https://www.vidyalakshmi.co.in",tags:["Science","Merit"]},
+  {id:"c08",state:"central",cat:"graduation",name:"Merit-cum-Means Scholarship for Minorities",min:"Ministry of Minority Affairs, GoI",desc:"Financial assistance to meritorious minority students for professional/technical UG and PG courses.",ben:"Course fee up to ₹20,000/year + ₹10,000/year maintenance",elig:"Muslim/Christian/Sikh/Buddhist/Jain/Parsi students; 50%+ marks; family income ≤ ₹2.5 lakh/year",url:"https://scholarships.gov.in",tags:["Minority","Merit"]},
+  {id:"c09",state:"central",cat:"graduation",name:"PM Scholarship Scheme (PMSS) – Ex-Servicemen",min:"Ministry of Home Affairs / KSB",desc:"For wards and widows of Ex-Servicemen/Coast Guard pursuing first professional degree. Priority to children of martyrs.",ben:"₹2,500/month (Boys) | ₹3,000/month (Girls) for course duration",elig:"Wards/widows of Ex-Servicemen; 60%+ in Class 12; pursuing professional UG courses",url:"https://ksb.gov.in",tags:["Ex-Servicemen","All"]},
+  {id:"c10",state:"central",cat:"graduation",name:"Vidya Lakshmi Education Loan Portal",min:"Ministry of Finance & Ministry of Education",desc:"Single-window platform for education loans from 38+ banks. Interest subsidy under CSIS for EWS students.",ben:"Loans up to ₹20 lakh+; interest subsidy for income ≤ ₹4.5 lakh",elig:"Students seeking education loans for India or abroad study",url:"https://aicte-india.org",tags:["All","Loan"]},
+  {id:"c11",state:"central",cat:"graduation",name:"Ishan Uday – Special NE Region Scholarship",min:"University Grants Commission (UGC)",desc:"Special scholarship for NE state students pursuing general/technical UG degree outside their home state.",ben:"₹5,400/month (General) | ₹7,800/month (Technical/Medical)",elig:"NE state domicile students; income ≤ ₹4.5 lakh/year",url:"https://scholarships.gov.in",tags:["North East","All"]},
+  {id:"c12",state:"central",cat:"competitive",name:"Free Coaching Scheme – SC & OBC Students",min:"Ministry of Social Justice & Empowerment",desc:"Free quality coaching for SC/OBC students for UPSC, JEE, NEET, CAT, CLAT, Bank PO and other competitive exams.",ben:"Free coaching + ₹3,000/month (residential) | ₹1,500/month (non-residential) stipend",elig:"SC/OBC students; family income ≤ ₹8 lakh/year",url:"https://scholarships.gov.in",tags:["SC","OBC"]},
+  {id:"c13",state:"central",cat:"competitive",name:"SATHEE – Free JEE/NEET Coaching (IIT Madras)",min:"Ministry of Education / IIT Madras",desc:"Self Assessment Test and Help for Entrance Exams — free AI-powered online coaching for JEE and NEET by IIT Madras faculty.",ben:"100% free: video lectures, study material, mock tests, analytics",elig:"All Class 11–12 students preparing for JEE Main/Advanced or NEET UG",url:"https://sathee.prutor.ai",tags:["All","JEE","NEET"]},
+  {id:"c14",state:"central",cat:"postgrad",name:"UGC-NET Junior Research Fellowship (JRF)",min:"University Grants Commission (UGC)",desc:"Fellowship for NET/JRF qualified candidates to pursue doctoral research (PhD) with financial support.",ben:"₹37,000/month (first 2 years) | ₹42,000/month (subsequent) + HRA",elig:"UGC NET exam qualified with JRF rank; for pursuing PhD in Indian universities",url:"https://scholarships.gov.in",tags:["Research","PhD","All"]},
+  {id:"c15",state:"central",cat:"postgrad",name:"GATE Scholarship for M.Tech/ME",min:"MHRD / AICTE",desc:"Monthly stipend for GATE-qualified students pursuing M.Tech or ME at AICTE-approved institutions.",ben:"₹12,400/month for up to 24 months",elig:"GATE qualified; enrolled in M.Tech/ME at AICTE-approved institution",url:"https://scholarships.gov.in",tags:["Engineering","Merit"]},
+  {id:"c16",state:"central",cat:"postgrad",name:"National Fellowship for ST Students (NFST)",min:"Ministry of Tribal Affairs",desc:"JRF/SRF level fellowship for ST students pursuing M.Phil./Ph.D. at UGC-recognized universities.",ben:"₹25,000–₹28,000/month (JRF/SRF level)",elig:"ST students; M.Phil or Ph.D admission at recognized university; 750 slots/year",url:"https://scholarships.gov.in",tags:["ST","Research","PhD"]},
+  // ── SPORTS (Central) ──
+  {id:"sp01",state:"central",cat:"sports",name:"National Sports Talent Contest (NSTC) Scholarship – SAI",min:"Sports Authority of India (SAI), Govt. of India",desc:"SAI identifies talented school athletes via NSTC trials and provides full residential training with scholarship. Students trained at SAI Training Centres nationwide.",ben:"₹5,000/month + free boarding, lodging & coaching at SAI Training Centres",elig:"Students aged 8–14; selected through NSTC trials; Class 6–10; any SAI-recognised sport",url:"https://sportsauthorityofindia.nic.in",tags:["All","Sports","Merit"]},
+  {id:"sp02",state:"central",cat:"sports",name:"Target Olympic Podium Scheme (TOPS)",min:"Sports Authority of India (SAI) / Ministry of Youth Affairs",desc:"Elite athlete support scheme for medal prospects at Olympics/Asian Games. Covers training, diet, equipment, foreign exposure, and monthly stipend.",ben:"₹50,000/month + training expenses, equipment, international camps fully funded",elig:"Elite athletes with realistic medal potential at Olympics/CWG/Asian Games; 18+ years; nominated by National Sports Federation",url:"https://sportsauthorityofindia.nic.in",tags:["All","Sports","Elite","Merit"]},
+  {id:"sp03",state:"central",cat:"sports",name:"Rajiv Gandhi Khel Ratna / Major Dhyan Chand Award",min:"Ministry of Youth Affairs & Sports, GoI",desc:"India's highest sporting honour with cash prize. Awarded annually to athletes for spectacular and outstanding performance over last 4 years at international level.",ben:"₹25 lakh cash award (Khel Ratna) | ₹15 lakh (Arjuna Award) | ₹10 lakh (Dhyan Chand Award)",elig:"Indian citizen; outstanding performance in sports at international level; nominated via National Federation",url:"https://yas.nic.in",tags:["All","Sports","Elite","Merit"]},
+  {id:"sp04",state:"central",cat:"sports",name:"PYKKA – Panchayat Yuva Krida aur Khel Abhiyan",min:"Ministry of Youth Affairs & Sports, GoI",desc:"Grassroots rural sports scheme to identify and nurture talent from panchayat level. Annual competitions from village to national level with prize money.",ben:"Cash prizes ₹10,000–₹1 lakh at national level + equipment & coaching support",elig:"Rural youth aged 12–35 years; resident of gram panchayat; participating in PYKKA-designated events",url:"https://yas.nic.in",tags:["All","Rural","Sports","EWS"]},
+  {id:"sp05",state:"central",cat:"sports",name:"Lakshmibai National Institute of Physical Education (LNIPE) Scholarship",min:"LNIPE (Deemed University), Ministry of Sports",desc:"Tuition waiver and stipend for national/international sportspersons joining BPEd, MPEd or PhD programs at LNIPE Gwalior or Guwahati campus.",ben:"Full tuition fee waiver + ₹3,000/month stipend for outstanding sportspersons",elig:"National/international-level sportspersons; BPEd/MPEd applicant at LNIPE; 50%+ in qualifying exam; valid sports certificate",url:"https://lnipe.edu.in",tags:["All","Sports","Merit"]},
+  // ── TELANGANA ──
+  {id:"ts01",state:"Telangana",cat:"intermediate",name:"TS ePass Scholarship",min:"BC/SC/ST/Minority Welfare Depts, Telangana",desc:"Flagship post-matric scholarship portal covering SC/ST/BC/EBC/Minority/Disabled students from Class 11 to PG in Telangana.",ben:"Tuition fee reimbursement + maintenance charges (category-wise)",elig:"Telangana domicile; SC/ST/BC/EBC/Minority/Disabled; in recognized institutions",url:"https://telanganaepass.cgg.gov.in",tags:["SC","ST","BC","EBC","Minority"]},
+  {id:"ts02",state:"Telangana",cat:"intermediate",name:"Vasathi Deevena Hostel Scheme (TS)",min:"Social Welfare Dept, Telangana",desc:"Reimbursement of hostel/boarding expenses for SC/ST/BC/EBC students studying in private hostels in Telangana.",ben:"₹10,000–₹15,000/year for boarding & lodging",elig:"SC/ST/BC/EBC students in Telangana staying in private hostels near college",url:"https://telanganaepass.cgg.gov.in",tags:["SC","ST","BC","EBC"]},
+  {id:"ts03",state:"Telangana",cat:"intermediate",name:"Abhyasa Merit Scholarship (TS Minorities)",min:"Minorities Welfare Dept, Telangana",desc:"Merit scholarship for minority students scoring 70%+ in SSC or Intermediate in Telangana.",ben:"₹10,000 one-time cash award + merit certificate",elig:"Minority students scoring 70%+ in SSC or Intermediate in Telangana",url:"https://telangana.gov.in",tags:["Minority","Merit"]},
+  {id:"ts04",state:"Telangana",cat:"graduation",name:"TS Rajiv Gandhi Vidya Deevena (Fee Reimbursement)",min:"Social Welfare Dept, Telangana",desc:"100% tuition and special fee reimbursement for SC/ST/BC/EBC students in Telangana degree/PG colleges.",ben:"Full tuition fee + special fee reimbursement",elig:"SC/ST/BC/EBC students in Telangana degree/PG colleges; income ≤ ₹1 lakh",url:"https://telanganaepass.cgg.gov.in",tags:["SC","ST","BC","EBC"]},
+  {id:"ts05",state:"Telangana",cat:"postgrad",name:"TS Chief Minister's Overseas Scholarship",min:"Social Welfare Dept, Telangana",desc:"Full financial support for SC/ST/BC students to pursue Masters/Ph.D. at top 200 QS/TIMES ranked world universities.",ben:"Up to ₹20 lakh (tuition + living + airfare) for 2 years",elig:"SC/ST/BC; Telangana domicile; admission at top-200 QS ranked university; income ≤ ₹5L",url:"https://telangana.gov.in",tags:["SC","ST","BC","Study Abroad"]},
+  // ── ANDHRA PRADESH ──
+  {id:"ap01",state:"Andhra Pradesh",cat:"intermediate",name:"AP ePass Scholarship",min:"Social Welfare Dept, Govt. of Andhra Pradesh",desc:"Electronic scholarship portal for SC/ST/BC/EBC/Minority post-matric students in AP covering maintenance and fees.",ben:"Tuition fee + maintenance allowance (category-wise)",elig:"SC/ST/BC/EBC/Minority students in AP recognized institutions; income criteria apply",url:"https://apepass.cgg.gov.in",tags:["SC","ST","BC","EBC","Minority"]},
+  {id:"ap02",state:"Andhra Pradesh",cat:"graduation",name:"Dr. YSR Jagananna Vidya Deevena (AP)",min:"Dept. of Higher Education, AP",desc:"Fee reimbursement for BC/SC/ST/EBC/Kapu and Minority students pursuing technical courses in AP.",ben:"100% tuition fee reimbursement directly to college",elig:"BC/SC/ST/EBC/Minority students in recognized AP technical institutions",url:"https://apepass.cgg.gov.in",tags:["SC","ST","BC","EBC","Minority"]},
+  // ── MAHARASHTRA ──
+  {id:"mh01",state:"Maharashtra",cat:"graduation",name:"Swami Vivekanand Merit-cum-Means Scholarship (MH)",min:"School Education Dept, Maharashtra",desc:"Merit scholarship for minority/EWS students pursuing technical/professional degree courses in Maharashtra.",ben:"Full tuition fee waiver + ₹8,000/year maintenance",elig:"Minority/EWS students; 60%+ in HSC; family income ≤ ₹6 lakh/year",url:"https://mahadbt.maharashtra.gov.in",tags:["Minority","EWS","Merit"]},
+  {id:"mh02",state:"Maharashtra",cat:"graduation",name:"Rajashri Chhatrapati Shahu Maharaj Scholarship",min:"Social Justice Dept, Maharashtra",desc:"Financial assistance for OBC students in Maharashtra pursuing higher education in degree courses.",ben:"₹4,000–₹8,000/year depending on course",elig:"OBC students domiciled in Maharashtra; income ≤ ₹8 lakh/year",url:"https://mahadbt.maharashtra.gov.in",tags:["OBC"]},
+  {id:"mh03",state:"Maharashtra",cat:"intermediate",name:"Govt. Scholarship for EBC Students (MH)",min:"Higher & Technical Education Dept, Maharashtra",desc:"Financial support for EBC students in Maharashtra pursuing HSC (Class 11–12) to prevent dropout.",ben:"₹3,000–₹6,000/year",elig:"EBC students in Maharashtra appearing in HSC; family income ≤ ₹1 lakh/year",url:"https://mahadbt.maharashtra.gov.in",tags:["EBC","EWS"]},
+  // ── UTTAR PRADESH ──
+  {id:"up01",state:"Uttar Pradesh",cat:"intermediate",name:"UP Pre & Post Matric Scholarship",min:"Social Welfare Dept, Govt. of UP",desc:"Comprehensive scholarship for SC/ST/OBC/Minority/EWS students in UP at pre-matric and post-matric levels.",ben:"₹3,000–₹25,000+/year (category, course, and hostel/day scholar)",elig:"UP domicile; SC/ST/OBC/Minority/EWS; income criteria per category",url:"https://up.gov.in",tags:["SC","ST","OBC","Minority","EWS"]},
+  {id:"up02",state:"Uttar Pradesh",cat:"intermediate",name:"Kanya Vidya Dhan Yojana (UP)",min:"Govt. of Uttar Pradesh",desc:"One-time financial assistance to meritorious girls passing Class 12 from UP/CBSE/ICSE boards in UP.",ben:"₹30,000 one-time cash grant",elig:"Girls passing UP Board/CBSE/ICSE Class 12 in UP; family income ≤ ₹48,000/year",url:"https://up.gov.in",tags:["Girls","Merit"]},
+  {id:"up03",state:"Uttar Pradesh",cat:"competitive",name:"UP Mukhyamantri Abhyudaya Free Coaching",min:"Govt. of Uttar Pradesh",desc:"Free coaching for UPSC, JEE, NEET, NDA, CDS at mandal level with coaching by IAS/IPS officers and subject experts.",ben:"Free classroom coaching + study material + online resources",elig:"All UP domicile students; no income bar; at mandal HQ centers",url:"https://up.gov.in",tags:["All","UPSC","JEE","NEET"]},
+  // ── BIHAR ──
+  {id:"br01",state:"Bihar",cat:"graduation",name:"Mukhyamantri Kanya Utthan Yojana (Bihar)",min:"Dept. of Education, Govt. of Bihar",desc:"Financial incentive for Bihar girls to pursue graduation. Reduces child marriage and improves female enrollment.",ben:"₹25,000 on passing Class 12 (unmarried) + ₹50,000 on completing graduation",elig:"Unmarried girls domiciled in Bihar; passing Intermediate and Graduation",url:"https://medhasoft.bih.nic.in",tags:["Girls","All"]},
+  {id:"br02",state:"Bihar",cat:"postgrad",name:"Bihar Post Matric Scholarship (SC/ST/OBC)",min:"SC/ST/BC Welfare Dept, Govt. of Bihar",desc:"Post-matric scholarship for SC/ST/OBC/EBC students from Bihar for Class 11 and above.",ben:"Maintenance allowance + tuition fee (category and course wise)",elig:"SC/ST/OBC/EBC domiciled in Bihar; income criteria per category",url:"https://state.bihar.gov.in",tags:["SC","ST","OBC","EBC"]},
+  {id:"br03",state:"Bihar",cat:"graduation",name:"Bihar Medhavriti Yojana (Board Toppers)",min:"Dept. of Education, Govt. of Bihar",desc:"Cash reward for SC/ST/OBC students passing Bihar Board Class 12 with first or second division.",ben:"₹15,000 (First Division) | ₹10,000 (Second Division)",elig:"SC/ST/OBC girls and boys passing Bihar Board Class 12 in first or second division",url:"https://medhasoft.bih.nic.in",tags:["SC","ST","OBC","Merit"]},
+  // ── KARNATAKA ──
+  {id:"ka01",state:"Karnataka",cat:"graduation",name:"Vidyasiri Scholarship (Karnataka)",min:"SC/ST/OBC & Minorities Welfare, Karnataka",desc:"Post-matric scholarship for SC/ST/OBC/Minority students in Karnataka for UG and PG courses.",ben:"Maintenance allowance + tuition fee (category-wise)",elig:"SC/ST/OBC/Minority domiciled in Karnataka; income criteria per category",url:"https://karepass.cgg.gov.in",tags:["SC","ST","OBC","Minority"]},
+  {id:"ka02",state:"Karnataka",cat:"graduation",name:"Arivu Education Loan (Karnataka Minorities)",min:"Karnataka Minorities Development Corporation",desc:"Low-interest education loan for minority students pursuing professional/technical courses in India or abroad.",ben:"Loan up to ₹5 lakh (India) | ₹10 lakh (abroad) at 6% interest",elig:"Minority students in Karnataka; pursuing professional/technical courses",url:"https://karnataka.gov.in",tags:["Minority","Loan"]},
+  // ── KERALA ──
+  {id:"kl01",state:"Kerala",cat:"graduation",name:"e-Grantz Scholarship (Kerala)",min:"Social Justice Dept, Govt. of Kerala",desc:"Single-window portal for SC/ST/OBC/EBC/Minority post-matric students in Kerala. Covers maintenance and fee support.",ben:"Maintenance allowance ₹1,200–₹3,500/month + tuition fee",elig:"SC/ST/OBC/EBC/Minority domiciled in Kerala; income criteria per category",url:"https://kerala.gov.in",tags:["SC","ST","OBC","EBC","Minority"]},
+  {id:"kl02",state:"Kerala",cat:"graduation",name:"Kerala Higher Education Scholarship (KSHEC)",min:"Kerala State Higher Education Council",desc:"Merit scholarships for EWS students from Kerala scoring 85%+ in plus-two and pursuing degree courses.",ben:"₹10,000/year for 3 years of UG degree",elig:"85%+ in Kerala HS board; family income ≤ ₹1 lakh/year; pursuing degree in Kerala",url:"https://kerala.gov.in",tags:["Merit","EWS"]},
+  {id:"kl03",state:"Kerala",cat:"competitive",name:"Vidya Samunnathi Free Coaching (Kerala Minorities)",min:"Kerala Minorities Welfare Dept, Govt. of Kerala",desc:"Free coaching for minority students in Kerala for UPSC, PSC, SSC, and banking exams.",ben:"Free coaching + ₹1,000/month stipend",elig:"Minority community; Kerala domicile; graduate for civil services; 10th/12th for others",url:"https://kerala.gov.in",tags:["Minority","UPSC","PSC","SSC"]},
+  // ── PUNJAB ──
+  {id:"pb01",state:"Punjab",cat:"graduation",name:"Post Matric Scholarship – SC Students (Punjab)",min:"Dept. of Social Justice & Empowerment, Punjab",desc:"Financial assistance to SC students in Punjab for Class 11 onwards including maintenance allowance and fees.",ben:"₹380–₹1,200/month maintenance + tuition fee",elig:"SC students domiciled in Punjab; family income ≤ ₹2.5 lakh/year",url:"https://punjab.gov.in",tags:["SC"]},
+  {id:"pb02",state:"Punjab",cat:"graduation",name:"Dr. Ambedkar Scholarship for SC/ST/BC (Punjab)",min:"Dept. of Social Justice & Empowerment, Punjab",desc:"Scholarship for SC/ST/BC students in Punjab pursuing professional/technical degree courses.",ben:"₹1,000–₹2,000/month for professional course duration",elig:"SC/ST/BC domiciled in Punjab; pursuing engineering, medical, law, or management",url:"https://punjab.gov.in",tags:["SC","ST","BC"]},
+  {id:"pb03",state:"Punjab",cat:"intermediate",name:"Punjab Merit Scholarship (PSEB Board Toppers)",min:"Punjab School Education Board (PSEB)",desc:"Cash award for students achieving top ranks in PSEB Class 10 and Class 12 examinations.",ben:"₹5,000–₹21,000 one-time award for merit positions",elig:"Top 3 positions in PSEB Class 10 and Class 12 examinations",url:"https://punjab.gov.in",tags:["Merit","All"]},
+  // ── ODISHA ──
+  {id:"od01",state:"Odisha",cat:"graduation",name:"PRERANA Post Matric Scholarship (Odisha)",min:"ST & SC Development Dept, Govt. of Odisha",desc:"Post-matric scholarship for SC/ST students in Odisha including maintenance, book grant and clothing allowance.",ben:"₹3,500–₹7,000/year + book grant + clothing allowance",elig:"SC/ST domiciled in Odisha; pursuing post-matric education",url:"https://odisha.gov.in",tags:["SC","ST"]},
+  {id:"od02",state:"Odisha",cat:"graduation",name:"Kalinga Sikhya Sathi Yojana (Odisha)",min:"Dept. of Higher Education, Govt. of Odisha",desc:"Interest subsidy on education loans for Odisha students at premier institutions.",ben:"100% interest subsidy during moratorium (course + 1 year)",elig:"Odisha domicile; admitted to premier institutes; income ≤ ₹4.5 lakh/year",url:"https://odisha.gov.in",tags:["All","Loan","EWS"]},
+  {id:"od03",state:"Odisha",cat:"intermediate",name:"Madhu Babu Scholarship – Disabled Students (OD)",min:"Dept. of Social Security & Empowerment of PWD, Odisha",desc:"Scholarship for differently-abled students in Odisha from Class 1 through post-graduation.",ben:"₹300–₹900/month depending on class level",elig:"40%+ disability; Odisha domicile; income ≤ ₹2.4 lakh/year",url:"https://odisha.gov.in",tags:["Disability","All"]},
+  // ── MADHYA PRADESH ──
+  {id:"mp01",state:"Madhya Pradesh",cat:"graduation",name:"Mukhyamantri Medhavi Vidyarthi Yojana (MMVY)",min:"Dept. of Technical Education, Govt. of MP",desc:"Full fee payment for MP students scoring 70%+ in Class 12 and admitted to IIT/NIT/AIIMS/IIM or govt colleges.",ben:"100% admission & tuition fee directly to institution; up to ₹1.5 lakh/year",elig:"MP domicile; 70%+ in MP/CBSE Class 12; IIT/NIT/AIIMS/IIM or govt medical/engineering; income ≤ ₹6L",url:"https://medhavikalyan.mp.gov.in",tags:["Merit","All","JEE","NEET"]},
+  {id:"mp02",state:"Madhya Pradesh",cat:"graduation",name:"Vikramaditya Scholarship for OBC (MP)",min:"OBC/EWS Welfare Dept, Govt. of MP",desc:"Financial assistance for OBC students of MP pursuing higher education in government colleges.",ben:"₹2,500/year + hostel allowance",elig:"OBC students in MP; 60%+ in Class 12 from MP Board; income ≤ ₹1.2 lakh/year",url:"https://scholarshipportal.mp.nic.in",tags:["OBC"]},
+  {id:"mp03",state:"Madhya Pradesh",cat:"10th",name:"Gaon Ki Beti Yojana (MP Girls)",min:"Dept. of Higher Education, Govt. of MP",desc:"Financial assistance for rural MP girls passing Class 12 with first division to pursue graduation.",ben:"₹500/month (10 months/year) while pursuing degree",elig:"Girls from rural MP; Class 12 first division; pursuing degree in MP college",url:"https://scholarshipportal.mp.nic.in",tags:["Girls","Rural"]},
+  // ── ASSAM ──
+  {id:"as01",state:"Assam",cat:"graduation",name:"Post Matric Scholarship SC/ST/OBC (Assam)",min:"Welfare of Plain Tribes & BC Dept, Assam",desc:"Post-matric scholarship for SC/ST/OBC students in Assam for degree and diploma level education.",ben:"₹600–₹1,500/month maintenance + tuition fee",elig:"SC/ST/OBC domiciled in Assam; income criteria per category",url:"https://scholarships.gov.in",tags:["SC","ST","OBC"]},
+  {id:"as02",state:"Assam",cat:"competitive",name:"Assam CM Special Scholarship (NEET/JEE)",min:"Dept. of Education, Govt. of Assam",desc:"Scholarship for Assam students qualifying NEET/JEE and admitted to govt medical/engineering colleges.",ben:"₹30,000/year (NEET/MBBS) | ₹20,000/year (JEE/B.Tech)",elig:"Assam domicile; NEET/JEE qualified; govt college admission; income ≤ ₹2L",url:"https://scholarships.gov.in",tags:["NEET","JEE","Merit","All"]},
+  // ── HARYANA ──
+  {id:"hr01",state:"Haryana",cat:"graduation",name:"Post Matric Scholarship – SC (Haryana)",min:"Welfare of SC & BC Dept, Haryana",desc:"Post-matric scholarship for SC students in Haryana from Class 11 to PG level.",ben:"₹570–₹1,500/month maintenance + tuition fee",elig:"SC domiciled in Haryana; income ≤ ₹2.5 lakh/year; in recognized institutions",url:"https://haryana.gov.in",tags:["SC"]},
+  {id:"hr02",state:"Haryana",cat:"graduation",name:"Haryana Merit Scholarship",min:"Dept. of Higher Education, Haryana",desc:"Merit scholarship for Haryana students securing admission in government colleges for UG courses.",ben:"₹5,000–₹8,000/year",elig:"Haryana domicile; 70%+ in Class 12; UG degree in government colleges",url:"https://haryana.gov.in",tags:["Merit","All"]},
+  {id:"hr03",state:"Haryana",cat:"graduation",name:"Mukhyamantri Vivah Shagun Yojana (Haryana)",min:"SC/BC/EWS Welfare Dept, Haryana",desc:"Financial gift for marriage of SC/ST/OBC/EWS/Minority girls in Haryana, with bonus for Class 10+ pass.",ben:"₹31,000 (general poor) | ₹51,000 (if girl passed Class 10+) for eligible families",elig:"SC/ST/OBC/Minority/EWS Haryana girls; income ≤ ₹1 lakh; age 18+",url:"https://haryana.gov.in",tags:["SC","ST","OBC","Minority","EWS","Girls"]},
+  // ── HIMACHAL PRADESH ──
+  {id:"hp01",state:"Himachal Pradesh",cat:"graduation",name:"HIMKOSH Post Matric Scholarship (HP)",min:"SC/ST/OBC Welfare Dept, Govt. of HP",desc:"Post-matric scholarship for SC/ST/OBC/Minority students in HP. Disbursed via PFMS/DBT.",ben:"₹380–₹1,200/month maintenance + tuition fee",elig:"SC/ST/OBC/Minority domiciled in HP; income ≤ ₹2.5 lakh/year",url:"https://himachal.nic.in",tags:["SC","ST","OBC","Minority"]},
+  {id:"hp02",state:"Himachal Pradesh",cat:"intermediate",name:"Dr. YS Parmar Merit Scholarships (HP)",min:"Dept. of Education, Govt. of HP",desc:"Cash awards for students in top positions in HP Board Class 10 and Class 12 examinations.",ben:"₹10,000–₹25,000 one-time award for merit positions",elig:"Top 3 positions in HPBOSE Class 10 and Class 12 board exams",url:"https://himachal.nic.in",tags:["Merit","All"]},
+  // ── TAMIL NADU ──
+  {id:"tn01",state:"Tamil Nadu",cat:"graduation",name:"Tamil Nadu Govt. Post Matric Scholarship",min:"Adi Dravidar & Tribal Welfare Dept, TN",desc:"Post-matric scholarship for SC/ST/BC/MBC students in Tamil Nadu from Class 11 onwards.",ben:"₹1,200–₹3,500/month + hostel allowance (category-wise)",elig:"SC/ST/BC/MBC domiciled in Tamil Nadu; pursuing post-matric education",url:"https://tn.gov.in",tags:["SC","ST","BC","OBC"]},
+  {id:"tn02",state:"Tamil Nadu",cat:"competitive",name:"TN CM Free UPSC Coaching Scheme",min:"Govt. of Tamil Nadu",desc:"Free UPSC Civil Services coaching for SC/ST/BC/MBC students from TN at coaching centers in Chennai.",ben:"Free coaching for UPSC Prelims & Mains + study material + mock interviews",elig:"SC/ST/BC/MBC from TN; graduate; preparing for UPSC Civil Services",url:"https://tn.gov.in",tags:["SC","ST","BC","OBC","UPSC"]},
+  // ── GUJARAT ──
+  {id:"gj01",state:"Gujarat",cat:"graduation",name:"CM's SC/ST/OBC Scholarship (Gujarat)",min:"Social Justice & Empowerment Dept, Gujarat",desc:"Financial assistance for SC/ST/OBC students of Gujarat pursuing higher education.",ben:"₹10,000–₹25,000/year depending on category and course",elig:"SC/ST/OBC domiciled in Gujarat; income criteria per category",url:"https://www.myscheme.gov.in/search/user-journey",tags:["SC","ST","OBC"]},
+  // ── WEST BENGAL ──
+  {id:"wb01",state:"West Bengal",cat:"graduation",name:"Swami Vivekananda Merit-cum-Means Scholarship (WB)",min:"Dept. of Higher Education, Govt. of WB",desc:"Merit scholarship for EWS students in WB with 75%+ in HS pursuing degree courses.",ben:"₹1,000–₹2,000/month depending on course level",elig:"75%+ in HS (Class 12); income ≤ ₹2.5 lakh/year; WB domicile",url:"https://svmcm.wbhed.gov.in",tags:["Merit","EWS","All"]},
+  // ── RAJASTHAN ──
+  {id:"rj01",state:"Rajasthan",cat:"graduation",name:"Kalibai Bheel Medhavi Chatra Yojana (RJ)",min:"Tribal Area Development Dept, Rajasthan",desc:"Free scooter or cash for meritorious SC/ST/OBC/Minority/EWS girls passing Class 12 with 65%+ in Rajasthan.",ben:"Free scooter or ₹40,000 cash + ₹2,000 fuel/insurance allowance",elig:"SC/ST/OBC/Minority/EWS girls; Rajasthan Board/CBSE/ICSE Class 12 with 65%+ (SC/ST 75%+)",url:"https://rajasthan.gov.in",tags:["Girls","SC","ST","OBC","Minority","EWS","Merit"]},
+  {id:"rj02",state:"Rajasthan",cat:"intermediate",name:"Mukhyamantri Scholarship Scheme (Rajasthan)",min:"Dept. of Finance / Education, Rajasthan",desc:"Merit scholarship for Rajasthan Board Class 10 toppers to encourage academic excellence.",ben:"₹5,000 one-time award for top merit ranks",elig:"Rajasthan Board Class 10 top merit rankers; Rajasthan domicile",url:"https://rajasthan.gov.in",tags:["Merit","All"]},
+  // ── DELHI (additional) ──
+  {id:"dl02",state:"Delhi (NCT)",cat:"graduation",name:"SC/ST/OBC Post-Matric Scholarship (Delhi)",min:"Dept. of SC/ST/OBC Welfare, GNCT of Delhi",desc:"Post-matric financial assistance for SC, ST, and OBC students domiciled in Delhi pursuing Class 11 and above at recognised institutions. Applied via NSP.",ben:"Maintenance allowance + tuition fee reimbursement as per NSP norms",elig:"SC/ST/OBC domiciled in Delhi; income ≤ ₹2.5 lakh/year; in recognised institution",url:"https://delhi.gov.in",tags:["SC","ST","OBC"]},
+  {id:"dl03",state:"Delhi (NCT)",cat:"graduation",name:"Dr. B.R. Ambedkar Merit Scholarship (Delhi)",min:"Dept. of SC/ST Welfare, GNCT of Delhi",desc:"Merit-based scholarship for SC students from Delhi who excelled in Class 12 board examinations and are pursuing higher education in Delhi universities.",ben:"₹2,500–₹5,000/year depending on course level",elig:"SC domicile in Delhi; 60%+ in Class 12; pursuing UG/PG at recognised Delhi institution",url:"https://delhi.gov.in",tags:["SC","Merit"]},
+
+  // ── ANDHRA PRADESH (additional) ──
+  {id:"ap03",state:"Andhra Pradesh",cat:"graduation",name:"Jagananna Vidya Deevena (AP Fee Reimbursement)",min:"Social Welfare Dept, Govt. of Andhra Pradesh",desc:"Full fee reimbursement for SC/ST/BC/EBC/Kapu/Minority students in AP pursuing degree, ITI, engineering, medical and professional courses. Amount credited directly to mother's bank account.",ben:"100% tuition fee + ₹10,000–₹20,000/year living allowance (course-wise)",elig:"SC/ST/BC/EBC/Kapu/Minority students; AP domicile; income ≤ ₹2.5 lakh (SC/ST) / ₹1 lakh (BC/Kapu)/year; in recognised AP college",url:"https://apepass.cgg.gov.in",tags:["SC","ST","BC","OBC","EWS","Minority"]},
+  {id:"ap04",state:"Andhra Pradesh",cat:"graduation",name:"AP ePass Post-Matric Scholarship",min:"Social Welfare Dept, Govt. of Andhra Pradesh",desc:"Electronic scholarship disbursement system for post-matric students of SC/ST/BC/EBC/Kapu/Minority in AP. Fully online, DBT to bank accounts via jnanabhumi.ap.gov.in.",ben:"Tuition fee reimbursement + maintenance allowance (category and course wise)",elig:"SC/ST/BC/EBC/Kapu/Minority students domiciled in AP; income criteria per category; enrolled in AP recognised institutions",url:"https://apepass.cgg.gov.in",tags:["SC","ST","BC","EWS","Minority"]},
+
+  // ── GUJARAT (additional) ──
+  {id:"gj02",state:"Gujarat",cat:"graduation",name:"MYSY Scholarship (Mukhyamantri Yuva Swavalamban Yojana)",min:"Education Dept, Govt. of Gujarat",desc:"Scholarship for EWS students (non-reserved category) from Gujarat pursuing engineering, medical, pharmacy, or diploma courses at recognised institutions. Budget ₹1,000 crore/year.",ben:"50% tuition fee waiver; ₹1,200/month hostel allowance; ₹2 lakh/year for MBBS; ₹25,000/year for diploma",elig:"Gujarat domicile; non-reserved (EWS); 80%+ in SSC/HSC; in engineering/medical/pharmacy/diploma course; income ≤ ₹6 lakh/year",url:"https://www.myscheme.gov.in/search/user-journey",tags:["EWS","Merit","Engineering","NEET"]},
+  {id:"gj03",state:"Gujarat",cat:"graduation",name:"Digital Gujarat Scholarship (SC/ST/OBC)",min:"Social Justice & Empowerment Dept, Gujarat",desc:"Post-matric scholarship for SC/ST/OBC/Minority students of Gujarat pursuing Class 11 onwards. Applied online via Digital Gujarat portal with Aadhaar-linked DBT.",ben:"Maintenance allowance + tuition fee reimbursement (category and course wise)",elig:"SC/ST/OBC/Minority domiciled in Gujarat; income criteria per category; pursuing post-matric education",url:"https://www.myscheme.gov.in/search/user-journey",tags:["SC","ST","OBC","Minority"]},
+
+  // ── WEST BENGAL (additional) ──
+  {id:"wb02",state:"West Bengal",cat:"graduation",name:"Aikyashree Scholarship (WB Minority)",min:"WB Minority Development & Finance Corporation",desc:"Post-matric scholarship for Minority students (Muslim/Christian/Sikh/Buddhist/Jain/Parsi) in WB from Class 11 to PG. Applied through the official WBMDFC portal.",ben:"Tuition fee + ₹1,000–₹2,400/month maintenance (course and level wise)",elig:"Minority community domicile in WB; income ≤ ₹2.5 lakh/year; Class 11 and above in recognised institution; 50%+ marks",url:"https://wb.gov.in",tags:["Minority"]},
+  {id:"wb03",state:"West Bengal",cat:"intermediate",name:"Kanyashree Prakalpa (WB Girls Scholarship)",min:"Women & Child Development Dept, Govt. of WB",desc:"Flagship WB scheme to incentivise girls aged 13–18 to stay in school/college and delay marriage. Two components: annual grant and one-time grant at 18. One of India's most successful girl education schemes.",ben:"₹1,000/year annual grant (Class 8–12) + ₹25,000 one-time grant at age 18 (unmarried + in education)",elig:"Girl students aged 13–18 in WB; enrolled in Class 8–12 or vocational training; family income ≤ ₹1.2 lakh/year; unmarried",url:"https://wbkanyashree.gov.in",tags:["Girls","EWS","All"]},
+
+  // ── RAJASTHAN (additional) ──
+  {id:"rj03",state:"Rajasthan",cat:"graduation",name:"Rajasthan Palanhar Yojana (Orphan Students)",min:"Social Justice & Empowerment Dept, Rajasthan",desc:"Monthly financial support for orphaned or destitute children in Rajasthan being raised by relatives/guardians, with education incentive for school/college-going students.",ben:"₹2,500/month (0–6 yrs) | ₹4,000/month (6–18 yrs) + ₹2,000/year clothing/stationery",elig:"Orphaned/destitute children in Rajasthan raised by relative guardian; guardian income ≤ ₹1.2 lakh/year",url:"https://rajasthan.gov.in",tags:["SC","ST","EWS","All"]},
+
+  // ── HIMACHAL PRADESH (additional) ──
+  {id:"hp03",state:"Himachal Pradesh",cat:"graduation",name:"Mukhya Mantri Protsahan Yojana (HP – UPSC/JEE/NEET)",min:"Dept. of Higher Education, Govt. of HP",desc:"Cash incentive for HP domicile students clearing competitive exams like UPSC, JEE, NEET, and HP State Services to encourage youth to pursue careers in civil/technical services.",ben:"₹50,000 one-time award for clearing UPSC/HP State Services | ₹75,000 for JEE Mains | Varies by exam",elig:"HP domicile; cleared specified competitive exam (UPSC/HP PSC/JEE/NEET); income ≤ ₹2 lakh/year",url:"https://himachal.nic.in",tags:["Merit","UPSC","JEE","NEET","Competitive"]},
+
+  // ── TAMIL NADU (additional) ──
+  {id:"tn03",state:"Tamil Nadu",cat:"graduation",name:"Tamil Nadu Minority Scholarship (Anbagam)",min:"Minority Welfare Dept, Govt. of Tamil Nadu",desc:"Post-matric financial assistance for Minority students (Muslim/Christian/Sikh/Jain/Buddhist/Parsi) in Tamil Nadu pursuing UG and PG courses at recognised institutions.",ben:"₹2,000–₹5,000/year for UG | higher for PG courses",elig:"Minority community students domiciled in TN; income ≤ ₹2 lakh/year; pursuing UG/PG in recognised TN colleges",url:"https://tn.gov.in",tags:["Minority"]},
+
+  // ── KARNATAKA (additional) ──
+  {id:"ka03",state:"Karnataka",cat:"graduation",name:"Dr. B.R. Ambedkar Post-Matric Scholarship (Karnataka)",min:"Social Welfare Dept, Govt. of Karnataka",desc:"Post-matric scholarship for SC/ST students in Karnataka from Class 11 onwards. Accessed via SSP Karnataka portal with annual renewal.",ben:"Tuition fee reimbursement + maintenance allowance (per SSP Karnataka rates)",elig:"SC/ST students domiciled in Karnataka; income ≤ ₹2.5 lakh/year; in recognised Karnataka institution; via ssp.karnataka.gov.in",url:"https://ssp.karnataka.gov.in",tags:["SC","ST"]},
+
+  // ── ARUNACHAL PRADESH ──
+  {id:"ar01",state:"Arunachal Pradesh",cat:"intermediate",name:"Pre-Matric Scholarship for ST Students (Arunachal Pradesh)",min:"Tribal Affairs Dept, Govt. of Arunachal Pradesh",desc:"Financial assistance for Scheduled Tribe students in Class 9 and 10 in Arunachal Pradesh, administered via National Scholarship Portal with DBT disbursement.",ben:"₹3,500/year (day scholar) | ₹7,000/year (hostel student) + book grant",elig:"ST students in Class 9–10; domiciled in Arunachal Pradesh; family income ≤ ₹2.5 lakh/year; via NSP",url:"https://arunachalpradesh.gov.in",tags:["ST"]},
+  {id:"ar02",state:"Arunachal Pradesh",cat:"graduation",name:"Post-Matric Scholarship for ST Students (Arunachal Pradesh)",min:"Social Justice Dept, Govt. of Arunachal Pradesh",desc:"Post-matric scholarship for ST students in Arunachal Pradesh from Class 11 through PG level, under the centrally-sponsored Umbrella Scheme for ST Children.",ben:"₹380–₹1,200/month maintenance + tuition fee reimbursement (course-wise)",elig:"ST students domiciled in Arunachal Pradesh; income ≤ ₹2.5 lakh/year; Class 11 and above in recognised institution",url:"https://arunachalpradesh.gov.in",tags:["ST"]},
+  {id:"ar03",state:"Arunachal Pradesh",cat:"graduation",name:"NEC Merit Scholarship (Arunachal Pradesh)",min:"North Eastern Council (NEC) / Ministry of DoNER",desc:"Merit scholarship for students from NE states including Arunachal Pradesh pursuing diploma, UG, PG, M.Phil. or PhD. 1,600 seats allocated across all NE states.",ben:"₹700/month (Diploma) | ₹1,300/month (UG) | ₹1,700/month (PG) | ₹2,700/month (M.Phil/PhD)",elig:"Arunachal Pradesh domicile; 60%+ in qualifying exam; family income ≤ ₹8 lakh/year; via NSP",url:"https://arunachalpradesh.gov.in",tags:["All","Merit","North East"]},
+
+  // ── CHHATTISGARH ──
+  {id:"cg01",state:"Chhattisgarh",cat:"intermediate",name:"Mukhyamantri Gyan Protsahan Yojana (CG)",min:"Tribal Development & SC Welfare Dept, Govt. of CG",desc:"One-time merit-based cash award for SC and ST students who score well in Class 10 or Class 12 board exams from CBSE, CISCE, or Chhattisgarh Board. Applied via schoolscholarship.cg.nic.in.",ben:"₹15,000 one-time cash award per selected student",elig:"SC/ST students in CG; Class 10 or 12 from CG/CBSE/CISCE Board; selected via merit list published by govt",url:"https://cgstate.gov.in",tags:["SC","ST","Merit"]},
+  {id:"cg02",state:"Chhattisgarh",cat:"graduation",name:"CG Post-Matric Scholarship (SC/ST/OBC/EWS)",min:"Social Welfare Dept, Govt. of Chhattisgarh",desc:"Post-matric scholarship for SC/ST/OBC/EWS students in Chhattisgarh from Class 11 onwards. Applied through CG Scholarship Portal 2.0 or NSP.",ben:"Maintenance allowance + tuition fee reimbursement (category and course wise)",elig:"SC/ST/OBC/EWS domiciled in CG; pursuing post-matric education; income criteria per category",url:"https://cgstate.gov.in",tags:["SC","ST","OBC","EWS"]},
+  {id:"cg03",state:"Chhattisgarh",cat:"graduation",name:"Kanya Saksharta Protsahan Yojana (CG)",min:"School Education Dept, Govt. of Chhattisgarh",desc:"Incentive scheme for girl students in Chhattisgarh to encourage literacy and prevent school dropout. Provides cash support for continuing education after Class 10.",ben:"Financial incentive for girls in BPL/EWS category continuing higher education",elig:"Girl students domiciled in CG; BPL/EWS family; continuing education post-Class 10; applied at district education office",url:"https://cgstate.gov.in",tags:["Girls","EWS","SC","ST","OBC"]},
+
+  // ── GOA ──
+  {id:"ga01",state:"Goa",cat:"postgrad",name:"Manohar Parrikar Goa Scholars Scheme",min:"Directorate of Higher Education, Govt. of Goa",desc:"Financial support for talented Goa domicile students aged 18–25 pursuing PG or Doctoral courses in reputed institutions in India or abroad. Applied via SUGAM portal.",ben:"Financial grant for PG/PhD studies in India or abroad (selection-based amount)",elig:"Goa domicile; age 18–25; pursuing PG/PhD at reputed institution; merit-based selection; apply at sugam.gshec.edu.in",url:"https://sugam.gshec.edu.in",tags:["Merit","All","Research"]},
+  {id:"ga02",state:"Goa",cat:"graduation",name:"ST/OBC Post-Matric Scholarship (Goa)",min:"Directorate of Tribal Welfare, Govt. of Goa",desc:"Financial assistance for ST and OBC students pursuing post-matric courses in Goa. Covers maintenance and partial tuition fee. Administered via Goa government scholarship portal.",ben:"Maintenance allowance + partial tuition fee reimbursement; income ≤ ₹3 lakh/year",elig:"ST/OBC students domiciled in Goa; pursuing post-matric courses; income ≤ ₹3 lakh/year; regular attendance required",url:"https://goa.gov.in",tags:["ST","OBC"]},
+
+  // ── JHARKHAND ──
+  {id:"jh01",state:"Jharkhand",cat:"graduation",name:"Guruji Student Credit Card Scheme (Jharkhand)",min:"Dept. of Higher Education, Govt. of Jharkhand",desc:"Collateral-free education loan for Jharkhand students pursuing higher education. Government acts as guarantor. Repayment begins one year after course completion.",ben:"Loan up to ₹15 lakh at 4% annual interest; repayment starts 1 year post-course",elig:"Jharkhand domicile; pursuing UG/PG at recognised institution; income ≤ ₹5 lakh/year; via E-Kalyan Jharkhand portal",url:"https://jharkhand.gov.in",tags:["All","EWS"]},
+  {id:"jh02",state:"Jharkhand",cat:"graduation",name:"Manki Munda Scholarship (Jharkhand Girls – Technical)",min:"Dept. of Higher Education, Govt. of Jharkhand",desc:"Scholarship for girl students pursuing technical/engineering education in Jharkhand to incentivise female enrolment in technical and professional courses.",ben:"₹15,000/year for Diploma | ₹30,000/year for Engineering/B.Tech",elig:"Girl students domiciled in Jharkhand; pursuing engineering or diploma at AICTE-approved institution; merit-based",url:"https://jharkhand.gov.in",tags:["Girls","Engineering"]},
+  {id:"jh03",state:"Jharkhand",cat:"graduation",name:"E-Kalyan Post-Matric Scholarship (Jharkhand)",min:"Social Welfare Dept, Govt. of Jharkhand",desc:"Post-matric scholarship for SC/ST/OBC students in Jharkhand from Class 11 onwards, administered through the E-Kalyan Jharkhand portal with DBT disbursal.",ben:"Maintenance allowance + tuition fee reimbursement (category and course wise)",elig:"SC/ST/OBC domiciled in Jharkhand; pursuing post-matric education; income criteria per category; apply at ekalyan.cgg.gov.in",url:"https://ekalyan.cgg.gov.in",tags:["SC","ST","OBC"]},
+  {id:"jh04",state:"Jharkhand",cat:"postgrad",name:"Marang Gomke Jaipal Singh Munda Overseas Scholarship",min:"Tribal Welfare Dept, Govt. of Jharkhand",desc:"Fully-funded overseas scholarship for ST/SC/OBC/Minority students from Jharkhand to pursue 1-year Master's or 2-year M.Phil at top UK universities. Jointly funded with UK FCDO.",ben:"Fully funded — tuition, travel, maintenance, visa for top UK universities (25 slots/year)",elig:"ST/SC/OBC/Minority from Jharkhand; 55%+ in graduation; for PG/MPhil at UK universities; merit-based selection",url:"https://jharkhand.gov.in",tags:["ST","SC","OBC","Minority","Research"]},
+
+  // ── MANIPUR ──
+  {id:"mn01",state:"Manipur",cat:"intermediate",name:"State Merit Scholarship (Manipur Board Toppers)",min:"Directorate of Education, Govt. of Manipur",desc:"Cash award for Class 10 and 12 board toppers in Manipur to recognise academic excellence. Encourages students to continue higher education.",ben:"₹2,000–₹5,000 one-time award per merit ranker",elig:"Top rank holders in BOSEM (Class 10) / COHSEM (Class 12) board exams; Manipur domicile",url:"https://manipur.gov.in",tags:["Merit","All"]},
+  {id:"mn02",state:"Manipur",cat:"graduation",name:"Post-Matric Scholarship for ST Students (Manipur)",min:"Tribal Affairs Dept, Govt. of Manipur",desc:"Post-matric scholarship for Scheduled Tribe students in Manipur pursuing Class 11 and above including UG and PG, under centrally-sponsored Umbrella Scheme.",ben:"₹380–₹1,200/month maintenance + tuition fee reimbursement",elig:"ST students domiciled in Manipur; income ≤ ₹2.5 lakh/year; pursuing post-matric education; via NSP",url:"https://manipur.gov.in",tags:["ST"]},
+  {id:"mn03",state:"Manipur",cat:"graduation",name:"NEC Merit Scholarship (Manipur)",min:"North Eastern Council (NEC) / Ministry of DoNER",desc:"Merit scholarship for students from all NE states including Manipur pursuing diploma, UG, PG, M.Phil., or Ph.D. courses anywhere in India. 1,600 seats across NE states.",ben:"₹700–₹2,700/month depending on course level; annual; via DBT",elig:"Manipur domicile; 60%+ in qualifying exam; diploma/UG/PG/MPhil/PhD; income ≤ ₹8 lakh/year; via NSP",url:"https://manipur.gov.in",tags:["All","Merit","North East"]},
+
+  // ── MEGHALAYA ──
+  {id:"ml01",state:"Meghalaya",cat:"graduation",name:"Post-Matric Scholarship for ST Students (Meghalaya)",min:"Social Welfare Dept, Govt. of Meghalaya",desc:"Post-matric scholarship under the Umbrella Scheme for ST Children for Meghalaya students in Class 11 and above. Applied via National Scholarship Portal.",ben:"₹380–₹1,200/month maintenance + tuition fee reimbursement (course-wise)",elig:"ST students domiciled in Meghalaya; income ≤ ₹2.5 lakh/year; pursuing post-matric education",url:"https://meghalaya.gov.in",tags:["ST"]},
+  {id:"ml02",state:"Meghalaya",cat:"graduation",name:"Chief Minister's Scholarship for Class 12 Toppers (Meghalaya)",min:"Education Dept, Govt. of Meghalaya",desc:"Merit scholarship for top performers in Meghalaya Board (MBOSE) Class 12 to support continued higher education and encourage academic excellence.",ben:"₹10,000–₹30,000 one-time award for top merit rank positions",elig:"Top rank holders in MBOSE Class 12; Meghalaya domicile; pursuing higher education",url:"https://meghalaya.gov.in",tags:["Merit","All"]},
+  {id:"ml03",state:"Meghalaya",cat:"graduation",name:"NEC Merit Scholarship (Meghalaya)",min:"North Eastern Council (NEC) / Ministry of DoNER",desc:"Merit scholarship for NE states including Meghalaya. Covers diploma, UG, PG, M.Phil., and PhD levels. Applications through NSP every academic year.",ben:"₹700–₹2,700/month depending on course level",elig:"Meghalaya domicile; 60%+ in qualifying exam; income ≤ ₹8 lakh/year; pursuing diploma/UG/PG/MPhil/PhD",url:"https://meghalaya.gov.in",tags:["All","Merit","North East"]},
+
+  // ── MIZORAM ──
+  {id:"mz01",state:"Mizoram",cat:"graduation",name:"Post-Matric Scholarship for ST Students (Mizoram)",min:"Social Welfare Dept, Govt. of Mizoram",desc:"Post-matric scholarship for Scheduled Tribe students in Mizoram pursuing higher education, administered through the Mizoram Scholarship Board and NSP.",ben:"Maintenance allowance + tuition fee reimbursement (category and course wise)",elig:"ST students domiciled in Mizoram; income ≤ ₹2.5 lakh/year; pursuing post-matric education",url:"https://mizoram.gov.in",tags:["ST"]},
+  {id:"mz02",state:"Mizoram",cat:"graduation",name:"Mizoram State Merit Scholarship",min:"Mizoram Scholarship Board, Govt. of Mizoram",desc:"Merit scholarship for Mizoram students pursuing higher studies at institutions within and outside Mizoram. Applied via the dedicated Mizoram Scholarship Portal (mzscholarship.mizoram.gov.in).",ben:"₹12,000–₹24,000/year depending on course type and institution",elig:"Mizoram domicile; 60%+ in qualifying exam; pursuing UG/PG at recognised institutions",url:"https://mizoram.gov.in",tags:["Merit","All"]},
+
+  // ── NAGALAND ──
+  {id:"nl01",state:"Nagaland",cat:"graduation",name:"Post-Matric Scholarship for ST Students (Nagaland)",min:"Tribal Affairs Dept, Govt. of Nagaland",desc:"Financial assistance for ST students in Nagaland pursuing post-matriculation education. Centrally sponsored; applied via National Scholarship Portal.",ben:"₹380–₹1,200/month maintenance + tuition fee reimbursement",elig:"ST students domiciled in Nagaland; income ≤ ₹2.5 lakh/year; pursuing post-matric education",url:"https://nagaland.gov.in",tags:["ST"]},
+  {id:"nl02",state:"Nagaland",cat:"graduation",name:"Nagaland State Merit Scholarship",min:"Dept. of Higher Education, Govt. of Nagaland",desc:"Merit-based scholarship for students who score high in NBSE Class 12 board exams to support higher education. Managed by Directorate of Higher Education, Nagaland.",ben:"₹10,000–₹30,000/year for selected merit positions",elig:"Nagaland domicile; top merit positions in NBSE Class 12; pursuing degree courses at recognised institutions",url:"https://nagaland.gov.in",tags:["Merit","All"]},
+
+  // ── SIKKIM ──
+  {id:"sk01",state:"Sikkim",cat:"graduation",name:"Post-Matric Scholarship for ST Students (Sikkim)",min:"Social Welfare Dept, Govt. of Sikkim",desc:"Post-matric scholarship for ST students in Sikkim administered by the Social Welfare Department. Applied via NSP with DBT to beneficiary accounts.",ben:"₹380–₹1,200/month maintenance + tuition fee reimbursement",elig:"ST students domiciled in Sikkim; income ≤ ₹2.5 lakh/year; pursuing post-matric courses",url:"https://sikkim.gov.in",tags:["ST"]},
+  {id:"sk02",state:"Sikkim",cat:"graduation",name:"Chief Minister's Scholarship Scheme (Sikkim)",min:"Human Resource Development Dept, Govt. of Sikkim",desc:"State-funded merit scholarship for Sikkim domicile students pursuing higher education. Encourages academic excellence among Sikkim's student community.",ben:"₹12,000–₹20,000/year depending on institution type and course",elig:"Sikkim domicile; merit-based (60%+ in qualifying exam); pursuing UG/PG at recognised institution",url:"https://sikkim.gov.in",tags:["Merit","All"]},
+  {id:"sk03",state:"Sikkim",cat:"graduation",name:"NEC Merit Scholarship (Sikkim)",min:"North Eastern Council (NEC) / Ministry of DoNER",desc:"Merit scholarship for students from NE states including Sikkim pursuing diploma, UG, PG, M.Phil., or PhD in India. Annual applications via NSP.",ben:"₹700–₹2,700/month depending on course level",elig:"Sikkim domicile; 60%+ in qualifying exam; income ≤ ₹8 lakh/year; diploma/UG/PG/MPhil/PhD; via NSP",url:"https://sikkim.gov.in",tags:["All","Merit","North East"]},
+
+  // ── TRIPURA ──
+  {id:"tr01",state:"Tripura",cat:"graduation",name:"Post-Matric Scholarship for ST/SC Students (Tripura)",min:"Tribal Welfare Dept, Govt. of Tripura",desc:"Financial assistance for ST and SC students in Tripura pursuing post-matric education, under centrally-sponsored Umbrella Scheme. Applied via NSP.",ben:"₹380–₹1,200/month maintenance + tuition fee reimbursement",elig:"ST/SC students domiciled in Tripura; income ≤ ₹2.5 lakh/year; pursuing post-matric education",url:"https://tripura.gov.in",tags:["ST","SC"]},
+  {id:"tr02",state:"Tripura",cat:"graduation",name:"Tripura State Merit Scholarship",min:"Directorate of Higher Education, Govt. of Tripura",desc:"Merit scholarship for students who excelled in Tripura Board (TBSE) Class 12 board exams and are pursuing degree-level higher education.",ben:"₹8,000–₹15,000/year merit cash award for selected rank holders",elig:"Tripura domicile; top merit positions in TBSE Class 12; pursuing UG at recognised institutions",url:"https://tripura.gov.in",tags:["Merit","All"]},
+  {id:"tr03",state:"Tripura",cat:"graduation",name:"NEC Merit Scholarship (Tripura)",min:"North Eastern Council (NEC) / Ministry of DoNER",desc:"Merit scholarship for students from NE states including Tripura pursuing diploma, UG, PG, M.Phil., or PhD across India. Via NSP.",ben:"₹700–₹2,700/month depending on course level",elig:"Tripura domicile; 60%+ in qualifying exam; income ≤ ₹8 lakh/year; via NSP",url:"https://tripura.gov.in",tags:["All","Merit","North East"]},
+
+  // ── UTTARAKHAND ──
+  {id:"uk01",state:"Uttarakhand",cat:"graduation",name:"Post-Matric Scholarship for SC/ST/OBC (Uttarakhand)",min:"Social Welfare Dept, Govt. of Uttarakhand",desc:"Post-matric scholarship for SC/ST/OBC students in Uttarakhand from Class 11 and above. Applied via Uttarakhand e-Scholarship portal or NSP.",ben:"Maintenance allowance + tuition fee reimbursement (category and course wise)",elig:"SC/ST/OBC domiciled in Uttarakhand; income criteria per category; pursuing post-matric education",url:"https://uk.gov.in",tags:["SC","ST","OBC"]},
+  {id:"uk02",state:"Uttarakhand",cat:"intermediate",name:"UK Board Merit Scholarship (Uttarakhand)",min:"Uttarakhand Board of School Education (UBSE)",desc:"Merit scholarship for Class 10 and Class 12 top performers in the Uttarakhand State Board examinations to encourage academic achievement.",ben:"₹6,000–₹12,000/year for top merit positions in UBSE board exams",elig:"Uttarakhand Board (UBSE) Class 10 or 12 merit rankers; Uttarakhand domicile; continuing to next level",url:"https://uk.gov.in",tags:["Merit","All"]},
+  {id:"uk03",state:"Uttarakhand",cat:"graduation",name:"Uttarakhand Girls in Technical Education Scholarship",min:"Technical Education Dept, Govt. of Uttarakhand",desc:"Special financial incentive for girl students from Uttarakhand enrolled in engineering or technical courses to boost female participation in STEM fields.",ben:"₹10,000/year for girl students enrolled in AICTE-approved engineering/technical courses",elig:"Girl students domiciled in Uttarakhand; enrolled in AICTE-approved engineering or technical institution",url:"https://uk.gov.in",tags:["Girls","Engineering"]},
+
+  // ── JAMMU & KASHMIR ──
+  {id:"jk01",state:"Jammu & Kashmir",cat:"graduation",name:"PM Special Scholarship Scheme (PMSSS) – J&K",min:"AICTE / Ministry of Education, Govt. of India",desc:"Flagship scholarship enabling J&K students to pursue higher education outside J&K at AICTE-approved colleges. Launched 2011 to promote national integration. Applied at aicte-jk-scholarship-de.samarth.ac.in.",ben:"Academic fee up to ₹3 lakh/year + ₹1 lakh/year maintenance; 5,000 seats/year",elig:"J&K domicile; passed Class 12 from JKBOSE/CBSE school in J&K; income ≤ ₹8 lakh/year; pursuing UG outside J&K",url:"https://aicte-jk-scholarship-de.samarth.ac.in",tags:["All","JEE","NEET","Engineering"]},
+  {id:"jk02",state:"Jammu & Kashmir",cat:"graduation",name:"Post-Matric Scholarship for ST Students (J&K)",min:"Tribal Affairs Dept, Govt. of J&K",desc:"Post-matric scholarship for Scheduled Tribe students of Jammu & Kashmir pursuing Class 11 and above, administered through National Scholarship Portal with DBT.",ben:"₹380–₹1,200/month maintenance + tuition fee reimbursement",elig:"ST students domiciled in J&K; income ≤ ₹2.5 lakh/year; pursuing post-matric education; via NSP",url:"https://jk.gov.in",tags:["ST"]},
+  {id:"jk03",state:"Jammu & Kashmir",cat:"graduation",name:"J&K State Scholarship (University Merit)",min:"Directorate of Higher Education, Govt. of J&K",desc:"State merit scholarship for J&K students who excelled in board exams and are pursuing degree courses at recognised colleges in or outside J&K.",ben:"₹10,000–₹20,000/year for merit-selected students",elig:"J&K domicile; merit-based on board exam performance; pursuing UG in recognised institution",url:"https://jk.gov.in",tags:["Merit","All"]},
+
+  // ── LADAKH ──
+  {id:"la01",state:"Ladakh",cat:"graduation",name:"PM Special Scholarship Scheme (PMSSS) – Ladakh",min:"AICTE / Ministry of Education, Govt. of India",desc:"Extension of PMSSS for Ladakh UT students. Enables students from Ladakh to pursue higher education outside their UT at AICTE-approved colleges with substantial financial support.",ben:"Academic fee up to ₹3 lakh/year + ₹1 lakh/year maintenance allowance",elig:"Ladakh UT domicile; Class 12 from JKBOSE/CBSE school in Ladakh; income ≤ ₹8 lakh/year; pursuing UG outside Ladakh",url:"https://aicte-jk-scholarship-de.samarth.ac.in",tags:["All","Engineering","NEET"]},
+  {id:"la02",state:"Ladakh",cat:"graduation",name:"Post-Matric Scholarship for ST Students (Ladakh)",min:"Social Welfare Dept, UT of Ladakh",desc:"Financial assistance for Scheduled Tribe students of UT Ladakh pursuing Class 11 and above, under centrally-sponsored scheme with DBT disbursement via NSP.",ben:"₹380–₹1,200/month maintenance + tuition fee reimbursement",elig:"ST students domiciled in UT Ladakh; income ≤ ₹2.5 lakh/year; pursuing post-matric education",url:"https://ladakh.gov.in",tags:["ST"]},
+
+  // ── CHANDIGARH ──
+  {id:"ch01",state:"Chandigarh",cat:"graduation",name:"Post-Matric Scholarship for SC Students (Chandigarh)",min:"Social Welfare Dept, UT of Chandigarh",desc:"Post-matric scholarship for Scheduled Caste students from Chandigarh UT pursuing Class 11 and above at recognised institutions. Applied via National Scholarship Portal.",ben:"Maintenance allowance + tuition fee reimbursement (course-wise per NSP norms)",elig:"SC students domiciled in Chandigarh UT; income ≤ ₹2.5 lakh/year; in recognised institution",url:"https://chandigarh.gov.in",tags:["SC"]},
+  {id:"ch02",state:"Chandigarh",cat:"graduation",name:"Dr. Ambedkar Post-Matric Scholarship for OBC (Chandigarh)",min:"Social Welfare Dept, UT of Chandigarh",desc:"Financial support for OBC students from Chandigarh at post-matric level under the Dr. Ambedkar Post-Matric Scholarship scheme, with DBT disbursement.",ben:"Tuition fee reimbursement + maintenance allowance (income and course dependent)",elig:"OBC domicile in Chandigarh UT; pursuing UG/PG; income ≤ ₹4 lakh/year; via NSP",url:"https://chandigarh.gov.in",tags:["OBC"]},
+
+  // ── PUDUCHERRY ──
+  {id:"py01",state:"Puducherry",cat:"graduation",name:"Chief Minister's Scholarship for Higher Education (Puducherry)",min:"Dept. of Education, Govt. of Puducherry",desc:"Financial assistance for Puducherry residents pursuing UG, PG, and professional courses at recognised institutions. Stipend disbursed monthly for course duration.",ben:"₹1,500/month (UG) | ₹2,000/month (PG) | ₹2,000/month (professional courses, 4th–5th year)",elig:"Puducherry residents; pursuing UG/PG/professional courses; income and merit criteria apply; via scholarship.py.gov.in",url:"https://scholarship.py.gov.in",tags:["All","Merit"]},
+  {id:"py02",state:"Puducherry",cat:"graduation",name:"Post-Matric Scholarship for SC Students (Puducherry)",min:"Adi Dravidar Welfare Dept, Govt. of Puducherry",desc:"Scholarship for Scheduled Caste students from Puducherry at post-matric level to support education and prevent dropout. Applied via NSP with annual renewal.",ben:"Maintenance allowance + tuition fee reimbursement (per NSP SC norms)",elig:"SC students; native/resident of Puducherry for 5+ years; income ≤ ₹2 lakh/year; pursuing post-matric education",url:"https://puducherry.gov.in",tags:["SC"]},
+
+  // ── LAKSHADWEEP ──
+  {id:"lk01",state:"Lakshadweep",cat:"graduation",name:"Lakshadweep Scholarship Scheme (Post-Matric)",min:"Dept. of Education, UT of Lakshadweep",desc:"Financial assistance for students from Lakshadweep UT pursuing post-matriculation education (Class 11+) at mainland institutions. Disbursed via DBT. Open to all categories.",ben:"Up to ₹3,000/month covering tuition and living expenses",elig:"Permanent residents of Lakshadweep UT; pursuing Class 11 and above at recognised institution; cleared matriculation exam; all categories eligible",url:"https://lakshadweep.gov.in",tags:["All","EWS"]},
+
+  // ── DADRA & NAGAR HAVELI ──
+  {id:"dnh01",state:"Dadra & Nagar Haveli",cat:"10th",name:"Pre-Matric Scholarship for SC/ST/OBC (Dadra & NH)",min:"Social Welfare Dept, UT of Dadra & Nagar Haveli",desc:"Pre-matric scholarships for SC, ST, and OBC students in Dadra & Nagar Haveli in Classes 1–10. Centrally sponsored with DBT to beneficiary accounts via NSP.",ben:"₹500–₹1,500/year (day scholar) | higher for hostel students; book grant ₹750/year",elig:"SC/ST/OBC students domiciled in Dadra & Nagar Haveli; attending recognised school; income criteria per category",url:"https://dnh.nic.in",tags:["SC","ST","OBC"]},
+  {id:"dnh02",state:"Dadra & Nagar Haveli",cat:"graduation",name:"Post-Matric Scholarship for SC/ST (Dadra & NH)",min:"Social Welfare Dept, UT of Dadra & Nagar Haveli",desc:"Post-matric financial support for SC and ST students from Dadra & Nagar Haveli pursuing Class 11 and above in recognised institutions. Applied via NSP.",ben:"Maintenance allowance + tuition fee reimbursement per NSP norms",elig:"SC/ST students domiciled in Dadra & Nagar Haveli; income ≤ ₹2.5 lakh/year; pursuing post-matric education",url:"https://dnh.nic.in",tags:["SC","ST"]},
+
+  // ── ANDAMAN & NICOBAR ──
+  {id:"an01",state:"Andaman & Nicobar",cat:"graduation",name:"Post-Matric Scholarship for ST Students (Andaman & Nicobar)",min:"Tribal Welfare Dept, UT of Andaman & Nicobar",desc:"Centrally-sponsored post-matric scholarship for Scheduled Tribe (indigenous islander) students of A&N Islands pursuing Class 11 and above. Via NSP.",ben:"₹380–₹1,200/month maintenance + tuition fee reimbursement",elig:"ST students (indigenous islanders) from A&N Islands; income ≤ ₹2.5 lakh/year; pursuing post-matric at recognised institution",url:"https://andaman.gov.in",tags:["ST"]},
+  {id:"an02",state:"Andaman & Nicobar",cat:"graduation",name:"A&N Islands Merit Scholarship (Higher Education)",min:"Directorate of Education, UT of Andaman & Nicobar",desc:"Merit-based financial assistance for students from A&N Islands pursuing higher education at mainland institutions. Encourages the island student community to access quality higher education.",ben:"₹12,000–₹20,000/year for students pursuing UG/PG in mainland India",elig:"Permanent residents of A&N Islands; merit-based; pursuing UG/PG at recognised mainland institutions",url:"https://andaman.gov.in",tags:["Merit","All"]}
+];
+
+// ═══════════════════════════════════════════════════════════════
+// APP STATE
+// ═══════════════════════════════════════════════════════════════
+let schemes=[], curState='', curCat='all', curTag='All', editId=null, loggedIn=false;
+let curAdmState='', globalSearchQ='';
+
+// ═══════════════════════════════════════════════════════════════
+// CORE APP
+// ═══════════════════════════════════════════════════════════════
+// Bump SEED_VER whenever SEED data changes — forces fresh load, discards stale localStorage
+const SEED_VER=4;
+function loadSchemes(){
+  try{
+    const raw=localStorage.getItem('syi_v4');
+    if(raw){
+      const parsed=JSON.parse(raw);
+      // If stored data has fewer schemes than SEED, it's stale — reload from SEED
+      if(parsed.length>=SEED.length){schemes=parsed;return;}
+    }
+  }catch(e){}
+  schemes=JSON.parse(JSON.stringify(SEED));
+  save();
+}
+function save(){localStorage.setItem('syi_v4',JSON.stringify(schemes));}
+function dc(o){return JSON.parse(JSON.stringify(o));}
+function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+function toast(m){const e=document.createElement('div');e.className='toast';e.textContent=m;document.body.appendChild(e);setTimeout(()=>e.remove(),3000);}
+
+function renderStateGrid(){
+  const g=document.getElementById('stateGrid');if(!g)return;
+  // Skip DOM rebuild when home view isn't active (admin is editing)
+  const hv=document.getElementById('view-home');
+  if(hv&&hv.classList.contains('hidden'))return;
+  g.innerHTML=STATES.map(s=>{const c=schemes.filter(x=>x.state===s.n).length;return`<div class="state-card" onclick="showState('${s.n}')"><div class="sc-em">${s.e}</div><div><div class="sc-nm">${s.n}</div><div class="sc-ct">${c} state scheme${c!==1?'s':''}</div></div></div>`;}).join('');
+}
+
+function updateStats(){
+  const total=schemes.length;
+  const stateCount=new Set(STATES.map(s=>s.n)).size; // 36 always (from STATES array)
+  const catCount=Object.keys(CAT).filter(k=>k!=='all').length;
+  const cenCount=schemes.filter(x=>x.state==='central').length;
+
+  // Hero pill
+  const pill=document.getElementById('heroPill');
+  if(pill)pill.textContent=`📚 ${stateCount} States & UTs · ${catCount} Categories · ${total}+ Schemes`;
+
+  // Stat cards
+  const sn=document.getElementById('statN');if(sn)sn.textContent=total+'+';
+  const ss=document.getElementById('statSt');if(ss)ss.textContent=stateCount;
+  const sl=document.getElementById('statLv');if(sl)sl.textContent=catCount;
+
+  // Central count on home card
+  const cc=document.getElementById('centralCount');if(cc)cc.textContent=cenCount+' schemes';
+}
+
+function populateAdmStateFilter(){/* now handled by renderAdmStateGrid */}
+
+function populateModalStates(){
+  const sel=document.getElementById('m-st');if(!sel)return;
+  sel.innerHTML='<option value="central">🇮🇳 Central (All India)</option>'+STATES.map(s=>`<option value="${s.n}">${s.e} ${s.n}</option>`).join('');
+}
+
+// ══ DARK / LIGHT THEME — Telegram-style radial reveal ══
+function initTheme(){
+  const saved=localStorage.getItem('syi_theme');
+  const prefersDark=window.matchMedia('(prefers-color-scheme:dark)').matches;
+  if(saved==='dark'||(saved!=='light'&&prefersDark)) document.body.classList.add('dark');
+  updateThemeBtn();
+}
+
+function updateThemeBtn(){
+  const btn=document.getElementById('themeBtn');
+  if(!btn)return;
+  const isDark=document.body.classList.contains('dark');
+  btn.textContent=isDark?'☀️':'🌙';
+  btn.title=isDark?'Switch to light mode':'Switch to dark mode';
+}
+
+function toggleTheme(e){
+  const isDark=document.body.classList.contains('dark');
+  // Get click/touch position for the reveal origin
+  const x=e.clientX||(e.touches&&e.touches[0]?.clientX)||window.innerWidth/2;
+  const y=e.clientY||(e.touches&&e.touches[0]?.clientY)||window.innerHeight/2;
+
+  const doSwitch=()=>{
+    document.body.classList.toggle('dark',!isDark);
+    localStorage.setItem('syi_theme',isDark?'light':'dark');
+    updateThemeBtn();
+    // Update cb-badge border to match new bg
+    document.querySelectorAll('.cb-badge').forEach(b=>b.style.borderColor='var(--cr)');
+  };
+
+  // Use View Transition API if supported (Chrome 111+, Edge 111+)
+  if(typeof document.startViewTransition==='function'){
+    const maxR=Math.hypot(Math.max(x,innerWidth-x),Math.max(y,innerHeight-y));
+    const clip0=`circle(0px at ${x}px ${y}px)`;
+    const clip1=`circle(${maxR+50}px at ${x}px ${y}px)`;
+    const t=document.startViewTransition(doSwitch);
+    t.ready.then(()=>{
+      document.documentElement.animate(
+        {clipPath:[clip0,clip1]},
+        {duration:480,easing:'cubic-bezier(0.4,0,0.2,1)',
+         pseudoElement:'::view-transition-new(root)'}
+      );
+    }).catch(()=>{});
+  } else {
+    // Fallback: simple clip-path overlay animation
+    const overlay=document.createElement('div');
+    overlay.style.cssText=[
+      'position:fixed','inset:0','z-index:99999','pointer-events:none',
+      'background:var(--cr)',
+      `clip-path:circle(0px at ${x}px ${y}px)`,
+      'transition:clip-path 480ms cubic-bezier(0.4,0,0.2,1)'
+    ].join(';');
+    document.body.appendChild(overlay);
+    doSwitch();
+    requestAnimationFrame(()=>requestAnimationFrame(()=>{
+      const maxR=Math.hypot(Math.max(x,innerWidth-x),Math.max(y,innerHeight-y));
+      overlay.style.clipPath=`circle(${maxR+50}px at ${x}px ${y}px)`;
+      overlay.addEventListener('transitionend',()=>overlay.remove(),{once:true});
+    }));
+  }
+}
+// ─ Views ─
+function showView(id){['view-home','view-state','view-admin-login','view-admin'].forEach(v=>document.getElementById(v).classList.toggle('hidden',v!==id));window.scrollTo(0,0);}
+function showHome(){showView('view-home');renderStateGrid();updateStats();}
+function showAdminOrLogin(){if(loggedIn)showAdminDash();else showView('view-admin-login');}
+
+// ── Hidden admin via URL hash: visit page.html#admin ──
+function checkAdminHash(){
+  const h=window.location.hash;
+  if(h==='#admin'||h==='#/admin'){
+    history.replaceState(null,'',window.location.pathname+window.location.search);
+    showAdminOrLogin();
+  }
+}
+window.addEventListener('hashchange',checkAdminHash);
+function showAdminDash(){
+  showView('view-admin');
+  curAdmState='';
+  // Make sure state grid is visible, not the state schemes view
+  const sv=document.getElementById('adm-state-schemes-view');if(sv)sv.classList.add('hidden');
+  const sg=document.getElementById('adm-states-view');if(sg)sg.classList.remove('hidden');
+  const sub=document.getElementById('admSubTitle');if(sub)sub.textContent='Select a state to manage its schemes';
+  renderAdmStats();
+  renderAdmStateGrid();
+}
+
+function showState(st){
+  curState=st;curCat='all';curTag='All';globalSearchQ='';
+  const isCen=st==='Central (All India)';
+  document.getElementById('breadState').textContent=st;
+  document.getElementById('pgTitle').textContent=isCen?'🇮🇳 Central Government Schemes':('Schemes — '+st);
+  document.getElementById('pgSub').textContent=isCen?'Schemes available to eligible students across all states':('Schemes specific to '+st);
+  document.querySelectorAll('.ctab').forEach((t,i)=>t.classList.toggle('active',i===0));
+  document.querySelectorAll('.tag-btn').forEach((t,i)=>t.classList.toggle('active',i===0));
+  const si=document.getElementById('stSearch');if(si)si.value='';
+  // Restore filter bar (may have been hidden in search mode)
+  const fb=document.getElementById('filterBar');if(fb)fb.style.display='';
+  showView('view-state');applyFilters();
+}
+
+// ─ Filters ─
+function selCat(cat,btn){
+  curCat=cat;
+  // Scope to only the state view (not admin or other views)
+  const sv=document.getElementById('view-state');
+  if(sv)sv.querySelectorAll('.ctab').forEach(t=>t.classList.remove('active'));
+  if(btn)btn.classList.add('active');
+  applyFilters();
+}
+function selTag(tag,btn){
+  curTag=tag;
+  const sv=document.getElementById('view-state');
+  if(sv)sv.querySelectorAll('.tag-btn').forEach(t=>t.classList.remove('active'));
+  if(btn)btn.classList.add('active');
+  applyFilters();
+}
+
+function applyFilters(){
+  if(!curState){renderCards([]);return;}
+
+  // ── GLOBAL SEARCH MODE ──────────────────────────────────────
+  if(curState==='__SEARCH__'){
+    // stSearch box can refine the cross-state results further
+    const stQ=(document.getElementById('stSearch')?.value||'').toLowerCase().trim();
+    const gq=stQ||globalSearchQ;
+
+    let results=schemes.filter(s=>{
+      if(!gq) return true;
+      const hay=[s.name,s.min,s.desc,s.ben,s.elig,s.state,
+                 Array.isArray(s.tags)?s.tags.join(' '):''].join(' ').toLowerCase();
+      return hay.includes(gq);
+    });
+
+    // Apply category filter in search mode
+    if(curCat!=='all') results=results.filter(s=>s.cat===curCat);
+
+    // Apply tag filter in search mode
+    if(curTag!=='All'){
+      results=results.filter(s=>{
+        const tags=Array.isArray(s.tags)?s.tags:[];
+        return tags.some(t=>t.toLowerCase()===curTag.toLowerCase());
+      });
+    }
+
+    const cnt=results.length;
+    const pgSub=document.getElementById('pgSub');
+    if(pgSub) pgSub.textContent=cnt+' scheme'+(cnt!==1?'s':'')+' match "'+gq+'"'+(curCat!=='all'||curTag!=='All'?' (filtered)':'');
+    renderCards(results,true);
+    const sc=document.getElementById('schCnt');
+    if(sc)sc.textContent=cnt+' result'+(cnt!==1?'s':'');
+    return;
+  }
+
+  const isCen = curState==='Central (All India)';
+  const q = (document.getElementById('stSearch')?.value||'').toLowerCase().trim();
+
+  const filtered = schemes.filter(s=>{
+    // ── STATE filter ─────────────────────────────────
+    // Exact match only — clicking "Telangana" shows only Telangana, not Central+Telangana
+    if(isCen){
+      if(s.state!=='central') return false;
+    } else {
+      if(s.state!==curState) return false;
+    }
+
+    // ── CATEGORY filter ───────────────────────────────
+    if(curCat!=='all' && s.cat!==curCat) return false;
+
+    // ── TAG filter ────────────────────────────────────
+    if(curTag!=='All'){
+      const tags = Array.isArray(s.tags) ? s.tags : [];
+      if(!tags.some(t=>t.toLowerCase()===curTag.toLowerCase())) return false;
+    }
+
+    // ── SEARCH filter ─────────────────────────────────
+    if(q){
+      const hay=[s.name,s.min,s.desc,s.ben,s.elig,
+                 Array.isArray(s.tags)?s.tags.join(' '):'',s.state]
+                .join(' ').toLowerCase();
+      if(!hay.includes(q)) return false;
+    }
+
+    return true;
+  });
+
+  const cc=document.getElementById('schCnt');
+  if(cc){
+    const label = isCen
+      ? `Showing ${filtered.length} Central scheme${filtered.length!==1?'s':''}`
+      : `Showing ${filtered.length} scheme${filtered.length!==1?'s':''} for ${curState}`;
+    cc.textContent = label;
+  }
+
+  renderCards(filtered);
+}
+
+function renderCards(list){
+  const g=document.getElementById('schemesGrid');if(!g)return;
+  if(!list.length){g.innerHTML=`<div class="empty"><div class="ei">🔍</div><h3>No schemes found</h3><p>Try adjusting filters or search terms.</p></div>`;return;}
+  g.innerHTML=list.map(s=>{
+    const c=CAT[s.cat]||CAT.all;const isCen=s.state==='central';
+    const tags=Array.isArray(s.tags)?s.tags:[];
+    return`<div class="s-card" style="--cc:${c.c};--catbg:${c.b}">
+      <div class="sc-top"><div class="sc-name">${esc(s.name)}</div><div class="sc-chip">${c.i} ${c.l}</div></div>
+      ${s.min?`<div class="sc-min">🏛️ ${esc(s.min)}</div>`:''}
+      <div class="sc-desc">${esc(s.desc||'')}</div>
+      ${s.ben?`<div class="sc-ben"><div class="lb">💰 Benefits</div><div class="vl">${esc(s.ben)}</div></div>`:''}
+      ${s.elig?`<div class="sc-elig"><strong>Eligibility:</strong> ${esc(s.elig)}</div>`:''}
+      <div class="sc-tags">${tags.map(t=>`<span class="sc-tag">${esc(t)}</span>`).join('')}</div>
+      <div class="sc-foot">
+        <a href="${s.url||'#'}" target="_blank" rel="noopener" class="btn-apply" ${!s.url?'onclick="return false" style="opacity:.5;cursor:not-allowed"':''}>Apply / Know More →</a>
+        ${isCen?'<div class="s-cent">🇮🇳 Central Scheme</div>':`<div class="s-stlbl">📍 ${esc(s.state)}</div>`}
+      </div>
+    </div>`;
+  }).join('');
+}
+
+// ─ Auth ─
+function doLogin(){
+  const u=document.getElementById('loginU')?.value.trim();
+  const p=document.getElementById('loginP')?.value;
+  const err=document.getElementById('loginErr');
+  if(u==='admin'&&p==='sarkari@2025'){loggedIn=true;sessionStorage.setItem('syi_auth','1');if(err)err.style.display='none';showAdminDash();updateChatAdminUI();}
+  else{if(err)err.style.display='block';}
+}
+function doLogout(){loggedIn=false;sessionStorage.removeItem('syi_auth');showHome();updateChatAdminUI();}
+function checkSession(){if(sessionStorage.getItem('syi_auth')==='1')loggedIn=true;}
+
+// ─ Admin Stats ─
+function renderAdmStats(){
+  const el=document.getElementById('admStats');if(!el)return;
+  const t=schemes.length,cen=schemes.filter(s=>s.state==='central').length,sts=new Set(schemes.filter(s=>s.state!=='central').map(s=>s.state)).size,comp=schemes.filter(s=>s.cat==='competitive').length;
+  el.innerHTML=[{i:'📊',n:t,l:'Total Schemes',c:'var(--nv)'},{i:'🇮🇳',n:cen,l:'Central Schemes',c:'var(--sf)'},{i:'🗺️',n:sts,l:'States Covered',c:'#10B981'},{i:'🏆',n:comp,l:'Competitive',c:'#EF4444'}].map(d=>`<div class="astat"><div class="ico">${d.i}</div><div><div class="n" style="color:${d.c}">${d.n}</div><div class="l">${d.l}</div></div></div>`).join('');
+}
+
+// ─ Admin State Grid ─
+function renderAdmStateGrid(){
+  const g=document.getElementById('admStateGrid');if(!g)return;
+  // Update central count
+  const cenCount=schemes.filter(s=>s.state==='central').length;
+  const cc=document.getElementById('admCentralCount');if(cc)cc.textContent=cenCount+' schemes';
+  g.innerHTML=STATES.map(s=>{
+    const cnt=schemes.filter(x=>x.state===s.n).length;
+    const escaped=s.n.replace(/'/g,"\\'");
+    return`<div class="state-card${cnt===0?' zero-schemes':''}" onclick="showAdminState('${escaped}')">
+      <div class="sc-em">${s.e}</div>
+      <div>
+        <div class="sc-nm">${s.n}</div>
+        <div class="sc-adm-cnt">✏️ ${cnt} scheme${cnt!==1?'s':''}</div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+// ─ Switch to state-specific scheme view ─
+function showAdminState(st){
+  curAdmState=st;
+  document.getElementById('adm-states-view').classList.add('hidden');
+  document.getElementById('adm-state-schemes-view').classList.remove('hidden');
+  const isCen=st==='central';
+  const titleEl=document.getElementById('adm-state-title');
+  if(titleEl)titleEl.textContent=isCen?'🇮🇳 Central Government Schemes':'📍 '+st;
+  const sub=document.getElementById('admSubTitle');
+  if(sub)sub.textContent=isCen?'Managing: Central (All India) schemes':'Managing: '+st+' schemes';
+  const si=document.getElementById('adm-state-q');if(si)si.value='';
+  const ca=document.getElementById('adm-state-ca');if(ca)ca.value='all';
+  renderAdmStateTbl();
+}
+
+// ─ Go back to states grid ─
+function showAdminStatesGrid(){
+  curAdmState='';
+  document.getElementById('adm-state-schemes-view').classList.add('hidden');
+  document.getElementById('adm-states-view').classList.remove('hidden');
+  const sub=document.getElementById('admSubTitle');
+  if(sub)sub.textContent='Select a state to manage its schemes';
+  renderAdmStateGrid();
+}
+
+// ─ Render state-specific table ─
+function renderAdmStateTbl(){
+  if(!curAdmState)return;
+  const cat=document.getElementById('adm-state-ca')?.value||'all';
+  const q=(document.getElementById('adm-state-q')?.value||'').toLowerCase().trim();
+  const rows=schemes.filter(s=>{
+    if(s.state!==curAdmState)return false;
+    if(cat!=='all'&&s.cat!==cat)return false;
+    if(q&&![s.name,s.min,s.desc,s.ben].join(' ').toLowerCase().includes(q))return false;
+    return true;
+  });
+  const ti=document.getElementById('admStateTblInfo');
+  if(ti)ti.textContent=`${rows.length} of ${schemes.filter(s=>s.state===curAdmState).length} schemes`;
+  const tb=document.getElementById('admStateTbody');if(!tb)return;
+  if(!rows.length){
+    const isCen=curAdmState==='central';
+    tb.innerHTML=`<tr><td colspan="6" style="text-align:center;padding:42px;color:var(--mu)"><div style="font-size:32px;margin-bottom:10px">📋</div><div style="font-weight:700;margin-bottom:6px">No schemes found</div><div style="font-size:12px;margin-bottom:14px">${q?'Try a different search term':'No schemes added for this state yet'}</div><button class="btn-add" onclick="openAdd()" style="margin:0 auto">＋ Add ${isCen?'Central':'First'} Scheme</button></td></tr>`;
+    return;
+  }
+  tb.innerHTML=rows.map((s,i)=>{
+    const c=CAT[s.cat]||CAT.all;
+    const us=s.url?s.url.replace(/https?:\/\//,'').substring(0,28)+'…':'—';
+    return`<tr>
+      <td style="color:var(--mu);font-size:11px">${i+1}</td>
+      <td class="td-nm" style="max-width:200px">${esc(s.name)}</td>
+      <td><span class="cat-bdg" style="background:${c.b};color:${c.c}">${c.i} ${c.l}</span></td>
+      <td style="max-width:160px;font-size:11px;color:var(--mu)">${esc(s.ben||'—')}</td>
+      <td style="font-size:11px">${s.url?`<a href="${s.url}" target="_blank" style="color:var(--sf);text-decoration:none" title="${s.url}">${us}</a>`:'—'}</td>
+      <td style="white-space:nowrap">
+        <button class="btn-ed" onclick="openEdit('${s.id}')">✏️ Edit</button>
+        <button class="btn-dl" onclick="delScheme('${s.id}')">🗑️</button>
+      </td>
+    </tr>`;
+  }).join('');
+}
+
+// ─ Modal ─
+function openAdd(){
+  editId=null;
+  document.getElementById('mTitle').textContent='＋ Add New Scheme';
+  ['m-nm','m-mi','m-de','m-be','m-el','m-ur','m-tg'].forEach(id=>{const e=document.getElementById(id);if(e)e.value='';});
+  const mst=document.getElementById('m-st');
+  if(mst)mst.value=curAdmState||'central'; // Pre-fill with current state
+  const mca=document.getElementById('m-ca');if(mca)mca.value='all';
+  document.getElementById('schModal').classList.add('open');
+}
+function openEdit(id){
+  const s=schemes.find(x=>x.id===id);if(!s)return;
+  editId=id;
+  document.getElementById('mTitle').textContent='✏️ Edit Scheme';
+  document.getElementById('m-nm').value=s.name||'';
+  const mst=document.getElementById('m-st');if(mst)mst.value=s.state||'central';
+  const mca=document.getElementById('m-ca');if(mca)mca.value=s.cat||'all';
+  document.getElementById('m-mi').value=s.min||'';
+  document.getElementById('m-de').value=s.desc||'';
+  document.getElementById('m-be').value=s.ben||'';
+  document.getElementById('m-el').value=s.elig||'';
+  document.getElementById('m-ur').value=s.url||'';
+  document.getElementById('m-tg').value=Array.isArray(s.tags)?s.tags.join(', '):(s.tags||'');
+  document.getElementById('schModal').classList.add('open');
+}
+function closeModal(){document.getElementById('schModal').classList.remove('open');editId=null;}
+function saveScheme(){
+  const nm=document.getElementById('m-nm')?.value.trim();if(!nm){alert('Scheme name required!');return;}
+  const data={
+    id:editId||'sch_'+Date.now(),
+    name:nm,
+    state:document.getElementById('m-st')?.value||'central',
+    cat:document.getElementById('m-ca')?.value||'all',
+    min:document.getElementById('m-mi')?.value.trim()||'',
+    desc:document.getElementById('m-de')?.value.trim()||'',
+    ben:document.getElementById('m-be')?.value.trim()||'',
+    elig:document.getElementById('m-el')?.value.trim()||'',
+    url:document.getElementById('m-ur')?.value.trim()||'',
+    tags:(document.getElementById('m-tg')?.value||'').split(',').map(t=>t.trim()).filter(Boolean)
+  };
+  if(editId){const i=schemes.findIndex(x=>x.id===editId);if(i!==-1)schemes[i]=data;}
+  else schemes.push(data);
+  save();closeModal();
+  renderAdmStats();
+  if(curAdmState)renderAdmStateTbl();
+  else renderAdmStateGrid();
+  renderStateGrid();updateStats();
+  toast(editId?'✅ Updated!':'✅ Added!');
+}
+function delScheme(id){
+  const s=schemes.find(x=>x.id===id);if(!s)return;
+  if(!confirm(`Delete "${s.name}"?`))return;
+  schemes=schemes.filter(x=>x.id!==id);
+  save();renderAdmStats();
+  if(curAdmState)renderAdmStateTbl();
+  else renderAdmStateGrid();
+  renderStateGrid();updateStats();toast('🗑️ Deleted.');
+}
+function resetData(){
+  if(!confirm('Reset all schemes to default data? All edits will be lost.'))return;
+  schemes=dc(SEED);save();curAdmState='';
+  renderAdmStats();renderAdmStateGrid();renderStateGrid();updateStats();
+  // Go back to state grid
+  document.getElementById('adm-state-schemes-view').classList.add('hidden');
+  document.getElementById('adm-states-view').classList.remove('hidden');
+  toast('🔄 Reset done.');
+}
+
+// ─ Search ─
+// ── Cross-state search from home page ──
+function doSearch(){
+  const q=(document.getElementById('homeSearch')?.value.trim()||'');
+  if(!q)return;
+  globalSearchQ=q.toLowerCase();
+  // Switch to state view in "search results" mode
+  curState='__SEARCH__';
+  curCat='all';curTag='All';
+  showView('view-state');
+  document.getElementById('pgTitle').textContent='🔍 Search Results';
+  document.getElementById('pgSub').textContent=`Searching all states for "${q}"`;
+  // Hide category/tag filter bar (not meaningful in cross-state mode)
+  const fb=document.getElementById('filterBar');if(fb)fb.style.display='none';
+  // Clear state search box
+  const si=document.getElementById('stSearch');if(si)si.value='';
+  applyFilters();
+}
+function clearSearch(){
+  globalSearchQ='';
+  const si=document.getElementById('stSearch');if(si)si.value='';
+  if(curState==='__SEARCH__'){showHome();return;}
+  applyFilters();
+}
+
+// ═══════════════════════════════════════════════════════════════
+// COMMUNITY CHAT — Firebase Realtime DB + localStorage fallback
+// ═══════════════════════════════════════════════════════════════
+const FIREBASE_CONFIG={
+  apiKey:"AIzaSyBJk5ek-1PRjEagnPuV4zpt-Ky7ERfi1uY",
+  authDomain:"niha-994b8.firebaseapp.com",
+  databaseURL:"https://niha-994b8-default-rtdb.firebaseio.com",
+  projectId:"niha-994b8",
+  storageBucket:"niha-994b8.firebasestorage.app",
+  messagingSenderId:"912923961733",
+  appId:"1:912923961733:web:9e1f6173a1b05fe3bf7cec"
+};
+const MSG_TTL=60000,DEF_W=340,DEF_H=500,MON_W=340,MON_H=500;
+const AVC=['#6366F1','#10B981','#3B82F6','#8B5CF6','#EC4899','#14B8A6','#F59E0B','#EF4444','#84CC16','#06B6D4'];
+const avc=n=>AVC[(n||'?').charCodeAt(0)%AVC.length];
+const avi=n=>(n||'?')[0].toUpperCase();
+
+// ── State ──
+let chatOpen=false,chatJoined=false,monOpen=false,monMin=false;
+let chatUser='',adminChatName='Admin',chatMsgs=[],pinnedMsg=null;
+let unread=0,monNewMsgs=0,ctxMsgId=null,fbDb=null;
+let monView='inbox',monSelUser='';
+let chatW=DEF_W,chatH=DEF_H;
+
+// ── Firebase init (SDK loaded via <head> static scripts) ──
+function connectFb(){
+  try{
+    if(typeof firebase==='undefined')throw new Error('Firebase SDK not found');
+    if(!firebase.apps.length)firebase.initializeApp(FIREBASE_CONFIG);
+    fbDb=firebase.database();
+
+    // Connection status
+    fbDb.ref('.info/connected').on('value',snap=>{
+      const online=snap.val()===true;
+      setFbStatus(online?'live':'offline');
+      if(online)console.log('[SYI] Firebase connected ✅');
+    });
+
+    // Listen: messages
+    fbDb.ref('syi_chat/messages').orderByChild('ts').limitToLast(300).on('value',snap=>{
+      const fromFb=[];
+      snap.forEach(c=>{const v=c.val();if(v)fromFb.push({id:c.key,...v});});
+      const fbIds=new Set(fromFb.map(m=>m.id));
+      const localPending=chatMsgs.filter(m=>!fbIds.has(m.id)&&m._local);
+      chatMsgs=[...fromFb,...localPending].sort((a,b)=>(a.ts||0)-(b.ts||0));
+
+      if(chatJoined) renderMsgs();
+      if(loggedIn){
+        if(monOpen){
+          monView==='inbox' ? renderMonInbox() : renderMonThread(monSelUser);
+          monNewMsgs=0; updateMonBadge();
+        } else {
+          monNewMsgs++; updateMonBadge();
+        }
+        updateChatAdminUI();
+      }
+    },(err)=>{
+      console.warn('[SYI] Firebase read error:',err.code, err.message);
+      // PERMISSION_DENIED = rules blocking access
+      if(err.code==='PERMISSION_DENIED'){
+        setFbStatus('denied');
+        showFbRulesHint();
+      } else {
+        setFbStatus('offline');
+      }
+      // DO NOT null fbDb here — Firebase auto-retries when rules are fixed or connection restores
+      if(chatJoined) renderMsgs();
+    });
+
+    // Listen: pinned
+    fbDb.ref('syi_chat/pinned').on('value',snap=>{
+      pinnedMsg=snap.val()||null;renderPinned();
+    });
+
+  }catch(e){
+    console.warn('[SYI] Firebase init error:',e.message,'→ offline mode');
+    setFbStatus('offline');fbDb=null;loadLocal();
+  }
+}
+
+function setFbStatus(state){
+  const el=document.getElementById('fbStatus');
+  const dot=document.getElementById('fbStatusDot');
+  const txt=document.getElementById('fbStatusText');
+  const map={
+    live:   {badge:'🟢 Live',   bg:'rgba(34,197,94,.15)',  col:'#15803D', dotCol:'#22C55E', msg:'Firebase connected — cross-device chat is live'},
+    offline:{badge:'⚫ Offline', bg:'rgba(100,116,139,.15)','col':'#475569', dotCol:'#94A3B8', msg:'Firebase offline — using local storage only'},
+    denied: {badge:'🔴 Rules!', bg:'rgba(239,68,68,.15)',  col:'#c53030', dotCol:'#EF4444', msg:'Firebase rules blocking access — see setup guide below'},
+  };
+  const s=map[state]||map.offline;
+  if(el){el.textContent=s.badge;el.style.cssText=`display:inline-flex;background:${s.bg};color:${s.col};padding:2px 7px;border-radius:100px;font-size:9px;font-weight:700`;}
+  if(dot)dot.style.background=s.dotCol;
+  if(txt)txt.textContent=s.msg;
+}
+
+function showFbRulesHint(){
+  const h=document.getElementById('fbRulesHint');
+  if(h)h.style.display='block';
+}
+
+function testFbConnection(){
+  if(!fbDb){
+    toast('⚠️ Firebase not initialised — reload the page');
+    return;
+  }
+  toast('🔄 Testing Firebase connection…');
+  fbDb.ref('syi_chat/.test').set({t:Date.now()})
+    .then(()=>{
+      fbDb.ref('syi_chat/.test').remove();
+      setFbStatus('live');
+      const h=document.getElementById('fbRulesHint');if(h)h.style.display='none';
+      toast('✅ Firebase working! Cross-device chat is live.');
+    })
+    .catch(err=>{
+      if(err.code==='PERMISSION_DENIED'){
+        setFbStatus('denied');showFbRulesHint();
+        toast('🔴 Rules are blocking access — see setup guide');
+      } else {
+        setFbStatus('offline');
+        toast('⚫ Firebase offline: '+err.message);
+      }
+    });
+}
+
+// ── Local fallback ──
+function loadLocal(){
+  try{
+    const stored=JSON.parse(localStorage.getItem('syi_c_msgs')||'[]');
+    // Merge: keep local optimistic messages not yet in stored
+    const storedIds=new Set(stored.map(m=>m.id));
+    const pending=chatMsgs.filter(m=>m._local&&!storedIds.has(m.id));
+    chatMsgs=[...stored,...pending].sort((a,b)=>(a.ts||0)-(b.ts||0));
+  }catch(e){if(!chatMsgs.length)chatMsgs=[];}
+  try{pinnedMsg=JSON.parse(localStorage.getItem('syi_c_pin')||'null');}catch(e){pinnedMsg=null;}
+  if(chatJoined) renderMsgs();
+  renderPinned();
+  if(loggedIn&&monOpen){
+    monView==='inbox' ? renderMonInbox() : renderMonThread(monSelUser);
+  }
+}
+function saveLocal(){
+  if(fbDb)return;
+  localStorage.setItem('syi_c_msgs',JSON.stringify(chatMsgs));
+  localStorage.setItem('syi_c_pin',JSON.stringify(pinnedMsg));
+}
+
+// ── FAB + Chat panel ──
+function toggleChat(){if(!chatOpen)openChat();else closeChat();}
+
+function openChat(){
+  chatOpen=true;
+  const cp=document.getElementById('chatPanel'),fb=document.getElementById('chatFab');
+  if(cp){cp.classList.add('open');cp.style.width=chatW+'px';cp.style.height=chatH+'px';}
+  // FAB becomes ✕ when chat is open
+  if(fb){
+    fb.classList.add('fab-open');
+    fb.classList.remove('has-msgs');
+    const ico=fb.querySelector('.fab-logo-ico');
+    if(ico)ico.textContent='✕';
+  }
+  unread=0;updateBadge();
+  if(chatJoined){
+    const ne=document.getElementById('cpNE'),cm=document.getElementById('cpMsgs'),cr=document.getElementById('cpIR');
+    if(ne)ne.style.display='none';if(cm)cm.style.display='flex';if(cr)cr.style.display='flex';
+    renderMsgs();scrollBot('cpMsgs');
+  } else if(chatUser){
+    autoJoin();
+  } else {
+    setTimeout(()=>document.getElementById('cpNameInp')?.focus(),220);
+  }
+}
+
+function closeChat(){
+  chatOpen=false;
+  const cp=document.getElementById('chatPanel'),fb=document.getElementById('chatFab');
+  if(cp)cp.classList.remove('open');
+  // FAB returns to logo icon when chat is closed
+  if(fb){
+    fb.classList.remove('fab-open');
+    const ico=fb.querySelector('.fab-logo-ico');
+    if(ico)ico.textContent='🎓';
+  }
+  updateBadge();closeCtxMenu();
+}
+
+// ── Join chat ──
+function joinChat(){
+  const ni=document.getElementById('cpNameInp');
+  const v=(ni?ni.value:'').trim();if(!v){ni?.focus();return;}
+  chatUser=v.substring(0,24);localStorage.setItem('syi_chat_name',chatUser);autoJoin();
+}
+function autoJoin(){
+  if(chatJoined)return;chatJoined=true;
+  const ne=document.getElementById('cpNE'),cm=document.getElementById('cpMsgs'),cr=document.getElementById('cpIR');
+  if(ne)ne.style.display='none';if(cm)cm.style.display='flex';if(cr)cr.style.display='flex';
+  renderPinned();renderMsgs();scrollBot('cpMsgs');updateChatAdminUI();
+  pushSys(chatUser+' started a conversation 💬');
+}
+
+// ── Send user message ──
+// Message shown instantly (optimistic). Firebase syncs in background.
+// USER  : message carries exp timestamp → disappears after MSG_TTL
+// ADMIN : admin messages carry exp:null → never disappear
+function sendMsg(){
+  const inp=document.getElementById('cpInp');
+  const txt=(inp?inp.value:'').trim();if(!txt||!chatJoined)return;
+  const msg={
+    id:'m'+Date.now()+'_'+Math.random().toString(36).slice(2,5),
+    name:chatUser, text:txt, ts:Date.now(),
+    exp:Date.now()+MSG_TTL,   // user messages expire
+    isAdmin:false,
+    _local:true               // tag as optimistic until Firebase confirms
+  };
+  chatMsgs.push(msg);           // instant local display
+  renderMsgs(); scrollBot('cpMsgs');
+
+  if(fbDb){
+    const toStore={...msg};delete toStore._local;
+    fbDb.ref('syi_chat/messages/'+msg.id).set(toStore)
+      .then(()=>{const m=chatMsgs.find(x=>x.id===msg.id);if(m)delete m._local;})
+      .catch(err=>{
+        console.warn('[SYI] send failed:',err.message);
+        // Message already shown locally — just remove optimistic flag
+        const m=chatMsgs.find(x=>x.id===msg.id);if(m)delete m._local;
+      });
+    // NOTE: We do NOT auto-delete from Firebase here.
+    // Users see messages filtered by exp timestamp client-side.
+    // Admin always sees full history in the monitor.
+  }else{
+    const m=chatMsgs.find(x=>x.id===msg.id);if(m)delete m._local;
+    saveLocal();
+  }
+  if(inp){inp.value='';inp.style.height='';}
+}
+
+// ── Send admin reply (NEVER expires) ──
+function sendAdminMsg(){
+  const inp=document.getElementById('amInp');
+  const txt=(inp?inp.value:'').trim();if(!txt)return;
+  const msg={
+    id:'ma'+Date.now()+'_'+Math.random().toString(36).slice(2,4),
+    name:adminChatName, text:txt, ts:Date.now(),
+    exp: Date.now()+MSG_TTL,   // expires for users; admin monitor always shows it
+    isAdmin:true,
+    replyTo:monSelUser||'',
+    _local:true
+  };
+  chatMsgs.push(msg);
+  renderMsgs();
+  renderMonThread(monSelUser);
+
+  if(fbDb){
+    const toStore={...msg};delete toStore._local;
+    fbDb.ref('syi_chat/messages/'+msg.id).set(toStore)
+      .then(()=>{const m=chatMsgs.find(x=>x.id===msg.id);if(m)delete m._local;})
+      .catch(err=>console.warn('[SYI] admin send failed:',err.message));
+  }else{
+    const m=chatMsgs.find(x=>x.id===msg.id);if(m)delete m._local;
+    saveLocal();
+  }
+  if(inp){inp.value='';inp.style.height='';}
+  scrollBot('amThreadMsgs');
+}
+
+// ── System message ──
+function pushSys(txt){
+  const m={id:'s'+Date.now(),system:true,text:txt,ts:Date.now(),exp:Date.now()+10000};
+  if(fbDb){fbDb.ref('syi_chat/messages/'+m.id).set(m);setTimeout(()=>{try{fbDb.ref('syi_chat/messages/'+m.id).remove();}catch(e){}},10500);}
+  else{chatMsgs.push(m);saveLocal();if(chatJoined)renderMsgs();}
+}
+
+// ── Render USER chat ──
+// USER  : sees only live (non-expired) messages + countdown timer
+// ADMIN : in user chat panel sees everything (no timer, no dimming)
+function renderMsgs(){
+  const box=document.getElementById('cpMsgs');if(!box)return;
+  const atBot=box.scrollHeight-box.scrollTop-box.clientHeight<60;
+  const now=Date.now();
+
+  // ── HELP DESK: each user only sees their own conversation ──
+  const vis=chatMsgs.filter(m=>{
+    if(m.system) return false;
+
+    if(m.isAdmin){
+      // Admin replies: only show to the user they're addressed to
+      if(loggedIn) return false;               // Admin's own panel — don't echo DMs here
+      if(!chatUser) return false;
+      if(m.replyTo && m.replyTo!==chatUser) return false; // private to recipient
+      return !m.exp || m.exp>now;
+    }
+
+    if(loggedIn) return true;                  // Admin sees all user messages in their own panel
+
+    // Regular user: ONLY see own messages — completely private help-desk
+    if(m.name!==chatUser) return false;
+    return !m.exp || m.exp>now;
+  });
+
+  let html='', lastDay='';
+  vis.forEach(m=>{
+    const day=new Date(m.ts).toLocaleDateString('en-IN',{day:'numeric',month:'short'});
+    if(day!==lastDay){html+=`<div class="cp-msg-sep"><span>${day}</span></div>`;lastDay=day;}
+    const own = m.name===chatUser;
+    const adm  = !!m.isAdmin;
+    const time = new Date(m.ts).toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit'});
+
+    const avBg = adm ? '' : ` style="background:${avc(m.name)}"`;
+
+    html+=`<div class="cp-row ${own?'own':''} ${adm?'adm-m':''}" data-id="${esc(m.id)}">
+      <div class="cp-av"${avBg}>${avi(m.name)}</div>
+      <div class="cp-bw">
+        <div class="cp-met">
+          <span class="cp-un">${esc(m.name)}</span>
+          ${adm?'<span class="cp-ab">Admin</span>':''}
+          <span class="cp-tm">${time}</span>
+          ${loggedIn?`<button class="cp-dlb vis" data-mid="${esc(m.id)}">✕</button>`:''}
+        </div>
+        <div class="cp-bub">${esc(m.text)}</div>
+      </div>
+    </div>`;
+  });
+
+  if(!vis.length){
+    html = loggedIn
+      ? '<div style="flex:1;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:8px;color:var(--mu);font-size:13px;padding:20px;text-align:center"><div style="font-size:28px">💬</div><div>No messages yet</div></div>'
+      : `<div style="flex:1;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:8px;color:var(--mu);font-size:12px;padding:20px;text-align:center"><div style="font-size:28px">💬</div><div>No messages yet — say hi!</div><div style="font-size:10px;background:#F1F5F9;padding:2px 9px;border-radius:20px">⏱ Messages disappear in ${MSG_TTL/1000}s</div></div>`;
+  }
+
+  box.innerHTML=html;
+  // Wire delete buttons
+  box.querySelectorAll('.cp-dlb[data-mid]').forEach(b=>{
+    b.addEventListener('click',e=>{e.stopPropagation();delMsg(b.dataset.mid);});
+  });
+  // Wire right-click context
+  box.querySelectorAll('.cp-row[data-id]').forEach(row=>{
+    row.addEventListener('contextmenu',e=>{e.preventDefault();showCtxMenu(e,row.dataset.id);});
+  });
+  if(atBot) scrollBot('cpMsgs');
+  if(!chatOpen&&!loggedIn){unread++;updateBadge();}
+}
+
+function renderPinned(){
+  const el=document.getElementById('cpPin'),tx=document.getElementById('cpPinTxt');
+  if(!el||!tx)return;
+  if(pinnedMsg?.text){tx.textContent=pinnedMsg.text;el.style.display='block';}
+  else el.style.display='none';
+}
+
+// ── ADMIN MONITOR — Inbox (shows ALL user messages, no expiry filter) ──
+function renderMonInbox(){
+  const box=document.getElementById('amInbox');if(!box)return;
+  // Group ALL user messages (admin sees everything including expired)
+  const userMap={};
+  chatMsgs.filter(m=>!m.system&&!m.isAdmin).forEach(m=>{
+    if(!userMap[m.name])userMap[m.name]={msgs:[],last:null};
+    userMap[m.name].msgs.push(m);
+    if(!userMap[m.name].last||m.ts>userMap[m.name].last.ts)userMap[m.name].last=m;
+  });
+  const users=Object.keys(userMap).sort((a,b)=>userMap[b].last.ts-userMap[a].last.ts);
+  if(!users.length){
+    box.innerHTML=`
+      <div class="wa-online-strip"><span class="wa-online-dot"></span> No active users yet</div>
+      <div class="mon-empty">
+        <div style="font-size:36px">💬</div>
+        <div style="font-weight:700;font-size:13px">No conversations yet</div>
+        <div style="font-size:11px;color:var(--mu);margin-top:4px">User messages will appear here</div>
+      </div>`;
+    return;
+  }
+  const now=Date.now();
+  const onlineCount=new Set(chatMsgs.filter(m=>!m.system&&!m.isAdmin&&(now-m.ts)<120000).map(m=>m.name)).size;
+  let html=`<div class="wa-online-strip"><span class="wa-online-dot"></span>${onlineCount} recently active · ${users.length} total conversation${users.length!==1?'s':''}</div>`;
+  html+=users.map(u=>{
+    const d=userMap[u];
+    const time=timeAgo(d.last.ts);
+    const expired=d.last.exp&&d.last.exp<=now;
+    const recentlyActive=(now-d.last.ts)<120000;
+    const preview=(expired?'⏱ expired · ':'')+d.last.text.substring(0,38)+(d.last.text.length>38?'…':'');
+    // Unread = messages with no admin reply yet
+    const hasAdminReply=chatMsgs.some(m=>m.isAdmin&&(m.replyTo===u||m.replyTo==='')&&m.ts>d.last.ts);
+    return`<div class="mon-item" data-user="${esc(u)}">
+      <div class="mon-av" style="background:${avc(u)};position:relative">
+        ${avi(u)}
+        ${recentlyActive?`<span style="position:absolute;bottom:0;right:0;width:10px;height:10px;background:#25D366;border-radius:50%;border:2px solid #fff"></span>`:''}
+      </div>
+      <div class="mon-inf">
+        <div class="mon-nm">${esc(u)}</div>
+        <div class="mon-prev">${esc(preview)}</div>
+      </div>
+      <div class="mon-rt">
+        <div class="mon-time">${time}</div>
+        ${!hasAdminReply?`<div class="mon-cnt">${d.msgs.length}</div>`:'<div style="color:#25D366;font-size:11px">✓✓</div>'}
+      </div>
+      <button class="mon-del-btn" data-user="${esc(u)}" title="Delete all from ${esc(u)}">🗑</button>
+    </div>`;
+  }).join('');
+  box.innerHTML=html;
+  box.querySelectorAll('.mon-item').forEach(item=>{
+    item.addEventListener('click',e=>{
+      if(e.target.classList.contains('mon-del-btn')||e.target.closest('.mon-del-btn')){deleteUserConvo(e.target.closest('[data-user]').dataset.user);return;}
+      openThread(item.dataset.user);
+    });
+  });
+  box.querySelectorAll('.mon-del-btn').forEach(btn=>{
+    btn.addEventListener('click',e=>{e.stopPropagation();deleteUserConvo(btn.dataset.user);});
+  });
+  const sub=document.getElementById('amSub');if(sub)sub.textContent=users.length+' conversation'+(users.length!==1?'s':'');
+}
+
+// ── Time-ago helper ──
+function timeAgo(ts){
+  const s=Math.floor((Date.now()-ts)/1000);
+  if(s<60)return 'just now';if(s<3600)return Math.floor(s/60)+'m';
+  if(s<86400)return Math.floor(s/3600)+'h';return Math.floor(s/86400)+'d';
+}
+
+// ── Open thread with a specific user ──
+function openThread(username){
+  monSelUser=username;monView='thread';
+  const inbox=document.getElementById('amInbox'),thread=document.getElementById('amThread');
+  if(inbox)inbox.style.display='none';
+  if(thread){thread.style.display='flex';}  // flex so column layout works
+  const av=document.getElementById('amThAv'),nm=document.getElementById('amThNm');
+  if(av){av.textContent=avi(username);av.style.cssText=`background:${avc(username)}`;}
+  if(nm)nm.textContent=username;
+  // Wire delete-user button for this user
+  const du=document.getElementById('amDelUsrBtn');
+  if(du){du.onclick=()=>deleteUserConvo(username);}
+  renderMonThread(username);
+  setTimeout(()=>scrollBot('amThreadMsgs'),60);
+  const sub=document.getElementById('amSub');if(sub)sub.textContent='← tap ‹ to go back';
+}
+
+// ── Render thread for one user (WhatsApp-style) ──
+function renderMonThread(username){
+  const box=document.getElementById('amThreadMsgs');if(!box)return;
+  const atBot=box.scrollHeight-box.scrollTop-box.clientHeight<60;
+  // Admin sees ALL messages in this thread — NO expiry filter
+  const thread=chatMsgs.filter(m=>!m.system&&(
+    (m.name===username&&!m.isAdmin)||
+    (m.isAdmin&&(m.replyTo===username||m.replyTo===''))
+  )).sort((a,b)=>a.ts-b.ts);
+  const now=Date.now();
+  let html='',lastDay='';
+  thread.forEach(m=>{
+    const day=new Date(m.ts).toLocaleDateString('en-IN',{day:'numeric',month:'short'});
+    if(day!==lastDay){
+      html+=`<div class="cp-msg-sep"><span style="background:rgba(255,255,255,.8);color:#667781;border-radius:8px;padding:3px 10px;font-size:10px;font-weight:600">${day}</span></div>`;
+      lastDay=day;
+    }
+    const own=m.isAdmin;
+    const time=new Date(m.ts).toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit'});
+    const expired=!m.isAdmin&&m.exp&&m.exp<=now;
+    const avBg=own?`style="background:linear-gradient(135deg,#128C7E,#075E54)"`:` style="background:${avc(m.name)}"`;
+    html+=`<div class="cp-row ${own?'own':''}" style="${expired?'opacity:.5':''}">
+      <div class="cp-av"${avBg}>${own?'🛡️':avi(m.name)}</div>
+      <div class="cp-bw" style="max-width:85%">
+        <div class="cp-met" style="${own?'justify-content:flex-end':''}">
+          <span class="cp-un" style="${own?'color:#128C7E':''}">${own?adminChatName:esc(m.name)}</span>
+          ${own?'<span style="font-size:9px;font-weight:800;background:#128C7E;color:#fff;padding:1px 5px;border-radius:4px">Admin</span>':''}
+          <span class="cp-tm">${time}</span>
+          ${expired?'<span class="wa-expired">⏱ expired</span>':''}
+          <button class="cp-dlb vis" data-mid="${m.id}">✕</button>
+        </div>
+        <div class="cp-bub" style="font-size:12.5px;line-height:1.45">${esc(m.text)}</div>
+        ${own?`<div style="text-align:right;font-size:9px;color:#667781;margin-top:1px;padding-right:3px">✓✓</div>`:''}
+      </div>
+    </div>`;
+  });
+  if(!html)html=`<div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;color:#667781;font-size:12px;padding:20px;text-align:center"><div style="font-size:32px">💬</div><div style="font-weight:600">Start the conversation</div><div style="font-size:11px">Reply to ${esc(username)}'s messages below</div></div>`;
+  box.innerHTML=html;
+  box.querySelectorAll('.cp-dlb[data-mid]').forEach(b=>{b.addEventListener('click',e=>{e.stopPropagation();delMsg(b.dataset.mid);});});
+  if(atBot)scrollBot('amThreadMsgs');
+}
+
+// ── Back to inbox ──
+function closeThread(){
+  monView='inbox';monSelUser='';
+  const inbox=document.getElementById('amInbox'),thread=document.getElementById('amThread');
+  if(inbox){inbox.style.display='block';inbox.style.overflowY='auto';}
+  if(thread)thread.style.display='none';
+  renderMonInbox();
+}
+
+// ── Delete all messages from a user ──
+function deleteUserConvo(username){
+  if(!confirm(`Delete ALL messages from "${username}"? This cannot be undone.`))return;
+  const toDelete=chatMsgs.filter(m=>m.name===username&&!m.isAdmin).map(m=>m.id);
+  if(fbDb){toDelete.forEach(id=>fbDb.ref('syi_chat/messages/'+id).remove());}
+  else{chatMsgs=chatMsgs.filter(m=>!(m.name===username&&!m.isAdmin));saveLocal();renderMsgs();}
+  if(monView==='thread'&&monSelUser===username)closeThread();
+  else renderMonInbox();
+  toast('🗑 Deleted all messages from "'+username+'"');
+}
+
+function scrollBot(id){const b=document.getElementById(id);if(b)b.scrollTop=b.scrollHeight;}
+function updateBadge(){
+  const b=document.getElementById('chatBadge');
+  const fb=document.getElementById('chatFab');
+  if(!b)return;
+  if(unread>0&&!chatOpen){
+    b.textContent=unread>9?'9+':unread;
+    b.classList.add('vis');
+    if(fb)fb.classList.add('has-msgs'); // pulse animation
+  }else{
+    b.classList.remove('vis');
+    if(fb)fb.classList.remove('has-msgs');
+    if(!chatOpen)unread=0;
+  }
+}
+function updateMonBadge(){
+  const b=document.getElementById('monBadge');if(!b)return;
+  if(monNewMsgs>0&&!monOpen){b.textContent=monNewMsgs>9?'9+':monNewMsgs;b.style.display='inline';}
+  else b.style.display='none';
+}
+
+// ── Admin UI controls ──
+function updateChatAdminUI(){
+  const clr=document.getElementById('cpClrBtn'),onb=document.getElementById('cpOnb');
+  const fab=document.getElementById('chatFab'),cp=document.getElementById('chatPanel');
+  if(loggedIn){
+    // ── ADMIN: hide community chat (FAB + panel) — use Monitor instead ──
+    if(fab)fab.style.display='none';
+    if(cp){closeChat();cp.style.display='none';}
+    if(clr)clr.style.display='inline-flex';
+    if(onb){
+      onb.style.display='flex';
+      const u=new Set(chatMsgs.filter(m=>!m.system&&!m.isAdmin).map(m=>m.name));
+      onb.textContent=u.size+' user'+(u.size!==1?'s':'');
+    }
+    if(!monOpen)openMon();else renderMonInbox();
+    if(fbDb)setTimeout(testFbConnection,800);
+  }else{
+    // ── USER: restore community chat, hide admin monitor ──
+    if(fab)fab.style.display='';
+    if(cp)cp.style.display='';
+    if(clr)clr.style.display='none';
+    if(onb)onb.style.display='none';
+    closeMon();
+  }
+}
+function toggleMonitor(){if(monOpen&&!monMin)closeMon();else openMon();}
+function openMon(){
+  const am=document.getElementById('adminMon'),ab=document.getElementById('amBody'),mb=document.getElementById('amMinBtn');
+  if(!am)return;
+  am.classList.add('open');monOpen=true;monMin=false;
+  if(ab)ab.style.display='flex';
+  if(mb)mb.textContent='⊟';
+  am.style.height=MON_H+'px';am.style.width=MON_W+'px';
+  // Reset to inbox view — use block (not flex) so items stack vertically
+  monView='inbox';monSelUser='';
+  const inbox=document.getElementById('amInbox'),thread=document.getElementById('amThread');
+  if(inbox){inbox.style.display='block';inbox.style.overflowY='auto';}
+  if(thread)thread.style.display='none';
+  renderMonInbox();
+  monNewMsgs=0;updateMonBadge();
+  const btn=document.getElementById('monToggleBtn');if(btn)btn.style.fontWeight='800';
+  const sub=document.getElementById('amSub');if(sub)sub.textContent='Tap a user to open chat';
+  // Auto-refresh inbox while open (catches Firebase updates)
+  if(window._monRefresh)clearInterval(window._monRefresh);
+  window._monRefresh=setInterval(()=>{if(monOpen&&monView==='inbox')renderMonInbox();},4000);
+}
+function minimizeMon(){
+  monMin=true;
+  const am=document.getElementById('adminMon'),ab=document.getElementById('amBody'),mb=document.getElementById('amMinBtn');
+  if(am)am.style.height='50px';if(ab)ab.style.display='none';if(mb)mb.textContent='⊞';
+}
+function toggleMonExpand(e){
+  if(e.target.tagName==='BUTTON')return;
+  if(monMin)openMon();
+}
+function closeMon(){
+  monOpen=false;monMin=false;monView='inbox';monSelUser='';
+  if(window._monRefresh){clearInterval(window._monRefresh);window._monRefresh=null;}
+  const am=document.getElementById('adminMon');if(am)am.classList.remove('open');
+  const btn=document.getElementById('monToggleBtn');if(btn)btn.style.fontWeight='';
+}
+
+// ── Admin actions ──
+function adminClearAll(){
+  if(!loggedIn||!confirm('Clear ALL chat messages?'))return;
+  if(fbDb)fbDb.ref('syi_chat/messages').remove();
+  else{chatMsgs=[];saveLocal();renderMsgs();renderMonInbox();}
+  toast('🗑 Chat cleared.');
+}
+function delMsg(id){
+  if(!loggedIn)return;
+  if(fbDb)fbDb.ref('syi_chat/messages/'+id).remove();
+  else{chatMsgs=chatMsgs.filter(m=>m.id!==id);saveLocal();renderMsgs();if(monOpen){if(monView==='inbox')renderMonInbox();else renderMonThread(monSelUser);}}
+  toast('🗑 Deleted.');
+}
+function toggleNameEdit(){
+  const ne=document.getElementById('amNameEdit');if(!ne)return;
+  const show=ne.style.display==='none'||ne.style.display==='';
+  ne.style.display=show?'block':'none';
+  if(show){const ni=document.getElementById('amNameInp');if(ni){ni.value=adminChatName;ni.focus();}}
+}
+function saveAdminName(){
+  const ni=document.getElementById('amNameInp');const v=(ni?ni.value:'').trim();
+  if(v){adminChatName=v;localStorage.setItem('syi_admin_name',v);}
+  const ne=document.getElementById('amNameEdit');if(ne)ne.style.display='none';
+  toast('✅ Display name updated to "'+adminChatName+'"');
+}
+
+// ── Context menu ──
+function showCtxMenu(e,id){if(!loggedIn)return;ctxMsgId=id;const ctx=document.getElementById('ctxMenu');if(!ctx)return;ctx.style.left=Math.min(e.clientX,window.innerWidth-165)+'px';ctx.style.top=Math.min(e.clientY,window.innerHeight-105)+'px';ctx.classList.add('open');}
+function closeCtxMenu(){document.getElementById('ctxMenu')?.classList.remove('open');ctxMsgId=null;}
+function ctxDelete(){if(ctxMsgId)delMsg(ctxMsgId);closeCtxMenu();}
+function ctxPin(){if(!ctxMsgId||!loggedIn)return;const m=chatMsgs.find(x=>x.id===ctxMsgId);if(!m)return;pinnedMsg={text:m.text,by:m.name};if(fbDb)fbDb.ref('syi_chat/pinned').set(pinnedMsg);else{saveLocal();renderPinned();}toast('📌 Pinned.');closeCtxMenu();}
+function ctxUnpin(){if(!loggedIn)return;pinnedMsg=null;if(fbDb)fbDb.ref('syi_chat/pinned').remove();else{saveLocal();renderPinned();}toast('Unpinned.');closeCtxMenu();}
+
+function autoResizeTa(el){el.style.height='';el.style.height=Math.min(el.scrollHeight,70)+'px';}
+
+// ── Drag ──
+function makeDraggable(panelId,hdrId,leftAnchored){
+  const panel=document.getElementById(panelId),hdr=document.getElementById(hdrId);if(!panel||!hdr)return;
+  let drg=false,dx0=0,dy0=0,pr0=0,pb0=0,pl0=0,pt0=0;
+  const start=e=>{if(e.target.tagName==='BUTTON')return;drg=true;const cx=e.touches?e.touches[0].clientX:e.clientX,cy=e.touches?e.touches[0].clientY:e.clientY;dx0=cx;dy0=cy;const r=panel.getBoundingClientRect();leftAnchored?(pl0=r.left,pt0=r.top):(pr0=window.innerWidth-r.right,pb0=window.innerHeight-r.bottom);document.body.style.userSelect='none';if(!e.touches)e.preventDefault();};
+  const move=e=>{if(!drg)return;const cx=e.touches?e.touches[0].clientX:e.clientX,cy=e.touches?e.touches[0].clientY:e.clientY,ddx=cx-dx0,ddy=cy-dy0;if(leftAnchored){panel.style.left=Math.max(0,pl0+ddx)+'px';panel.style.top=Math.max(0,pt0+ddy)+'px';panel.style.right='auto';panel.style.bottom='auto';}else{panel.style.right=Math.max(0,pr0-ddx)+'px';panel.style.bottom=Math.max(0,pb0-ddy)+'px';panel.style.left='auto';panel.style.top='auto';}};
+  const end=()=>{drg=false;document.body.style.userSelect='';};
+  hdr.addEventListener('mousedown',start);hdr.addEventListener('touchstart',start,{passive:false});
+  document.addEventListener('mousemove',move);document.addEventListener('touchmove',move,{passive:true});
+  document.addEventListener('mouseup',end);document.addEventListener('touchend',end);
+}
+function makeResizable(panelId,rzId,trackH){
+  const panel=document.getElementById(panelId),rz=document.getElementById(rzId);if(!panel||!rz)return;
+  let rsz=false,rx0=0,ry0=0,rw0=0,rh0=0;
+  rz.addEventListener('mousedown',e=>{rsz=true;e.stopPropagation();e.preventDefault();rx0=e.clientX;ry0=e.clientY;rw0=panel.offsetWidth;rh0=panel.offsetHeight;document.body.style.userSelect='none';});
+  document.addEventListener('mousemove',e=>{if(!rsz)return;const nw=Math.max(260,Math.min(700,rw0+(e.clientX-rx0))),nh=Math.max(300,Math.min(800,rh0+(e.clientY-ry0)));panel.style.width=nw+'px';const isMin=panelId==='chatPanel'?false:monMin;if(!isMin){panel.style.height=nh+'px';if(trackH)chatH=nh;}});
+  document.addEventListener('mouseup',()=>{rsz=false;document.body.style.userSelect='';});
+}
+
+// ── Expire ticker (inside initChat, not global) ──
+let expireInterval=null;
+
+// ── Init ──
+function initChat(){
+  chatUser=localStorage.getItem('syi_chat_name')||'';
+  adminChatName=localStorage.getItem('syi_admin_name')||'Admin';
+  // Pre-fill name input if returning user
+  const ni=document.getElementById('cpNameInp');
+  if(ni&&chatUser)ni.value=chatUser;
+  // Size panels
+  const cp=document.getElementById('chatPanel'),am=document.getElementById('adminMon');
+  if(cp){cp.style.width=chatW+'px';cp.style.height=chatH+'px';}
+  if(am){am.style.width=MON_W+'px';am.style.height=MON_H+'px';}
+  // Drag + resize
+  makeDraggable('chatPanel','cpDragHdr',false);
+  makeDraggable('adminMon','amDragHdr',true);
+  makeResizable('chatPanel','cpRz',true);
+  makeResizable('adminMon','amRz',false);
+  // Button wiring — user chat
+  document.getElementById('chatFab').addEventListener('click',toggleChat);
+  document.getElementById('cpClrBtn').addEventListener('click',adminClearAll);
+  document.getElementById('cpCloseBtn').addEventListener('click',closeChat);
+  document.getElementById('cpJoinBtn').addEventListener('click',joinChat);
+  document.getElementById('cpSendBtn').addEventListener('click',sendMsg);
+  document.getElementById('cpNameInp').addEventListener('keydown',e=>{if(e.key==='Enter')joinChat();});
+  document.getElementById('cpInp').addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();sendMsg();}});
+  document.getElementById('cpInp').addEventListener('input',e=>autoResizeTa(e.target));
+  // Button wiring — admin monitor
+  document.getElementById('amMinBtn').addEventListener('click',e=>{e.stopPropagation();minimizeMon();});
+  document.getElementById('amCloseBtn').addEventListener('click',e=>{e.stopPropagation();closeMon();});
+  document.getElementById('amEditBtn').addEventListener('click',e=>{e.stopPropagation();toggleNameEdit();});
+  document.getElementById('amNameSaveBtn').addEventListener('click',saveAdminName);
+  document.getElementById('amSendBtn').addEventListener('click',sendAdminMsg);
+  document.getElementById('amBackBtn').addEventListener('click',closeThread);
+  document.getElementById('amDelUsrBtn').addEventListener('click',()=>deleteUserConvo(monSelUser));
+  document.getElementById('amInp').addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();sendAdminMsg();}});
+  document.getElementById('amInp').addEventListener('input',e=>autoResizeTa(e.target));
+  document.getElementById('amDragHdr').addEventListener('click',toggleMonExpand);
+  document.getElementById('amNameInp').addEventListener('keydown',e=>{if(e.key==='Enter')saveAdminName();});
+  // Context menu
+  document.getElementById('ctxPin').addEventListener('click',ctxPin);
+  document.getElementById('ctxUnpin').addEventListener('click',ctxUnpin);
+  document.getElementById('ctxDel').addEventListener('click',ctxDelete);
+  document.addEventListener('click',e=>{if(!document.getElementById('ctxMenu')?.contains(e.target))closeCtxMenu();});
+  // Smart expiry ticker — only re-renders when a message actually transitions expired.
+  // Runs every 3 s; tracks count of live messages so it only re-renders on change.
+  let _lastVisCount=-1;
+  if(expireInterval)clearInterval(expireInterval);
+  expireInterval=setInterval(()=>{
+    if(!chatJoined)return;
+    const now=Date.now();
+    const visCount=chatMsgs.filter(m=>!m.system&&(!m.exp||m.exp>now)).length;
+    if(visCount!==_lastVisCount){
+      _lastVisCount=visCount;
+      renderMsgs();
+      if(loggedIn&&monOpen&&monView==='thread')renderMonThread(monSelUser);
+    }
+  },3000);
+  // Connect Firebase (SDK loaded in <head>)
+  connectFb();
+}
+
+// ═══════════════════════════════════════════════════════════════
+// STARTUP — Single DOMContentLoaded, initialises everything
+// ═══════════════════════════════════════════════════════════════
+  // Theme — must run before other UI so no flash
+  initTheme();
+  const themeBtn=document.getElementById('themeBtn');
+  if(themeBtn)themeBtn.addEventListener('click',toggleTheme);
+  loadSchemes();
+  checkSession();
+  renderStateGrid();
+  updateStats();
+  populateAdmStateFilter();
+  populateModalStates();
+  renderAdmStateGrid();
+  // Scheme modal close
+  const sm=document.getElementById('schModal');
+  if(sm)sm.addEventListener('click',e=>{if(e.target===sm)closeModal();});
+  const mc=document.getElementById('mCls');
+  if(mc)mc.addEventListener('click',closeModal);
+  // Admin login Enter key
+  const lp=document.getElementById('loginP');
+  if(lp)lp.addEventListener('keydown',e=>{if(e.key==='Enter')doLogin();});
+  // Chat
+  initChat();
+  // Restore admin session
+  if(loggedIn){updateChatAdminUI();renderAdmStats();}
+  // Hash-based admin route
+  checkAdminHash();
+
+  // ── Home button: short tap = go home │ hold 2 s = admin login ──
+  // Logic: start timer on press. If released before 2 s → cancel timer + showHome().
+  // If timer fires first → showAdminOrLogin() (no showHome, so page stays stable).
+  (function(){
+    const btn=document.getElementById('homeBtn');
+    if(!btn)return;
+    let holdTimer=null,bar=null;
+    const HOLD_MS=2000;
+
+    function startHold(e){
+      // Don't trigger on right-click
+      if(e.button!==undefined&&e.button!==0)return;
+      clearTimeout(holdTimer);
+      // Progress bar hint
+      bar=document.createElement('span');
+      bar.style.cssText=[
+        'position:absolute','inset:0','border-radius:inherit',
+        'background:rgba(247,148,29,.22)',
+        'transform:scaleX(0)','transform-origin:left',
+        'transition:transform '+HOLD_MS+'ms linear',
+        'pointer-events:none'
+      ].join(';');
+      btn.style.position='relative';
+      btn.style.overflow='hidden';
+      btn.appendChild(bar);
+      // Trigger CSS transition on next frame
+      requestAnimationFrame(()=>requestAnimationFrame(()=>{if(bar)bar.style.transform='scaleX(1)';}));
+      holdTimer=setTimeout(()=>{
+        holdTimer=null;
+        cleanup();
+        showAdminOrLogin(); // ← hold action: open admin
+      },HOLD_MS);
+    }
+
+    function endHold(wasCancelled){
+      if(holdTimer){
+        // Released before hold completed → it was a normal tap
+        clearTimeout(holdTimer);
+        holdTimer=null;
+        cleanup();
+        if(!wasCancelled) showHome(); // ← tap action: go home
+      } else {
+        cleanup();
+      }
+    }
+
+    function cleanup(){
+      if(bar){bar.remove();bar=null;}
+    }
+
+    btn.addEventListener('mousedown', startHold);
+    btn.addEventListener('mouseup',   ()=>endHold(false));
+    btn.addEventListener('mouseleave',()=>endHold(true));   // dragged away = cancel silently
+    btn.addEventListener('touchstart', startHold,         {passive:true});
+    btn.addEventListener('touchend',  ()=>endHold(false));
+    btn.addEventListener('touchcancel',()=>endHold(true));
+    btn.addEventListener('contextmenu',e=>e.preventDefault()); // suppress long-press menu on mobile
+    btn.addEventListener('click',e=>e.preventDefault());       // we handle action in mouseup/touchend
+  })();
+
+</script>
+</body>
+</html>
